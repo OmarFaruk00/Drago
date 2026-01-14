@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import FlashSale from './components/FlashSale'
 import './App.css'
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <div className="App">
       <Navbar />
       <Hero />
+      <FlashSale />
       {/* Other sections will be added step by step */}
     </div>
   )
