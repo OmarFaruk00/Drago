@@ -1,0 +1,250 @@
+.summer-sale-banner {
+  padding: 3rem 2rem;
+  background-color: #f9fafb;
+}
+
+.banner-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
+}
+
+/* Left Side - Produce Background */
+.banner-left {
+  background: linear-gradient(135deg, #1a3a2a 0%, #0f2418 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.produce-background {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 2rem;
+}
+
+.produce-elements {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.produce-item {
+  font-size: 4rem;
+  opacity: 0.9;
+  animation: float 3s ease-in-out infinite;
+}
+
+.produce-item.broccoli {
+  font-size: 5rem;
+  animation-delay: 0s;
+}
+
+.produce-item.celery {
+  font-size: 3.5rem;
+  animation-delay: 0.5s;
+  transform: rotate(-15deg);
+}
+
+.produce-item.pepper {
+  font-size: 3rem;
+  animation-delay: 1s;
+  transform: rotate(10deg);
+}
+
+.produce-item.beans {
+  font-size: 2.5rem;
+  animation-delay: 1.5s;
+}
+
+.produce-item.kiwi {
+  font-size: 3rem;
+  animation-delay: 2s;
+  transform: rotate(-20deg);
+}
+
+.produce-item.leaves {
+  font-size: 2rem;
+  animation-delay: 2.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Right Side - Text and CTA */
+.banner-right {
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 500px;
+  width: 100%;
+}
+
+.banner-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.9;
+}
+
+.banner-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  line-height: 1;
+}
+
+.discount-percent {
+  font-size: 5rem;
+  font-weight: 800;
+  color: #DC143C;
+  line-height: 1;
+}
+
+.discount-text {
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.banner-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  max-width: 450px;
+}
+
+.shop-now-btn {
+  background-color: #DC143C;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin-top: 0.5rem;
+}
+
+.shop-now-btn:hover {
+  background-color: #b8122f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 968px) {
+  .banner-container {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .banner-left {
+    min-height: 300px;
+  }
+
+  .banner-right {
+    padding: 2.5rem 2rem;
+  }
+
+  .discount-percent {
+    font-size: 4rem;
+  }
+
+  .discount-text {
+    font-size: 2.5rem;
+  }
+
+  .produce-item {
+    font-size: 3rem;
+  }
+
+  .produce-item.broccoli {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .summer-sale-banner {
+    padding: 2rem 1.5rem;
+  }
+
+  .banner-left {
+    min-height: 250px;
+  }
+
+  .banner-right {
+    padding: 2rem 1.5rem;
+  }
+
+  .banner-content {
+    gap: 1rem;
+  }
+
+  .banner-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .discount-percent {
+    font-size: 3.5rem;
+  }
+
+  .discount-text {
+    font-size: 2rem;
+  }
+
+  .banner-description {
+    font-size: 0.9rem;
+  }
+
+  .shop-now-btn {
+    width: 100%;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+
+  .produce-item {
+    font-size: 2.5rem;
+  }
+
+  .produce-item.broccoli {
+    font-size: 3.5rem;
+  }
+}
