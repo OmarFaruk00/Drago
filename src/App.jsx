@@ -5,6 +5,7 @@ import FlashSale from './components/FlashSale'
 import Categories from './components/Categories'
 import TopProducts from './components/TopProducts'
 import SummerSale from './components/SummerSale'
+import ExploreProducts from './components/ExploreProducts'
 import './App.css'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Categories />
       <TopProducts />
       <SummerSale />
+      <ExploreProducts />
       {/* Other sections will be added step by step */}
     </div>
   )
