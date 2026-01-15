@@ -115,6 +115,10 @@
   cursor: pointer;
   transition: color 0.2s;
   font-size: 0.95rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .category-item:hover {
@@ -124,6 +128,11 @@
 .category-item.active {
   color: #DC143C;
   font-weight: 600;
+}
+
+.category-count {
+  font-weight: normal;
+  opacity: 0.8;
 }
 
 .price-slider-container {

@@ -10,14 +10,22 @@ const Shop = () => {
   const [selectedRating, setSelectedRating] = useState(null)
 
   const categories = [
+    { name: 'All Categories', count: 120 },
     { name: 'Fresh Fruit', count: 22 },
-    { name: 'Vegetables', count: 20 },
+    { name: 'Fresh Vegetables', count: 20 },
+    { name: 'Meat & Fish', count: 14 },
     { name: 'Cooking', count: 15 },
     { name: 'Snacks', count: 10 },
     { name: 'Non-Veg', count: 14 },
     { name: 'Bakery & Milk', count: 12 },
     { name: 'Beverages', count: 10 },
-    { name: 'Grocery', count: 10 }
+    { name: 'Grocery', count: 10 },
+    { name: 'Beauty & Health', count: 8 },
+    { name: 'Bread & Bakery', count: 12 },
+    { name: 'Baking Needs', count: 7 },
+    { name: 'Diabetic Food', count: 5 },
+    { name: 'Dish Detergents', count: 6 },
+    { name: 'Oil', count: 9 }
   ]
 
   const ratings = [
@@ -93,9 +101,13 @@ const Shop = () => {
                     <li key={index}>
                       <button
                         className={`category-item ${selectedCategory === category.name ? 'active' : ''}`}
-                        onClick={() => setSelectedCategory(category.name)}
+                        onClick={() => {
+                          setSelectedCategory(category.name)
+                          // Scroll to top when category changes
+                          window.scrollTo({ top: 0, behavior: 'smooth' })
+                        }}
                       >
-                        {category.name} ({category.count})
+                        {category.name} <span className="category-count">({category.count})</span>
                       </button>
                     </li>
                   ))}
