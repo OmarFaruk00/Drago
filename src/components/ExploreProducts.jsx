@@ -92,7 +92,10 @@ const ExploreProducts = () => {
   return (
     <section className="explore-products">
       <div className="explore-products-container">
-        <h2 className="explore-title">Exploure Our Products</h2>
+        <div className="section-header">
+          <h2 className="explore-title">Exploure Our Products</h2>
+          <Link to="/shop" className="view-all-link">View All →</Link>
+        </div>
         
         {/* Category Filters */}
         <div className="category-filters">
