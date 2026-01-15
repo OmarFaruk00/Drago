@@ -194,6 +194,8 @@
   font-size: 0.95rem;
   transition: background-color 0.2s;
   white-space: nowrap;
+  text-decoration: none;
+  color: #1f2937;
 }
 
 .categories-button:hover {

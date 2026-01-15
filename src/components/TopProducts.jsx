@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import './TopProducts.css'
 
 const TopProducts = () => {
@@ -108,7 +109,7 @@ const TopProducts = () => {
       <div className="top-products-container">
         <div className="section-header">
           <h2 className="section-title">Top Products</h2>
-          <a href="#view-all" className="view-all-link">View All →</a>
+          <Link to="/shop" className="view-all-link">View All →</Link>
         </div>
         
         <div className="products-grid">

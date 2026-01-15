@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import './FlashSale.css'
 
 const FlashSale = () => {
@@ -109,7 +110,7 @@ const FlashSale = () => {
       </div>
 
       <div className="flash-sale-footer">
-        <button className="see-all-button">See All Products →</button>
+        <Link to="/shop" className="see-all-button">See All Products →</Link>
       </div>
     </section>
   )

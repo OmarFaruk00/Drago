@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import './Navbar.css'
 
 const Navbar = () => {
@@ -56,15 +57,15 @@ const Navbar = () => {
       {/* Secondary Navigation - White Bar */}
       <div className="secondary-nav">
         <div className="secondary-nav-container">
-          <div className="categories-button" onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
+          <Link to="/shop" className="categories-button" onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
             <span className="hamburger-icon">☰</span>
             <span>All Categories</span>
             <span className="dropdown-arrow">▼</span>
-          </div>
+          </Link>
           
           <div className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-            <a href="#home" className="nav-link">Home <span>▼</span></a>
-            <a href="#shop" className="nav-link">Shop <span>▼</span></a>
+            <Link to="/" className="nav-link">Home <span>▼</span></Link>
+            <Link to="/shop" className="nav-link">Shop <span>▼</span></Link>
             <a href="#pages" className="nav-link">Pages <span>▼</span></a>
             <a href="#blog" className="nav-link">Blog <span>▼</span></a>
             <a href="#about" className="nav-link">About Us <span>▼</span></a>

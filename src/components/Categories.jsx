@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import './Categories.css'
 
 const Categories = () => {
@@ -24,7 +25,7 @@ const Categories = () => {
       <div className="categories-container">
         <div className="section-header">
           <h2 className="section-title">Categories</h2>
-          <a href="#view-all" className="view-all-link">View All →</a>
+          <Link to="/shop" className="view-all-link">View All →</Link>
         </div>
         
         <div className="categories-grid">
