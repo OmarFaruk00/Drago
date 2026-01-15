@@ -4,43 +4,112 @@ import './Footer.css'
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-container">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <span className="brand-logo">Drago</span>
-            <p className="footer-description">
-              Transforming digital experiences with innovative solutions.
-            </p>
+      {/* Top Green Header Strip */}
+      <div className="footer-header">
+        <div className="footer-header-container">
+          <div className="footer-logo">
+            <span className="cart-icon">🛒</span>
+            <span className="footer-logo-text">DRAGO</span>
           </div>
-          <div className="footer-links">
-            <div className="footer-column">
-              <h4 className="footer-heading">Product</h4>
-              <a href="#features" className="footer-link">Features</a>
-              <a href="#pricing" className="footer-link">Pricing</a>
-              <a href="#updates" className="footer-link">Updates</a>
+        </div>
+      </div>
+
+      {/* Main Dark Gray Content Area */}
+      <div className="footer-main">
+        <div className="footer-main-container">
+          {/* Left Column */}
+          <div className="footer-left">
+            {/* About Drago */}
+            <div className="footer-section">
+              <h3 className="footer-heading">About Drago</h3>
+              <p className="footer-description">
+                Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
+              </p>
+              <div className="footer-contact">
+                <a href="tel:01845678543" className="contact-link">01845678543</a>
+                <a href="mailto:drago@gmail.com" className="contact-link">drago@gmail.com</a>
+              </div>
             </div>
-            <div className="footer-column">
-              <h4 className="footer-heading">Company</h4>
-              <a href="#about" className="footer-link">About</a>
-              <a href="#careers" className="footer-link">Careers</a>
-              <a href="#blog" className="footer-link">Blog</a>
+
+            {/* Proxy */}
+            <div className="footer-section">
+              <h3 className="footer-heading">Proxy</h3>
+              <ul className="footer-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#product">Product</a></li>
+                <li><a href="#products-details">Products Details</a></li>
+                <li><a href="#track-order">Track Order</a></li>
+              </ul>
             </div>
-            <div className="footer-column">
-              <h4 className="footer-heading">Support</h4>
-              <a href="#help" className="footer-link">Help Center</a>
-              <a href="#contact" className="footer-link">Contact</a>
-              <a href="#docs" className="footer-link">Documentation</a>
+
+            {/* Red Divider */}
+            <div className="footer-divider"></div>
+
+            {/* Instagram */}
+            <div className="footer-section">
+              <h3 className="footer-heading">Instagram</h3>
+              <div className="instagram-grid">
+                {Array.from({ length: 8 }, (_, i) => (
+                  <div key={i} className="instagram-item">
+                    <span>📷</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="footer-right">
+            {/* My Account */}
+            <div className="footer-section">
+              <h3 className="footer-heading">My Account</h3>
+              <ul className="footer-links">
+                <li><a href="#my-account">My Account</a></li>
+                <li><a href="#order-history">Order History</a></li>
+                <li><a href="#shopping-cart">Shoping Cart</a></li>
+                <li><a href="#wishlist">Wishlist</a></li>
+                <li><a href="#settings">Settings</a></li>
+              </ul>
+            </div>
+
+            {/* Helps */}
+            <div className="footer-section">
+              <h3 className="footer-heading">Helps</h3>
+              <ul className="footer-links">
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#faqs">Faqs</a></li>
+                <li><a href="#terms">Terms & Condition</a></li>
+                <li><a href="#privacy">Privacy Policy</a></li>
+              </ul>
             </div>
           </div>
         </div>
-        <div className="footer-bottom">
-          <p className="footer-copyright">
-            © {new Date().getFullYear()} Drago. All rights reserved.
-          </p>
-          <div className="footer-social">
-            <a href="#twitter" className="social-link" aria-label="Twitter">Twitter</a>
-            <a href="#linkedin" className="social-link" aria-label="LinkedIn">LinkedIn</a>
-            <a href="#github" className="social-link" aria-label="GitHub">GitHub</a>
+      </div>
+
+      {/* Bottom Green Footer Strip */}
+      <div className="footer-bottom">
+        <div className="footer-bottom-container">
+          {/* Social Media Icons */}
+          <div className="social-icons">
+            <a href="#facebook" className="social-icon facebook">f</a>
+            <a href="#twitter" className="social-icon twitter">🐦</a>
+            <a href="#pinterest" className="social-icon pinterest">P</a>
+            <a href="#instagram" className="social-icon instagram">📷</a>
+          </div>
+
+          {/* Payment Logos */}
+          <div className="payment-logos">
+            <span className="payment-logo">Apple Pay</span>
+            <span className="payment-logo">VISA</span>
+            <span className="payment-logo">DISCOVER</span>
+            <span className="payment-logo">Mastercard</span>
+            <span className="payment-secure">🔒 Secure Payment</span>
+          </div>
+
+          {/* Copyright */}
+          <div className="footer-copyright">
+            dragoeCommerce © {new Date().getFullYear()}. All Rights Reserved
           </div>
         </div>
       </div>
