@@ -10,6 +10,7 @@ import ExploreProducts from './components/ExploreProducts'
 import ReviewSection from './components/ReviewSection'
 import Footer from './components/Footer'
 import Shop from './pages/Shop'
+import ProductDetails from './pages/ProductDetails'
 import './App.css'
 
 function Home() {
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
         </Routes>
         <Footer />
       </div>

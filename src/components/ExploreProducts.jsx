@@ -1,87 +1,210 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './ExploreProducts.css'
 
 const ExploreProducts = () => {
+  const navigate = useNavigate()
   const [activeCategory, setActiveCategory] = useState('All')
-  const [selectedProduct, setSelectedProduct] = useState('Green Apple')
+  const [selectedProduct, setSelectedProduct] = useState('সবুজ আপেল')
 
   const categories = ['All', 'Vegetable', 'Fruit', 'Meat & Fish', 'View All']
 
-  const products = [
+  const allProducts = [
+    // Fruits
     {
       id: 1,
-      name: 'Green Apple',
+      name: 'সবুজ আপেল',
       price: 14.99,
       originalPrice: 20.99,
       rating: 5,
       badge: 'Sale 50%',
-      badgeColor: '#DC143C'
+      badgeColor: '#DC143C',
+      category: 'Fruit'
     },
     {
       id: 2,
-      name: 'Surjapur Mango',
+      name: 'সুরজপুর আম',
       price: 14.99,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Fruit'
     },
     {
+      id: 13,
+      name: 'কলা',
+      price: 40.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Fruit'
+    },
+    {
+      id: 14,
+      name: 'কমলা',
+      price: 60.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Fruit'
+    },
+    {
+      id: 15,
+      name: 'পেয়ারা',
+      price: 50.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Fruit'
+    },
+    {
+      id: 16,
+      name: 'লিচু',
+      price: 150.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Fruit'
+    },
+    {
+      id: 17,
+      name: 'আঙ্গুর',
+      price: 180.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Fruit'
+    },
+    {
+      id: 18,
+      name: 'জাম',
+      price: 120.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Fruit'
+    },
+    // Vegetables
+    {
       id: 3,
-      name: 'Red Tomatos',
+      name: 'লাল টমেটো',
       price: 14.99,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Vegetable'
     },
     {
       id: 4,
-      name: 'Fresh Cauliflower',
+      name: 'তাজা ফুলকপি',
       price: 14.99,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Vegetable'
     },
     {
       id: 5,
-      name: 'Green Lettuce',
+      name: 'সবুজ লেটুস',
       price: 14.99,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Vegetable'
     },
     {
       id: 6,
-      name: 'Eggplant',
+      name: 'বেগুন',
       price: 14.99,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Vegetable'
     },
     {
       id: 7,
-      name: 'Green Chilli',
+      name: 'সবুজ মরিচ',
       price: 14.99,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Vegetable'
     },
+    // Meat & Fish products
     {
       id: 8,
-      name: 'Eggplant',
-      price: 14.99,
+      name: 'গরুর মাংস',
+      price: 450.00,
       originalPrice: null,
       rating: 5,
       badge: null,
-      badgeColor: null
+      badgeColor: null,
+      category: 'Meat & Fish'
+    },
+    {
+      id: 9,
+      name: 'মুরগির মাংস',
+      price: 180.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Meat & Fish'
+    },
+    {
+      id: 10,
+      name: 'ইলিশ মাছ',
+      price: 800.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Meat & Fish'
+    },
+    {
+      id: 11,
+      name: 'রুই মাছ',
+      price: 250.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Meat & Fish'
+    },
+    {
+      id: 12,
+      name: 'চিংড়ি',
+      price: 350.00,
+      originalPrice: null,
+      rating: 5,
+      badge: null,
+      badgeColor: null,
+      category: 'Meat & Fish'
     }
   ]
+
+  // Filter products based on active category
+  const products = activeCategory === 'All' 
+    ? allProducts 
+    : activeCategory === 'Vegetable'
+    ? allProducts.filter(p => p.category === 'Vegetable')
+    : activeCategory === 'Fruit'
+    ? allProducts.filter(p => p.category === 'Fruit')
+    : activeCategory === 'Meat & Fish'
+    ? allProducts.filter(p => p.category === 'Meat & Fish')
+    : allProducts
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -118,7 +241,8 @@ const ExploreProducts = () => {
             <div
               key={product.id}
               className={`product-card ${selectedProduct === product.name ? 'selected' : ''}`}
-              onClick={() => setSelectedProduct(product.name)}
+              onClick={() => navigate(`/product/${product.id}`)}
+              style={{ cursor: 'pointer' }}
             >
               {/* Badge */}
               {product.badge && (
@@ -132,8 +256,18 @@ const ExploreProducts = () => {
 
               {/* Action Icons */}
               <div className="product-actions">
-                <button className="action-icon wishlist-icon">♡</button>
-                <button className="action-icon view-icon">👁️</button>
+                <button 
+                  className="action-icon wishlist-icon"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  ♡
+                </button>
+                <button 
+                  className="action-icon view-icon"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  👁️
+                </button>
               </div>
 
               {/* Product Image */}
@@ -164,7 +298,7 @@ const ExploreProducts = () => {
                 className={`add-to-cart-icon ${selectedProduct === product.name ? 'active' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation()
-                  setSelectedProduct(product.name)
+                  // Handle add to cart
                 }}
               >
                 🛍️

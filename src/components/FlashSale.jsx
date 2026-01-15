@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './FlashSale.css'
 
 const FlashSale = () => {
+  const navigate = useNavigate()
   const [timeLeft, setTimeLeft] = useState({
     days: 2,
     hours: 10,
@@ -46,11 +47,11 @@ const FlashSale = () => {
   }
 
   const products = [
-    { id: 1, name: 'Lorem ipsum', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 2, name: 'Lorem ipsum', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 3, name: 'Lorem ipsum', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 4, name: 'Lorem ipsum', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 5, name: 'Lorem ipsum', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: true },
+    { id: 1, name: 'সবুজ আপেল', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
+    { id: 2, name: 'তাজা টমেটো', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
+    { id: 3, name: 'সবুজ মরিচ', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
+    { id: 4, name: 'বেগুন', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
+    { id: 5, name: 'ফুলকপি', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: true },
   ]
 
   return (
@@ -80,7 +81,12 @@ const FlashSale = () => {
       <div className="flash-sale-content">
         <div className="products-container">
           {products.map((product) => (
-            <div key={product.id} className="product-card">
+            <div 
+              key={product.id} 
+              className="product-card"
+              onClick={() => navigate(`/product/${product.id}`)}
+              style={{ cursor: 'pointer' }}
+            >
               {product.hasGift && (
                 <div className="gift-badge">Gift Offer</div>
               )}

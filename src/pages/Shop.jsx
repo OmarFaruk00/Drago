@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Shop.css'
 
 const Shop = () => {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedCategory, setSelectedCategory] = useState('All Categories')
   const [priceRange, setPriceRange] = useState([0, 1000])
@@ -40,28 +41,72 @@ const Shop = () => {
   const popularTags = ['Healthy', 'Vegetables', 'Eat Fresh', 'Organic', 'Fresh', 'Fruits', 'Snacks', 'Orange', 'Freshfood', 'Food']
 
   const saleProducts = [
-    { name: 'Red Capsicum', originalPrice: 10.00, salePrice: 8.00, rating: 5 },
-    { name: 'Chinese Cabbage', originalPrice: 10.00, salePrice: 8.00, rating: 5 },
-    { name: 'Green Capsicum', originalPrice: 10.00, salePrice: 8.00, rating: 5 }
+    { name: 'লাল ক্যাপসিকাম', originalPrice: 10.00, salePrice: 8.00, rating: 5 },
+    { name: 'চীনা বাধাকপি', originalPrice: 10.00, salePrice: 8.00, rating: 5 },
+    { name: 'সবুজ ক্যাপসিকাম', originalPrice: 10.00, salePrice: 8.00, rating: 5 }
   ]
 
-  const products = [
-    { id: 1, name: 'Big Potato', price: 24.99 },
-    { id: 2, name: 'Chinese Cabbage', price: 24.99 },
-    { id: 3, name: 'Indian Finger', price: 24.99 },
-    { id: 4, name: 'Eggplant', price: 24.99 },
-    { id: 5, name: 'Fresh Cauliflower', price: 24.99 },
-    { id: 6, name: 'Sweet Apple', price: 24.99 },
-    { id: 7, name: 'Green Capsicum', price: 24.99 },
-    { id: 8, name: 'Green Chili', price: 24.99 },
-    { id: 9, name: 'Small Cucumber', price: 24.99 },
-    { id: 10, name: 'Green Lettuce', price: 24.99 },
-    { id: 11, name: 'Ladies Finger', price: 24.99 },
-    { id: 12, name: 'Red Capsicum', price: 24.99 },
-    { id: 13, name: 'Red Chili', price: 24.99 },
-    { id: 14, name: 'Red Tomato', price: 24.99 },
-    { id: 15, name: 'Sweet Mango', price: 24.99 }
+  const allProducts = [
+    // Vegetables
+    { id: 1, name: 'বড় আলু', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 2, name: 'চীনা বাধাকপি', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 3, name: 'ভুট্টা', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 4, name: 'বেগুন', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 5, name: 'তাজা ফুলকপি', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 7, name: 'সবুজ ক্যাপসিকাম', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 8, name: 'সবুজ মরিচ', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 9, name: 'ছোট শসা', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 10, name: 'সবুজ লেটুস', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 11, name: 'ঢেঁড়শ', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 12, name: 'লাল ক্যাপসিকাম', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 13, name: 'লাল মরিচ', price: 24.99, category: 'Fresh Vegetables' },
+    { id: 14, name: 'লাল টমেটো', price: 24.99, category: 'Fresh Vegetables' },
+    
+    // Fruits
+    { id: 6, name: 'মিষ্টি আপেল', price: 24.99, category: 'Fresh Fruit' },
+    { id: 15, name: 'মিষ্টি আম', price: 24.99, category: 'Fresh Fruit' },
+    { id: 30, name: 'কলা', price: 40.00, category: 'Fresh Fruit' },
+    { id: 31, name: 'কমলা', price: 60.00, category: 'Fresh Fruit' },
+    { id: 32, name: 'পেয়ারা', price: 50.00, category: 'Fresh Fruit' },
+    { id: 33, name: 'লিচু', price: 150.00, category: 'Fresh Fruit' },
+    { id: 34, name: 'আঙ্গুর', price: 180.00, category: 'Fresh Fruit' },
+    { id: 35, name: 'জাম', price: 120.00, category: 'Fresh Fruit' },
+    { id: 36, name: 'কাঁঠাল', price: 80.00, category: 'Fresh Fruit' },
+    { id: 37, name: 'নারিকেল', price: 35.00, category: 'Fresh Fruit' },
+    { id: 38, name: 'তরমুজ', price: 45.00, category: 'Fresh Fruit' },
+    { id: 39, name: 'পেঁপে', price: 30.00, category: 'Fresh Fruit' },
+    { id: 40, name: 'বাঙ্গি', price: 40.00, category: 'Fresh Fruit' },
+    { id: 41, name: 'স্ট্রবেরি', price: 250.00, category: 'Fresh Fruit' },
+    { id: 42, name: 'আনারস', price: 70.00, category: 'Fresh Fruit' },
+    { id: 43, name: 'বরই', price: 55.00, category: 'Fresh Fruit' },
+    { id: 44, name: 'জামরুল', price: 90.00, category: 'Fresh Fruit' },
+    { id: 45, name: 'কামরাঙা', price: 65.00, category: 'Fresh Fruit' },
+    { id: 46, name: 'ডালিম', price: 100.00, category: 'Fresh Fruit' },
+    { id: 47, name: 'পাকা খেজুর', price: 200.00, category: 'Fresh Fruit' },
+    { id: 48, name: 'শরিফা', price: 110.00, category: 'Fresh Fruit' },
+    { id: 49, name: 'ড্রাগন ফল', price: 160.00, category: 'Fresh Fruit' },
+    
+    // Meat & Fish
+    { id: 16, name: 'গরুর মাংস', price: 450.00, category: 'Meat & Fish' },
+    { id: 17, name: 'খাসির মাংস', price: 500.00, category: 'Meat & Fish' },
+    { id: 18, name: 'মুরগির মাংস', price: 180.00, category: 'Meat & Fish' },
+    { id: 19, name: 'ইলিশ মাছ', price: 800.00, category: 'Meat & Fish' },
+    { id: 20, name: 'রুই মাছ', price: 250.00, category: 'Meat & Fish' },
+    { id: 21, name: 'কাতলা মাছ', price: 220.00, category: 'Meat & Fish' },
+    { id: 22, name: 'চিংড়ি', price: 350.00, category: 'Meat & Fish' },
+    { id: 23, name: 'মাগুর মাছ', price: 300.00, category: 'Meat & Fish' },
+    { id: 24, name: 'টেংরা মাছ', price: 280.00, category: 'Meat & Fish' },
+    { id: 25, name: 'পুটি মাছ', price: 200.00, category: 'Meat & Fish' },
+    { id: 26, name: 'তেলাপিয়া মাছ', price: 150.00, category: 'Meat & Fish' },
+    { id: 27, name: 'কই মাছ', price: 400.00, category: 'Meat & Fish' },
+    { id: 28, name: 'শিং মাছ', price: 320.00, category: 'Meat & Fish' },
+    { id: 29, name: 'বোয়াল মাছ', price: 380.00, category: 'Meat & Fish' }
   ]
+
+  // Filter products based on selected category
+  const products = selectedCategory === 'All Categories' 
+    ? allProducts 
+    : allProducts.filter(p => p.category === selectedCategory)
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -200,18 +245,46 @@ const Shop = () => {
             <main className="shop-products">
               <div className="products-grid">
                 {products.map((product) => (
-                  <div key={product.id} className="product-card">
+                  <div 
+                    key={product.id} 
+                    className="product-card"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
                     <div className="product-image-container">
                       <div className="product-image-placeholder">
                         <span>🛒</span>
                       </div>
-                      <button className="wishlist-btn">♡</button>
-                      <button className="add-cart-label">Add to cart</button>
+                      <button 
+                        className="wishlist-btn"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          // Handle wishlist
+                        }}
+                      >
+                        ♡
+                      </button>
+                      <button 
+                        className="add-cart-label"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          // Handle add to cart
+                        }}
+                      >
+                        Add to cart
+                      </button>
                     </div>
                     <div className="product-info">
                       <div className="product-name">{product.name}</div>
                       <div className="product-price">৳{product.price.toFixed(2)}</div>
-                      <button className="cart-icon-btn">🛍️</button>
+                      <button 
+                        className="cart-icon-btn"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          // Handle add to cart
+                        }}
+                      >
+                        🛍️
+                      </button>
                     </div>
                   </div>
                 ))}

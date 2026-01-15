@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './TopProducts.css'
 
 const TopProducts = () => {
-  const [selectedProduct, setSelectedProduct] = useState('Chinese cabbage')
+  const navigate = useNavigate()
+  const [selectedProduct, setSelectedProduct] = useState('চীনা বাধাকপি')
 
   const products = [
     { 
       id: 1, 
-      name: 'Green Apple', 
+      name: 'সবুজ আপেল', 
       price: 14.99, 
       originalPrice: 20.99, 
       rating: 5, 
@@ -17,7 +18,7 @@ const TopProducts = () => {
     },
     { 
       id: 2, 
-      name: 'Fresh Indian Malta', 
+      name: 'তাজা মাল্টা', 
       price: 20.00, 
       originalPrice: null, 
       rating: 5, 
@@ -26,7 +27,7 @@ const TopProducts = () => {
     },
     { 
       id: 3, 
-      name: 'Chinese cabbage', 
+      name: 'চীনা বাধাকপি', 
       price: 12.00, 
       originalPrice: null, 
       rating: 5, 
@@ -35,7 +36,7 @@ const TopProducts = () => {
     },
     { 
       id: 4, 
-      name: 'Green Lettuce', 
+      name: 'সবুজ লেটুস', 
       price: 9.00, 
       originalPrice: null, 
       rating: 5, 
@@ -44,7 +45,7 @@ const TopProducts = () => {
     },
     { 
       id: 5, 
-      name: 'Eggplant', 
+      name: 'বেগুন', 
       price: 34.00, 
       originalPrice: null, 
       rating: 5, 
@@ -53,7 +54,7 @@ const TopProducts = () => {
     },
     { 
       id: 6, 
-      name: 'Big Potatoes', 
+      name: 'বড় আলু', 
       price: 20.00, 
       originalPrice: null, 
       rating: 5, 
@@ -62,7 +63,7 @@ const TopProducts = () => {
     },
     { 
       id: 7, 
-      name: 'Corn', 
+      name: 'ভুট্টা', 
       price: 20.00, 
       originalPrice: null, 
       rating: 5, 
@@ -71,7 +72,7 @@ const TopProducts = () => {
     },
     { 
       id: 8, 
-      name: 'Fresh Cauliflower', 
+      name: 'তাজা ফুলকপি', 
       price: 12.00, 
       originalPrice: null, 
       rating: 5, 
@@ -80,7 +81,7 @@ const TopProducts = () => {
     },
     { 
       id: 9, 
-      name: 'Green Capsicum', 
+      name: 'সবুজ ক্যাপসিকাম', 
       price: 8.00, 
       originalPrice: 20.00, 
       rating: 5, 
@@ -89,7 +90,7 @@ const TopProducts = () => {
     },
     { 
       id: 10, 
-      name: 'Green Chili', 
+      name: 'সবুজ মরিচ', 
       price: 34.00, 
       originalPrice: null, 
       rating: 5, 
@@ -117,7 +118,8 @@ const TopProducts = () => {
             <div
               key={product.id}
               className={`product-card ${selectedProduct === product.name ? 'selected' : ''}`}
-              onClick={() => setSelectedProduct(product.name)}
+              onClick={() => navigate(`/product/${product.id}`)}
+              style={{ cursor: 'pointer' }}
             >
               {product.badge && (
                 <div 
