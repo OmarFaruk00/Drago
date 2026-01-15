@@ -7,6 +7,7 @@ import TopProducts from './components/TopProducts'
 import SummerSale from './components/SummerSale'
 import ExploreProducts from './components/ExploreProducts'
 import ReviewSection from './components/ReviewSection'
+import Footer from './components/Footer'
 import './App.css'
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
       <SummerSale />
       <ExploreProducts />
       <ReviewSection />
-      {/* Other sections will be added step by step */}
+      <Footer />
     </div>
   )
 }
