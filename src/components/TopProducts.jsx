@@ -138,9 +138,9 @@ const TopProducts = () => {
                 </div>
                 <div className="product-pricing">
                   {product.originalPrice && (
-                    <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+                    <span className="original-price">৳{product.originalPrice.toFixed(2)}</span>
                   )}
-                  <span className="current-price">${product.price.toFixed(2)}</span>
+                  <span className="current-price">৳{product.price.toFixed(2)}</span>
                 </div>
               </div>
               <button className="add-to-cart-btn">

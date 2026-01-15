@@ -147,10 +147,10 @@ const ExploreProducts = () => {
                 </div>
                 <div className="product-pricing">
                   {product.originalPrice && (
-                    <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+                    <span className="original-price">৳{product.originalPrice.toFixed(2)}</span>
                   )}
                   <span className={`current-price ${product.originalPrice ? 'sale-price' : ''}`}>
-                    ${product.price.toFixed(2)}
+                    ৳{product.price.toFixed(2)}
                   </span>
                 </div>
               </div>

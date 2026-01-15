@@ -99,8 +99,8 @@ const FlashSale = () => {
                   <div className="wishlist-icon">❤️</div>
                 </div>
                 <div className="product-pricing">
-                  <span className="original-price">${product.price.toFixed(2).replace('.', ',')}</span>
-                  <span className="sale-price">${product.salePrice.toFixed(2).replace('.', ',')}</span>
+                  <span className="original-price">৳{product.price.toFixed(2).replace('.', ',')}</span>
+                  <span className="sale-price">৳{product.salePrice.toFixed(2).replace('.', ',')}</span>
                 </div>
               </div>
             </div>

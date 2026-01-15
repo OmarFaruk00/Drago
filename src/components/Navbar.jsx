@@ -47,7 +47,7 @@ const Navbar = () => {
                 <span className="cart-icon-symbol">🛒</span>
                 <span className="cart-badge">2</span>
               </div>
-              <span className="cart-text">Shopping cart: $57.00</span>
+              <span className="cart-text">Shopping cart: ৳57.00</span>
             </div>
           </div>
         </div>
