@@ -6,6 +6,7 @@ import Categories from './components/Categories'
 import TopProducts from './components/TopProducts'
 import SummerSale from './components/SummerSale'
 import ExploreProducts from './components/ExploreProducts'
+import ReviewSection from './components/ReviewSection'
 import './App.css'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <TopProducts />
       <SummerSale />
       <ExploreProducts />
+      <ReviewSection />
       {/* Other sections will be added step by step */}
     </div>
   )
