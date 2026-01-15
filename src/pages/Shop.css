@@ -275,6 +275,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .discount-shop-btn:hover {

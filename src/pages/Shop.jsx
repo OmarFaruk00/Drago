@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Shop.css'
@@ -169,7 +170,7 @@ const Shop = () => {
                 <div className="discount-image-placeholder">
                   <span>🥬🍅🥒</span>
                 </div>
-                <button className="discount-shop-btn">Shop Now</button>
+                <Link to="/shop" className="discount-shop-btn">Shop Now</Link>
               </div>
 
               {/* Sale Products */}

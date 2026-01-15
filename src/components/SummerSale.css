@@ -115,6 +115,8 @@
   width: fit-content;
   box-shadow: 0 4px 6px rgba(220, 20, 60, 0.3);
   margin-top: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .summer-shop-button:hover {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import './Hero.css'
 
 const Hero = () => {
@@ -25,7 +26,7 @@ const Hero = () => {
           <div className="sale-text-small">UP TO 70%</div>
           <h1 className="hero-title">Big Sale</h1>
           <div className="hero-subtitle">Happening Now</div>
-          <button className="shop-now-button">Shop now →</button>
+          <Link to="/shop" className="shop-now-button">Shop now →</Link>
         </div>
       </div>
 

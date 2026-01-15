@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './SummerSale.css'
 
 const SummerSale = () => {
@@ -25,7 +26,7 @@ const SummerSale = () => {
           <div className="sale-description">
             Free on all your order, Free Shipping and 30 days money-back guarantee
           </div>
-          <button className="summer-shop-button">Shop Now →</button>
+          <Link to="/shop" className="summer-shop-button">Shop Now →</Link>
         </div>
       </div>
     </section>
