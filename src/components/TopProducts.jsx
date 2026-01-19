@@ -4,22 +4,22 @@ import './TopProducts.css'
 
 const TopProducts = () => {
   const navigate = useNavigate()
-  const [selectedProduct, setSelectedProduct] = useState('চীনা বাধাকপি')
+  const [selectedProduct, setSelectedProduct] = useState('iPhone 15 Pro')
 
   const products = [
     { 
       id: 1, 
-      name: 'সবুজ আপেল', 
-      price: 14.99, 
-      originalPrice: 20.99, 
+      name: 'iPhone 15 Pro', 
+      price: 100000, 
+      originalPrice: 120000, 
       rating: 5, 
-      badge: 'Sale 50%',
+      badge: 'Sale 17%',
       badgeColor: '#DC143C'
     },
     { 
       id: 2, 
-      name: 'তাজা মাল্টা', 
-      price: 20.00, 
+      name: 'Samsung Galaxy S24', 
+      price: 95000, 
       originalPrice: null, 
       rating: 5, 
       badge: null,
@@ -27,8 +27,8 @@ const TopProducts = () => {
     },
     { 
       id: 3, 
-      name: 'চীনা বাধাকপি', 
-      price: 12.00, 
+      name: 'MacBook Pro M3', 
+      price: 180000, 
       originalPrice: null, 
       rating: 5, 
       badge: null,
@@ -36,8 +36,8 @@ const TopProducts = () => {
     },
     { 
       id: 4, 
-      name: 'সবুজ লেটুস', 
-      price: 9.00, 
+      name: 'AirPods Pro 2', 
+      price: 25000, 
       originalPrice: null, 
       rating: 5, 
       badge: null,
@@ -45,8 +45,8 @@ const TopProducts = () => {
     },
     { 
       id: 5, 
-      name: 'বেগুন', 
-      price: 34.00, 
+      name: 'Sony WH-1000XM5', 
+      price: 35000, 
       originalPrice: null, 
       rating: 5, 
       badge: null,
@@ -54,8 +54,8 @@ const TopProducts = () => {
     },
     { 
       id: 6, 
-      name: 'বড় আলু', 
-      price: 20.00, 
+      name: 'Apple Watch Series 9', 
+      price: 45000, 
       originalPrice: null, 
       rating: 5, 
       badge: 'Gift Offer',
@@ -63,8 +63,8 @@ const TopProducts = () => {
     },
     { 
       id: 7, 
-      name: 'ভুট্টা', 
-      price: 20.00, 
+      name: 'iPad Pro 12.9"', 
+      price: 110000, 
       originalPrice: null, 
       rating: 5, 
       badge: null,
@@ -72,8 +72,8 @@ const TopProducts = () => {
     },
     { 
       id: 8, 
-      name: 'তাজা ফুলকপি', 
-      price: 12.00, 
+      name: 'PlayStation 5', 
+      price: 55000, 
       originalPrice: null, 
       rating: 5, 
       badge: null,

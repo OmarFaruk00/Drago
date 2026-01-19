@@ -1,6 +1,6 @@
 .flash-sale {
   padding: 3rem 2rem;
-  background: linear-gradient(135deg, #DC143C 0%, #FF6347 100%);
+  background: linear-gradient(135deg, #FF1A0A 0%, #FF1A0A 27%, #FA776E 50%, #F3EFEF 79%, #F3EFEF 100%);
   position: relative;
   overflow: hidden;
 }
@@ -16,12 +16,15 @@
 }
 
 .flash-sale-title {
-  font-size: 3.5rem;
-  font-weight: 700;
+  font-size: 5rem;
+  font-weight: 400;
   color: white;
-  font-family: 'Brush Script MT', cursive;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  letter-spacing: 2px;
+  font-family: 'Mystery Quest', 'Playfair Display', 'Dancing Script', 'Great Vibes', serif;
+  text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.4);
+  letter-spacing: 3px;
+  position: relative;
+  display: inline-block;
+  line-height: 1.1;
 }
 
 .countdown-timer {
@@ -69,6 +72,37 @@
   padding-bottom: 1rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+  position: relative;
+}
+
+.product-card {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .products-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .product-card {
+    min-width: auto;
+    width: 100%;
+  }
 }
 
 .products-container::-webkit-scrollbar {
@@ -251,7 +285,7 @@
   }
 
   .flash-sale-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
 
   .timer-box {
@@ -266,13 +300,19 @@
 }
 
 @media (max-width: 640px) {
+  .flash-sale {
+    padding: 2rem 1rem;
+  }
+
   .flash-sale-header {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 1.5rem;
   }
 
   .flash-sale-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
   }
 
   .countdown-timer {
@@ -290,7 +330,33 @@
     font-size: 0.75rem;
   }
 
+  .products-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
   .product-card {
-    min-width: 180px;
+    min-width: auto;
+    width: 100%;
+    padding: 0.75rem;
+  }
+
+  .product-image-placeholder {
+    font-size: 3rem;
+  }
+
+  .product-name {
+    font-size: 0.85rem;
+  }
+
+  .sale-price {
+    font-size: 1rem;
+  }
+
+  .original-price {
+    font-size: 0.75rem;
   }
 }

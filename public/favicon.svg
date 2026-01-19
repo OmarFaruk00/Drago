@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <pattern id="faviconPattern" patternUnits="userSpaceOnUse" width="100" height="100">
+      <circle cx="50" cy="50" r="50" fill="#DC143C"/>
+      <text x="50" y="65" font-size="60" font-weight="bold" text-anchor="middle" fill="white" font-family="Arial, sans-serif">D</text>
+    </pattern>
+  </defs>
+  <circle cx="50" cy="50" r="50" fill="url(#faviconPattern)"/>
+  <circle cx="50" cy="50" r="48" fill="none" stroke="white" stroke-width="2"/>
+</svg>

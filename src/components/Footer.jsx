@@ -1,34 +1,23 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './Footer.css'
 
 const Footer = () => {
   return (
     <footer className="footer">
-      {/* Top Section - Dark Gray with Logo */}
-      <div className="footer-top">
-        <div className="footer-top-container">
-          <div className="footer-red-line"></div>
-          <div className="footer-logo-section">
-            <div className="footer-logo">
-              <span className="cart-icon">🛒</span>
-              <span className="footer-logo-text">DRAGO</span>
-            </div>
-          </div>
-          <div className="footer-red-line"></div>
-        </div>
-      </div>
-
-      {/* Middle Section - Dark Green with 5 Columns */}
+      {/* Middle Section - Dark Gray with Columns */}
       <div className="footer-middle">
         <div className="footer-middle-container">
-          {/* About Drago */}
-          <div className="footer-column">
-            <h3 className="footer-heading">About Drago</h3>
+          {/* About Drago - Left Column with Logo */}
+          <div className="footer-column footer-column-logo">
+            <Link to="/" className="footer-logo-link">
+              <img src="/logo.png" alt="Drago Logo" className="footer-logo-img" />
+            </Link>
             <p className="footer-description">
               Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
             </p>
             <div className="footer-contact">
-              <a href="tel:01845678543" className="contact-link">01845678543</a>
+              <a href="tel:+880178664389" className="contact-link">+880178664389</a>
               <span className="contact-or">or</span>
               <a href="mailto:drago@gmail.com" className="contact-link">drago@gmail.com</a>
             </div>
@@ -69,15 +58,32 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Instagram */}
+          {/* Categories */}
           <div className="footer-column">
-            <h3 className="footer-heading">Instagram</h3>
+            <h3 className="footer-heading">Categories</h3>
+            <ul className="footer-links">
+              <li><a href="#smartphones">Smartphones</a></li>
+              <li><a href="#laptops">Laptops</a></li>
+              <li><a href="#headphones">Headphones</a></li>
+              <li><a href="#gaming">Gaming</a></li>
+            </ul>
+          </div>
+
+          {/* Follow Us / Instagram */}
+          <div className="footer-column">
+            <h3 className="footer-heading desktop-heading">Instagram</h3>
+            <h3 className="footer-heading mobile-heading">Follow Us</h3>
             <div className="instagram-grid">
               {Array.from({ length: 8 }, (_, i) => (
                 <div key={i} className="instagram-item">
                   <span>📷</span>
                 </div>
               ))}
+            </div>
+            <div className="social-icons-mobile">
+              <a href="#facebook" className="social-icon facebook">f</a>
+              <a href="#instagram" className="social-icon instagram">📷</a>
+              <a href="#youtube" className="social-icon youtube">▶</a>
             </div>
           </div>
         </div>
@@ -89,14 +95,15 @@ const Footer = () => {
           {/* Social Media Icons */}
           <div className="social-icons">
             <a href="#facebook" className="social-icon facebook">f</a>
-            <a href="#twitter" className="social-icon twitter">🐦</a>
-            <a href="#pinterest" className="social-icon pinterest">P</a>
             <a href="#instagram" className="social-icon instagram">📷</a>
+            <a href="#youtube" className="social-icon youtube">▶</a>
           </div>
 
-          {/* Copyright */}
-          <div className="footer-copyright">
-            dragoeCommerce © {new Date().getFullYear()}. All Rights Reserved
+          {/* Help and About Us Links */}
+          <div className="footer-help-links">
+            <a href="#help" className="help-link">Help</a>
+            <span className="link-separator">|</span>
+            <a href="#about" className="help-link">About Us</a>
           </div>
 
           {/* Payment Methods */}
@@ -106,6 +113,11 @@ const Footer = () => {
             <span className="payment-logo">DISCOVER</span>
             <span className="payment-logo">Mastercard</span>
             <span className="payment-secure">🔒 Secure Payment</span>
+          </div>
+
+          {/* Copyright */}
+          <div className="footer-copyright">
+            dragoeCommerce © {new Date().getFullYear()}. All Rights Reserved
           </div>
         </div>
       </div>

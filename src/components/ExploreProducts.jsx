@@ -5,205 +5,145 @@ import './ExploreProducts.css'
 const ExploreProducts = () => {
   const navigate = useNavigate()
   const [activeCategory, setActiveCategory] = useState('All')
-  const [selectedProduct, setSelectedProduct] = useState('সবুজ আপেল')
+  const [selectedProduct, setSelectedProduct] = useState('iPhone 15 Pro')
 
-  const categories = ['All', 'Vegetable', 'Fruit', 'Meat & Fish', 'View All']
+  const categories = ['All', 'Smartphones', 'Laptops', 'Headphones', 'View All']
 
   const allProducts = [
-    // Fruits
+    // Smartphones
     {
       id: 1,
-      name: 'সবুজ আপেল',
-      price: 14.99,
-      originalPrice: 20.99,
+      name: 'iPhone 15 Pro',
+      price: 100000,
+      originalPrice: 120000,
       rating: 5,
-      badge: 'Sale 50%',
+      badge: 'Sale 17%',
       badgeColor: '#DC143C',
-      category: 'Fruit'
+      category: 'Smartphones'
     },
     {
       id: 2,
-      name: 'সুরজপুর আম',
-      price: 14.99,
+      name: 'Samsung Galaxy S24',
+      price: 95000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Fruit'
+      category: 'Smartphones'
     },
-    {
-      id: 13,
-      name: 'কলা',
-      price: 40.00,
-      originalPrice: null,
-      rating: 5,
-      badge: null,
-      badgeColor: null,
-      category: 'Fruit'
-    },
-    {
-      id: 14,
-      name: 'কমলা',
-      price: 60.00,
-      originalPrice: null,
-      rating: 5,
-      badge: null,
-      badgeColor: null,
-      category: 'Fruit'
-    },
-    {
-      id: 15,
-      name: 'পেয়ারা',
-      price: 50.00,
-      originalPrice: null,
-      rating: 5,
-      badge: null,
-      badgeColor: null,
-      category: 'Fruit'
-    },
-    {
-      id: 16,
-      name: 'লিচু',
-      price: 150.00,
-      originalPrice: null,
-      rating: 5,
-      badge: null,
-      badgeColor: null,
-      category: 'Fruit'
-    },
-    {
-      id: 17,
-      name: 'আঙ্গুর',
-      price: 180.00,
-      originalPrice: null,
-      rating: 5,
-      badge: null,
-      badgeColor: null,
-      category: 'Fruit'
-    },
-    {
-      id: 18,
-      name: 'জাম',
-      price: 120.00,
-      originalPrice: null,
-      rating: 5,
-      badge: null,
-      badgeColor: null,
-      category: 'Fruit'
-    },
-    // Vegetables
     {
       id: 3,
-      name: 'লাল টমেটো',
-      price: 14.99,
+      name: 'Xiaomi 14 Pro',
+      price: 65000,
       originalPrice: null,
-      rating: 5,
+      rating: 4,
       badge: null,
       badgeColor: null,
-      category: 'Vegetable'
+      category: 'Smartphones'
     },
     {
       id: 4,
-      name: 'তাজা ফুলকপি',
-      price: 14.99,
+      name: 'OnePlus 12',
+      price: 75000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Vegetable'
+      category: 'Smartphones'
     },
+    // Laptops
     {
       id: 5,
-      name: 'সবুজ লেটুস',
-      price: 14.99,
+      name: 'MacBook Pro M3',
+      price: 180000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Vegetable'
+      category: 'Laptops'
     },
     {
       id: 6,
-      name: 'বেগুন',
-      price: 14.99,
+      name: 'Dell XPS 15',
+      price: 140000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Vegetable'
+      category: 'Laptops'
     },
     {
       id: 7,
-      name: 'সবুজ মরিচ',
-      price: 14.99,
+      name: 'HP Spectre x360',
+      price: 120000,
       originalPrice: null,
-      rating: 5,
+      rating: 4,
       badge: null,
       badgeColor: null,
-      category: 'Vegetable'
+      category: 'Laptops'
     },
-    // Meat & Fish products
+    // Headphones
     {
       id: 8,
-      name: 'গরুর মাংস',
-      price: 450.00,
+      name: 'Sony WH-1000XM5',
+      price: 35000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Meat & Fish'
+      category: 'Headphones'
     },
     {
       id: 9,
-      name: 'মুরগির মাংস',
-      price: 180.00,
+      name: 'AirPods Pro 2',
+      price: 25000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Meat & Fish'
+      category: 'Headphones'
     },
     {
       id: 10,
-      name: 'ইলিশ মাছ',
-      price: 800.00,
+      name: 'Bose QuietComfort 45',
+      price: 32000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Meat & Fish'
+      category: 'Headphones'
     },
     {
       id: 11,
-      name: 'রুই মাছ',
-      price: 250.00,
+      name: 'JBL Tune 770NC',
+      price: 8000,
       originalPrice: null,
-      rating: 5,
+      rating: 4,
       badge: null,
       badgeColor: null,
-      category: 'Meat & Fish'
+      category: 'Headphones'
     },
     {
       id: 12,
-      name: 'চিংড়ি',
-      price: 350.00,
+      name: 'Apple Watch Series 9',
+      price: 45000,
       originalPrice: null,
       rating: 5,
       badge: null,
       badgeColor: null,
-      category: 'Meat & Fish'
+      category: 'Smart Watches'
     }
   ]
 
   // Filter products based on active category
   const products = activeCategory === 'All' 
     ? allProducts 
-    : activeCategory === 'Vegetable'
-    ? allProducts.filter(p => p.category === 'Vegetable')
-    : activeCategory === 'Fruit'
-    ? allProducts.filter(p => p.category === 'Fruit')
-    : activeCategory === 'Meat & Fish'
-    ? allProducts.filter(p => p.category === 'Meat & Fish')
+    : activeCategory === 'Smartphones'
+    ? allProducts.filter(p => p.category === 'Smartphones')
+    : activeCategory === 'Laptops'
+    ? allProducts.filter(p => p.category === 'Laptops')
+    : activeCategory === 'Headphones'
+    ? allProducts.filter(p => p.category === 'Headphones')
     : allProducts
 
   const renderStars = (rating) => {

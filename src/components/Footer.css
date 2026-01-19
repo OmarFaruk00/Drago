@@ -1,56 +1,12 @@
 .footer {
   width: 100%;
-  background: #1f2937;
+  background: linear-gradient(180deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
   color: white;
 }
 
-/* Top Section - Dark Gray with Logo */
-.footer-top {
-  background: #1f2937;
-  padding: 2rem 0;
-}
-
-.footer-top-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.footer-red-line {
-  width: 100%;
-  height: 2px;
-  background: #DC143C;
-}
-
-.footer-logo-section {
-  padding: 1rem 0;
-}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.cart-icon {
-  font-size: 1.5rem;
-}
-
-.footer-logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: white;
-  letter-spacing: 1px;
-}
-
-/* Middle Section - Dark Green with 5 Columns */
+/* Middle Section - Dark Gray with Columns */
 .footer-middle {
-  background: #065f46;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
   padding: 3rem 2rem;
 }
 
@@ -58,7 +14,7 @@
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   gap: 3rem;
 }
 
@@ -66,6 +22,26 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.footer-column-logo {
+  gap: 1.5rem;
+}
+
+.footer-logo-link {
+  display: inline-block;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.footer-logo-link:hover {
+  opacity: 0.8;
+}
+
+.footer-logo-img {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
 }
 
 .footer-heading {
@@ -77,7 +53,7 @@
 
 .footer-description {
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.6;
   margin: 0;
   max-width: 350px;
@@ -93,11 +69,17 @@
 .contact-link {
   color: white;
   text-decoration: underline;
-  text-decoration-color: #DC143C;
+  text-decoration-color: #FF1A0A;
   text-underline-offset: 3px;
   font-size: 0.95rem;
   transition: color 0.2s;
   width: fit-content;
+  display: inline-block;
+}
+
+.contact-or {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0.25rem;
 }
 
 .contact-link:hover {
@@ -160,7 +142,7 @@
 
 /* Bottom Section - Dark Green with Social, Copyright, Payment */
 .footer-bottom {
-  background: #065f46;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
   padding: 2rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -170,9 +152,10 @@
   margin: 0 auto;
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr auto auto auto;
   gap: 2rem;
   align-items: center;
+  justify-content: space-between;
 }
 
 .social-icons {
@@ -197,7 +180,47 @@
 }
 
 .social-icon.facebook {
-  background: #DC143C;
+  background: #1877F2;
+}
+
+.footer-help-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 0.95rem;
+  order: 2;
+}
+
+.help-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.help-link:hover {
+  color: #FF1A0A;
+}
+
+.link-separator {
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0.25rem;
+}
+
+.desktop-heading {
+  display: block;
+}
+
+.mobile-heading {
+  display: none;
+}
+
+.footer-logo-mobile {
+  display: none;
+}
+
+.social-icons-mobile {
+  display: none;
 }
 
 .social-icon.twitter {
@@ -211,8 +234,13 @@
 }
 
 .social-icon.instagram {
-  background: transparent;
-  border: 1px solid white;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  border: none;
+}
+
+.social-icon.youtube {
+  background: #FF0000;
+  border: none;
 }
 
 .social-icon:hover {
@@ -220,9 +248,10 @@
 }
 
 .footer-copyright {
-  text-align: center;
-  color: white;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
+  grid-column: 1;
 }
 
 .payment-logos {
@@ -231,6 +260,7 @@
   gap: 0.75rem;
   flex-wrap: wrap;
   justify-content: flex-end;
+  order: 4;
 }
 
 .payment-logo {
@@ -290,6 +320,7 @@
 
   .footer-middle {
     padding: 2rem 1.5rem;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   }
 
   .footer-middle-container {
@@ -297,22 +328,150 @@
     gap: 2rem;
   }
 
+  /* Mobile: Show About Drago first with logo and description */
+  .footer-column:first-child {
+    order: -1;
+  }
+
+  .desktop-heading {
+    display: none;
+  }
+
+  .mobile-heading {
+    display: block;
+  }
+
+  .footer-logo-mobile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer-logo-mobile-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+
+  .footer-logo-mobile-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    letter-spacing: 1px;
+  }
+
+  .instagram-grid {
+    display: none;
+  }
+
+  .social-icons-mobile {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .footer-description {
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+  }
+
+  /* Follow Us Section */
+  .footer-column:nth-child(6) {
+    order: 1;
+  }
+
+  .footer-column:nth-child(6) .mobile-heading {
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+
+  /* Contact Us Section */
+  .footer-column:first-child .footer-contact {
+    margin-top: 1.5rem;
+  }
+
+  .footer-column:first-child .footer-contact::before {
+    content: "Contact Us";
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .contact-link {
+    color: #1f2937;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-link::before {
+    content: "📞";
+    font-size: 1.25rem;
+  }
+
+  .contact-link[href^="mailto"]::before {
+    content: "✉️";
+  }
+
+  .contact-or {
+    display: none;
+  }
+
+  /* Hide other columns on mobile */
+  .footer-column:not(:first-child):not(:nth-child(6)) {
+    display: none;
+  }
+
   .footer-bottom {
     padding: 1.5rem 0;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
   }
 
   .footer-bottom-container {
     padding: 0 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .social-icons {
-    flex-wrap: wrap;
+  .footer-help-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    order: 1;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 0;
+  }
+
+  .help-link {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .help-link:hover {
+    opacity: 0.8;
+  }
+
+  .link-separator {
+    color: white;
   }
 
   .payment-logos {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    order: 2;
   }
 
   .payment-logo,
@@ -322,12 +481,18 @@
     justify-content: center;
   }
 
+  .footer-copyright {
+    font-size: 0.75rem;
+    order: 3;
+    color: white;
+  }
+
   .instagram-grid {
     max-width: 200px;
     gap: 0.25rem;
   }
 
-  .footer-copyright {
-    font-size: 0.75rem;
+  .footer-heading {
+    color: #1f2937;
   }
 }

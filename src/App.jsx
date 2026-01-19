@@ -11,6 +11,8 @@ import ReviewSection from './components/ReviewSection'
 import Footer from './components/Footer'
 import Shop from './pages/Shop'
 import ProductDetails from './pages/ProductDetails'
+import SignIn from './pages/SignIn'
+import Blog from './pages/Blog'
 import './App.css'
 
 function Home() {
@@ -33,9 +35,11 @@ function App() {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/blog" element={<Blog />} />
         </Routes>
         <Footer />
       </div>

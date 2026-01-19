@@ -36,6 +36,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Round favicon support */
+link[rel="icon"],
+link[rel="shortcut icon"] {
+  border-radius: 50%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

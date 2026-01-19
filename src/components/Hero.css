@@ -1,11 +1,16 @@
 .hero {
-  margin-top: 130px;
+  margin-top: 175px;
   padding: 3rem 2rem;
   background-color: #f5f5dc;
-  min-height: calc(100vh - 130px);
+  min-height: calc(100vh - 175px);
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: margin-top 0.3s ease;
+}
+
+.secondary-nav.nav-sticky ~ * {
+  margin-top: 60px;
 }
 
 .hero-container {

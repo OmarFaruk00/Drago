@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
 import './ProductDetails.css'
 
 const ProductDetails = () => {
@@ -50,7 +48,6 @@ const ProductDetails = () => {
 
   return (
     <div className="product-details-page">
-      <Navbar />
       <div className="product-details-content">
         {/* Breadcrumb */}
         <div className="breadcrumb">
@@ -210,7 +207,6 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

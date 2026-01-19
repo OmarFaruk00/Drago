@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
 import './Shop.css'
 
 const Shop = () => {
@@ -11,23 +10,26 @@ const Shop = () => {
   const [priceRange, setPriceRange] = useState([0, 1000])
   const [selectedRating, setSelectedRating] = useState(null)
 
+  // Update breadcrumb in Navbar when category changes
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory)
+    window.dispatchEvent(new Event('categoryChanged'))
+  }, [selectedCategory])
+
   const categories = [
     { name: 'All Categories', count: 120 },
-    { name: 'Fresh Fruit', count: 22 },
-    { name: 'Fresh Vegetables', count: 20 },
-    { name: 'Meat & Fish', count: 14 },
-    { name: 'Cooking', count: 15 },
-    { name: 'Snacks', count: 10 },
-    { name: 'Non-Veg', count: 14 },
-    { name: 'Bakery & Milk', count: 12 },
-    { name: 'Beverages', count: 10 },
-    { name: 'Grocery', count: 10 },
-    { name: 'Beauty & Health', count: 8 },
-    { name: 'Bread & Bakery', count: 12 },
-    { name: 'Baking Needs', count: 7 },
-    { name: 'Diabetic Food', count: 5 },
-    { name: 'Dish Detergents', count: 6 },
-    { name: 'Oil', count: 9 }
+    { name: 'Smartphones', count: 25 },
+    { name: 'Laptops', count: 18 },
+    { name: 'Headphones', count: 22 },
+    { name: 'Smart Watches', count: 15 },
+    { name: 'Tablets', count: 12 },
+    { name: 'Cameras', count: 10 },
+    { name: 'Speakers', count: 14 },
+    { name: 'Gaming', count: 16 },
+    { name: 'Accessories', count: 20 },
+    { name: 'TV & Audio', count: 12 },
+    { name: 'Smart Home', count: 8 },
+    { name: 'Wearables', count: 10 }
   ]
 
   const ratings = [
@@ -38,69 +40,83 @@ const Shop = () => {
     { stars: 1, percent: 1.8 }
   ]
 
-  const popularTags = ['Healthy', 'Vegetables', 'Eat Fresh', 'Organic', 'Fresh', 'Fruits', 'Snacks', 'Orange', 'Freshfood', 'Food']
+  const popularTags = ['Smart', 'Premium', 'Wireless', 'Gaming', 'Latest', 'Best Seller', 'New Arrival', 'Sale', 'Gadgets', 'Tech']
 
   const saleProducts = [
-    { name: 'লাল ক্যাপসিকাম', originalPrice: 10.00, salePrice: 8.00, rating: 5 },
-    { name: 'চীনা বাধাকপি', originalPrice: 10.00, salePrice: 8.00, rating: 5 },
-    { name: 'সবুজ ক্যাপসিকাম', originalPrice: 10.00, salePrice: 8.00, rating: 5 }
+    { name: 'iPhone 15 Pro', originalPrice: 120000.00, salePrice: 100000.00, rating: 5 },
+    { name: 'MacBook Pro M3', originalPrice: 180000.00, salePrice: 150000.00, rating: 5 },
+    { name: 'AirPods Pro', originalPrice: 25000.00, salePrice: 20000.00, rating: 5 }
   ]
 
   const allProducts = [
-    // Vegetables
-    { id: 1, name: 'বড় আলু', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 2, name: 'চীনা বাধাকপি', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 3, name: 'ভুট্টা', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 4, name: 'বেগুন', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 5, name: 'তাজা ফুলকপি', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 7, name: 'সবুজ ক্যাপসিকাম', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 8, name: 'সবুজ মরিচ', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 9, name: 'ছোট শসা', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 10, name: 'সবুজ লেটুস', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 11, name: 'ঢেঁড়শ', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 12, name: 'লাল ক্যাপসিকাম', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 13, name: 'লাল মরিচ', price: 24.99, category: 'Fresh Vegetables' },
-    { id: 14, name: 'লাল টমেটো', price: 24.99, category: 'Fresh Vegetables' },
+    // Smartphones
+    { id: 1, name: 'iPhone 15 Pro', price: 120000, category: 'Smartphones' },
+    { id: 2, name: 'Samsung Galaxy S24', price: 95000, category: 'Smartphones' },
+    { id: 3, name: 'Xiaomi 14 Pro', price: 65000, category: 'Smartphones' },
+    { id: 4, name: 'OnePlus 12', price: 75000, category: 'Smartphones' },
+    { id: 5, name: 'Google Pixel 8', price: 85000, category: 'Smartphones' },
+    { id: 6, name: 'OPPO Find X7', price: 70000, category: 'Smartphones' },
+    { id: 7, name: 'Vivo X100', price: 68000, category: 'Smartphones' },
+    { id: 8, name: 'Realme GT 6', price: 45000, category: 'Smartphones' },
     
-    // Fruits
-    { id: 6, name: 'মিষ্টি আপেল', price: 24.99, category: 'Fresh Fruit' },
-    { id: 15, name: 'মিষ্টি আম', price: 24.99, category: 'Fresh Fruit' },
-    { id: 30, name: 'কলা', price: 40.00, category: 'Fresh Fruit' },
-    { id: 31, name: 'কমলা', price: 60.00, category: 'Fresh Fruit' },
-    { id: 32, name: 'পেয়ারা', price: 50.00, category: 'Fresh Fruit' },
-    { id: 33, name: 'লিচু', price: 150.00, category: 'Fresh Fruit' },
-    { id: 34, name: 'আঙ্গুর', price: 180.00, category: 'Fresh Fruit' },
-    { id: 35, name: 'জাম', price: 120.00, category: 'Fresh Fruit' },
-    { id: 36, name: 'কাঁঠাল', price: 80.00, category: 'Fresh Fruit' },
-    { id: 37, name: 'নারিকেল', price: 35.00, category: 'Fresh Fruit' },
-    { id: 38, name: 'তরমুজ', price: 45.00, category: 'Fresh Fruit' },
-    { id: 39, name: 'পেঁপে', price: 30.00, category: 'Fresh Fruit' },
-    { id: 40, name: 'বাঙ্গি', price: 40.00, category: 'Fresh Fruit' },
-    { id: 41, name: 'স্ট্রবেরি', price: 250.00, category: 'Fresh Fruit' },
-    { id: 42, name: 'আনারস', price: 70.00, category: 'Fresh Fruit' },
-    { id: 43, name: 'বরই', price: 55.00, category: 'Fresh Fruit' },
-    { id: 44, name: 'জামরুল', price: 90.00, category: 'Fresh Fruit' },
-    { id: 45, name: 'কামরাঙা', price: 65.00, category: 'Fresh Fruit' },
-    { id: 46, name: 'ডালিম', price: 100.00, category: 'Fresh Fruit' },
-    { id: 47, name: 'পাকা খেজুর', price: 200.00, category: 'Fresh Fruit' },
-    { id: 48, name: 'শরিফা', price: 110.00, category: 'Fresh Fruit' },
-    { id: 49, name: 'ড্রাগন ফল', price: 160.00, category: 'Fresh Fruit' },
+    // Laptops
+    { id: 9, name: 'MacBook Pro M3', price: 180000, category: 'Laptops' },
+    { id: 10, name: 'Dell XPS 15', price: 140000, category: 'Laptops' },
+    { id: 11, name: 'HP Spectre x360', price: 120000, category: 'Laptops' },
+    { id: 12, name: 'Lenovo ThinkPad X1', price: 130000, category: 'Laptops' },
+    { id: 13, name: 'ASUS ROG Strix', price: 110000, category: 'Laptops' },
+    { id: 14, name: 'MSI Gaming Laptop', price: 95000, category: 'Laptops' },
     
-    // Meat & Fish
-    { id: 16, name: 'গরুর মাংস', price: 450.00, category: 'Meat & Fish' },
-    { id: 17, name: 'খাসির মাংস', price: 500.00, category: 'Meat & Fish' },
-    { id: 18, name: 'মুরগির মাংস', price: 180.00, category: 'Meat & Fish' },
-    { id: 19, name: 'ইলিশ মাছ', price: 800.00, category: 'Meat & Fish' },
-    { id: 20, name: 'রুই মাছ', price: 250.00, category: 'Meat & Fish' },
-    { id: 21, name: 'কাতলা মাছ', price: 220.00, category: 'Meat & Fish' },
-    { id: 22, name: 'চিংড়ি', price: 350.00, category: 'Meat & Fish' },
-    { id: 23, name: 'মাগুর মাছ', price: 300.00, category: 'Meat & Fish' },
-    { id: 24, name: 'টেংরা মাছ', price: 280.00, category: 'Meat & Fish' },
-    { id: 25, name: 'পুটি মাছ', price: 200.00, category: 'Meat & Fish' },
-    { id: 26, name: 'তেলাপিয়া মাছ', price: 150.00, category: 'Meat & Fish' },
-    { id: 27, name: 'কই মাছ', price: 400.00, category: 'Meat & Fish' },
-    { id: 28, name: 'শিং মাছ', price: 320.00, category: 'Meat & Fish' },
-    { id: 29, name: 'বোয়াল মাছ', price: 380.00, category: 'Meat & Fish' }
+    // Headphones
+    { id: 15, name: 'Sony WH-1000XM5', price: 35000, category: 'Headphones' },
+    { id: 16, name: 'Bose QuietComfort 45', price: 32000, category: 'Headphones' },
+    { id: 17, name: 'Apple AirPods Pro 2', price: 25000, category: 'Headphones' },
+    { id: 18, name: 'JBL Tune 770NC', price: 8000, category: 'Headphones' },
+    { id: 19, name: 'Sennheiser HD 450BT', price: 12000, category: 'Headphones' },
+    
+    // Smart Watches
+    { id: 20, name: 'Apple Watch Series 9', price: 45000, category: 'Smart Watches' },
+    { id: 21, name: 'Samsung Galaxy Watch 6', price: 28000, category: 'Smart Watches' },
+    { id: 22, name: 'Garmin Forerunner 265', price: 40000, category: 'Smart Watches' },
+    { id: 23, name: 'Fitbit Versa 4', price: 20000, category: 'Smart Watches' },
+    
+    // Tablets
+    { id: 24, name: 'iPad Pro 12.9"', price: 110000, category: 'Tablets' },
+    { id: 25, name: 'Samsung Galaxy Tab S9', price: 75000, category: 'Tablets' },
+    { id: 26, name: 'Microsoft Surface Pro 9', price: 95000, category: 'Tablets' },
+    
+    // Cameras
+    { id: 27, name: 'Canon EOS R6 Mark II', price: 280000, category: 'Cameras' },
+    { id: 28, name: 'Sony Alpha 7 IV', price: 250000, category: 'Cameras' },
+    { id: 29, name: 'Nikon Z6 III', price: 240000, category: 'Cameras' },
+    
+    // Speakers
+    { id: 30, name: 'Sonos Era 300', price: 55000, category: 'Speakers' },
+    { id: 31, name: 'JBL Flip 6', price: 12000, category: 'Speakers' },
+    { id: 32, name: 'Bose SoundLink Flex', price: 18000, category: 'Speakers' },
+    
+    // Gaming
+    { id: 33, name: 'PlayStation 5', price: 55000, category: 'Gaming' },
+    { id: 34, name: 'Xbox Series X', price: 50000, category: 'Gaming' },
+    { id: 35, name: 'Nintendo Switch OLED', price: 35000, category: 'Gaming' },
+    
+    // Accessories
+    { id: 36, name: 'Wireless Charger', price: 2500, category: 'Accessories' },
+    { id: 37, name: 'USB-C Hub', price: 3500, category: 'Accessories' },
+    { id: 38, name: 'Phone Case', price: 1500, category: 'Accessories' },
+    { id: 39, name: 'Screen Protector', price: 800, category: 'Accessories' },
+    
+    // TV & Audio
+    { id: 40, name: 'Samsung 55" QLED TV', price: 120000, category: 'TV & Audio' },
+    { id: 41, name: 'LG OLED 65"', price: 180000, category: 'TV & Audio' },
+    
+    // Smart Home
+    { id: 42, name: 'Amazon Echo Dot', price: 5000, category: 'Smart Home' },
+    { id: 43, name: 'Google Nest Hub', price: 8000, category: 'Smart Home' },
+    
+    // Wearables
+    { id: 44, name: 'Fitbit Charge 6', price: 12000, category: 'Wearables' },
+    { id: 45, name: 'Oura Ring Gen 3', price: 35000, category: 'Wearables' }
   ]
 
   // Filter products based on selected category
@@ -118,7 +134,6 @@ const Shop = () => {
 
   return (
     <div className="shop-page">
-      <Navbar />
       <div className="shop-content">
         {/* Header Section */}
         <div className="shop-header">
@@ -312,7 +327,6 @@ const Shop = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

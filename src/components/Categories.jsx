@@ -3,21 +3,21 @@ import { Link } from 'react-router-dom'
 import './Categories.css'
 
 const Categories = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Fresh Vegetables')
+  const [selectedCategory, setSelectedCategory] = useState('Smartphones')
 
   const categories = [
-    { id: 1, name: 'Fresh Fruit', icon: '🍎' },
-    { id: 2, name: 'Fresh Vegetables', icon: '🥬' },
-    { id: 3, name: 'Meat & Fish', icon: '🥩' },
-    { id: 4, name: 'Snacks', icon: '🍿' },
-    { id: 5, name: 'Beverages', icon: '🥤' },
-    { id: 6, name: 'Beauty & Health', icon: '💄' },
-    { id: 7, name: 'Bread & Bakery', icon: '🥖' },
-    { id: 8, name: 'Baking Needs', icon: '🧁' },
-    { id: 9, name: 'Cooking', icon: '🍳' },
-    { id: 10, name: 'Diabetic Food', icon: '🍬' },
-    { id: 11, name: 'Dish Detergents', icon: '🧴' },
-    { id: 12, name: 'Oil', icon: '🫒' },
+    { id: 1, name: 'Smartphones', icon: '📱' },
+    { id: 2, name: 'Laptops', icon: '💻' },
+    { id: 3, name: 'Headphones', icon: '🎧' },
+    { id: 4, name: 'Smart Watches', icon: '⌚' },
+    { id: 5, name: 'Tablets', icon: '📱' },
+    { id: 6, name: 'Cameras', icon: '📷' },
+    { id: 7, name: 'Speakers', icon: '🔊' },
+    { id: 8, name: 'Gaming', icon: '🎮' },
+    { id: 9, name: 'Accessories', icon: '🔌' },
+    { id: 10, name: 'TV & Audio', icon: '📺' },
+    { id: 11, name: 'Smart Home', icon: '🏠' },
+    { id: 12, name: 'Wearables', icon: '⌚' },
   ]
 
   return (

@@ -10,6 +10,7 @@ const FlashSale = () => {
     minutes: 30,
     seconds: 45
   })
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -42,17 +43,40 @@ const FlashSale = () => {
     return () => clearInterval(timer)
   }, [])
 
+  const allProducts = [
+    { id: 1, name: 'iPhone 15 Pro', price: 120000, salePrice: 100000, discount: 17, rating: 4.8, hasGift: false },
+    { id: 2, name: 'AirPods Pro 2', price: 25000, salePrice: 20000, discount: 20, rating: 4.7, hasGift: false },
+    { id: 3, name: 'Samsung Galaxy S24', price: 95000, salePrice: 80000, discount: 16, rating: 4.6, hasGift: false },
+    { id: 4, name: 'Sony WH-1000XM5', price: 35000, salePrice: 28000, discount: 20, rating: 4.9, hasGift: false },
+    { id: 5, name: 'MacBook Pro M3', price: 180000, salePrice: 150000, discount: 17, rating: 4.8, hasGift: true },
+    { id: 6, name: 'iPad Pro 12.9"', price: 110000, salePrice: 95000, discount: 14, rating: 4.7, hasGift: false },
+    { id: 7, name: 'Apple Watch Series 9', price: 45000, salePrice: 38000, discount: 16, rating: 4.8, hasGift: false },
+    { id: 8, name: 'PlayStation 5', price: 55000, salePrice: 48000, discount: 13, rating: 4.9, hasGift: false },
+  ]
+
+  // Get 3 products starting from currentIndex
+  const getVisibleProducts = () => {
+    const visible = []
+    for (let i = 0; i < 3; i++) {
+      const index = (currentIndex + i) % allProducts.length
+      visible.push(allProducts[index])
+    }
+    return visible
+  }
+
+  const products = getVisibleProducts()
+
+  useEffect(() => {
+    const productTimer = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % allProducts.length)
+    }, 3000)
+
+    return () => clearInterval(productTimer)
+  }, [])
+
   const formatTime = (value) => {
     return String(value).padStart(2, '0')
   }
-
-  const products = [
-    { id: 1, name: 'সবুজ আপেল', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 2, name: 'তাজা টমেটো', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 3, name: 'সবুজ মরিচ', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 4, name: 'বেগুন', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: false },
-    { id: 5, name: 'ফুলকপি', price: 20.00, salePrice: 16.00, discount: 20, rating: 4.5, hasGift: true },
-  ]
 
   return (
     <section className="flash-sale">
@@ -80,9 +104,9 @@ const FlashSale = () => {
 
       <div className="flash-sale-content">
         <div className="products-container">
-          {products.map((product) => (
+          {products.map((product, idx) => (
             <div 
-              key={product.id} 
+              key={`${product.id}-${currentIndex}-${idx}`}
               className="product-card"
               onClick={() => navigate(`/product/${product.id}`)}
               style={{ cursor: 'pointer' }}
