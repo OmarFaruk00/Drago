@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import logoImage from '../images/logo.jpg'
 import './Footer.css'
 
 const Footer = () => {
@@ -14,7 +15,7 @@ const Footer = () => {
           {/* About Drago - Left Column with Logo */}
           <div className="footer-column footer-column-logo">
             <Link to="/" className="footer-logo-link">
-              <img src="/logo.png" alt="Drago Logo" className="footer-logo-img" />
+              <img src={logoImage} alt="Drago Logo" className="footer-logo-img" />
             </Link>
             <p className="footer-description">
               Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.

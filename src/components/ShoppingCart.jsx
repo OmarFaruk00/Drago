@@ -33,7 +33,7 @@ const ShoppingCart = ({ isOpen, onClose, cartItems, onRemoveItem }) => {
                 <div className="cart-item-details">
                   <h4 className="cart-item-name">{item.name}</h4>
                   <div className="cart-item-price-quantity">
-                    <span>{item.quantity} kg × ${item.price.toFixed(2)}</span>
+                    <span>{item.quantity} kg × ৳{item.price.toFixed(2)}</span>
                   </div>
                 </div>
                 <button 
@@ -51,7 +51,7 @@ const ShoppingCart = ({ isOpen, onClose, cartItems, onRemoveItem }) => {
           <>
             <div className="cart-summary">
               <span className="cart-summary-text">{totalItems} Product</span>
-              <span className="cart-total">${totalPrice.toFixed(2)}</span>
+              <span className="cart-total">৳{totalPrice.toFixed(2)}</span>
             </div>
 
             <div className="cart-actions">

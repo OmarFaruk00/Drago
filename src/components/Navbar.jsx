@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import SignInModal from './SignInModal'
 import CreateAccountModal from './CreateAccountModal'
 import ShoppingCart from './ShoppingCart'
+import logoImage from '../images/logo.jpg'
 import './Navbar.css'
 
 const Navbar = () => {
@@ -91,7 +92,7 @@ const Navbar = () => {
         <div className="main-header-container">
           <div className="header-left">
             <Link to="/" className="logo-container">
-              <img src="/logo.png" alt="Drago Logo" className="brand-logo-img" />
+              <img src={logoImage} alt="Drago Logo" className="brand-logo-img" />
             </Link>
           </div>
           
@@ -130,7 +131,7 @@ const Navbar = () => {
                 </svg>
                 <span className="cart-badge">{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
               </div>
-              <div className="cart-amount">${cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</div>
+              <div className="cart-amount">৳{cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</div>
             </div>
           </div>
         </div>

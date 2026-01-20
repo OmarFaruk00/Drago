@@ -64,11 +64,14 @@
 /* Main Header - Red Bar */
 .main-header {
   background-color: #FF1A0A;
-  padding: 0.5rem 0;
+  padding: 1rem 0;
   color: white;
   transition: all 0.3s ease;
   position: relative;
   z-index: 1001;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
 }
 
 /* Removed .main-header.scrolled - no size changes on scroll */
@@ -81,18 +84,20 @@
 }
 
 .main-header-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .header-left {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .logo-container {
@@ -108,10 +113,12 @@
 }
 
 .brand-logo-img {
-  height: 70px;
   width: auto;
+  height: 60px;
+  max-width: 300px;
   object-fit: contain;
   transition: all 0.3s ease;
+  display: block;
 }
 
 /* Removed size changes - logo stays same size */
@@ -119,6 +126,7 @@
 .header-center {
   flex: 1;
   max-width: 500px;
+  min-width: 300px;
 }
 
 .search-container {
@@ -545,7 +553,9 @@
   }
 
   .brand-logo-img {
-    height: 65px;
+    width: auto;
+    height: 60px;
+    max-width: 300px;
   }
 
   .header-center {
@@ -588,7 +598,9 @@
   }
 
   .brand-logo-img {
-    height: 55px;
+    width: auto;
+    height: 60px;
+    max-width: 300px;
   }
 
   .user-icon {
@@ -623,7 +635,9 @@
   }
 
   .brand-logo-img {
-    height: 55px;
+    width: auto;
+    height: 60px;
+    max-width: 300px;
   }
 
   .header-center {
@@ -698,7 +712,9 @@
   }
 
   .brand-logo-img {
-    height: 50px;
+    width: auto;
+    height: 60px;
+    max-width: 300px;
   }
 
   .search-container {
