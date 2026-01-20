@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SignInModal from './SignInModal'
 import CreateAccountModal from './CreateAccountModal'
+import ShoppingCart from './ShoppingCart'
 import './Navbar.css'
 
 const Navbar = () => {
@@ -10,6 +11,18 @@ const Navbar = () => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
   const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [cartItems, setCartItems] = useState([
+    { name: 'Fresh Indian Orange', quantity: 1, price: 12.00 },
+    { name: 'Green Apple', quantity: 1, price: 14.00 }
+  ])
+  
+  // Hide navbar on SignIn/SignUp pages for mobile
+  const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup' || location.pathname === '/register'
+  
+  const handleRemoveItem = (index) => {
+    setCartItems(prev => prev.filter((_, i) => i !== index))
+  }
   
   // Categories list
   const categories = [
@@ -60,7 +73,7 @@ const Navbar = () => {
   // No scroll effects needed - nav1 stays sticky with fixed size
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isAuthPage ? 'hide-on-mobile' : ''}`}>
       {/* Top Bar - Always Fixed */}
       <div className="top-bar">
         <div className="top-bar-container">
@@ -85,7 +98,10 @@ const Navbar = () => {
           <div className="header-center">
             <div className="search-container">
               <div className="search-input-wrapper">
-                <span className="search-icon">🔍</span>
+                <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="11" cy="11" r="8" stroke="black" strokeWidth="2" fill="none"/>
+                  <path d="m21 21-4.35-4.35" stroke="black" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
                 <input 
                   type="text" 
                   placeholder="Search Products" 
@@ -105,12 +121,16 @@ const Navbar = () => {
               </svg>
             </div>
             <div className="header-separator"></div>
-            <div className="cart-info">
+            <div className="cart-info" onClick={() => setIsCartOpen(true)}>
               <div className="cart-icon-badge">
-                <span className="cart-icon-symbol">🛒</span>
-                <span className="cart-badge">2</span>
+                <svg className="cart-icon-symbol" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="white" strokeWidth="2" fill="none"/>
+                  <line x1="3" y1="6" x2="21" y2="6" stroke="white" strokeWidth="2"/>
+                  <path d="M16 10a4 4 0 0 1-8 0" stroke="white" strokeWidth="2" fill="none"/>
+                </svg>
+                <span className="cart-badge">{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
               </div>
-              <div className="cart-amount">৳57.00</div>
+              <div className="cart-amount">${cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</div>
             </div>
           </div>
         </div>
@@ -217,6 +237,20 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      {location.pathname === '/dashboard' && (
+        <div className="breadcrumb-nav">
+          <div className="breadcrumb-container">
+            <Link to="/" className="breadcrumb-item" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <span className="breadcrumb-icon">🏠</span>
+              <span>Home</span>
+            </Link>
+            <span className="breadcrumb-separator">/</span>
+            <span className="breadcrumb-item">Account</span>
+            <span className="breadcrumb-separator">/</span>
+            <span className="breadcrumb-item active">Dashboard</span>
+          </div>
+        </div>
+      )}
       
       {/* Sign In Modal */}
       <SignInModal 
@@ -230,6 +264,14 @@ const Navbar = () => {
         isOpen={isCreateAccountModalOpen} 
         onClose={() => setIsCreateAccountModalOpen(false)}
         onSwitchToLogin={() => setIsSignInModalOpen(true)}
+      />
+
+      {/* Shopping Cart Sidebar */}
+      <ShoppingCart
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cartItems={cartItems}
+        onRemoveItem={handleRemoveItem}
       />
     </nav>
   )

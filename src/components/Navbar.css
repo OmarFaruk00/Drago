@@ -1,3 +1,10 @@
+/* Hide navbar on auth pages for mobile */
+@media (max-width: 767px) {
+  .navbar.hide-on-mobile {
+    display: none;
+  }
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -118,6 +125,9 @@
   display: flex;
   width: 100%;
   gap: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .search-input-wrapper {
@@ -125,57 +135,57 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px 0 0 4px;
-  border-right: none;
+  background: #FF1A0A;
+  border: none;
+  border-radius: 0;
+  border-right: 1px solid #d1d5db;
 }
 
 .search-icon {
   position: absolute;
   left: 1rem;
-  font-size: 1.1rem;
-  color: #6b7280;
+  width: 20px;
+  height: 20px;
   z-index: 1;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-input {
   flex: 1;
-  padding: 0.625rem 1rem 0.625rem 3rem;
+  padding: 0.75rem 1rem 0.75rem 3rem;
   border: none;
   background: transparent;
-  border-radius: 4px 0 0 4px;
+  border-radius: 0;
   font-size: 0.9rem;
   outline: none;
-  color: #1f2937;
+  color: white;
   transition: all 0.3s ease;
 }
 
-/* Removed size changes - search input stays same size */
-
 .search-input::placeholder {
-  color: #9ca3af;
+  color: white;
+  opacity: 1;
 }
 
 .search-button {
-  padding: 0.625rem 1.25rem;
-  background-color: #000;
+  padding: 0.75rem 1.5rem;
+  background-color: #2d2d2d;
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0;
-  font-weight: 700;
+  border-radius: 0;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.875rem;
-  text-transform: uppercase;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
   white-space: nowrap;
+  border-left: none;
 }
 
-/* Removed size changes - search button stays same size */
-
 .search-button:hover {
-  background-color: #333;
+  background-color: #1a1a1a;
 }
 
 .header-right {
@@ -222,6 +232,12 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.cart-info:hover {
+  opacity: 0.8;
 }
 
 .cart-icon-badge {
@@ -232,32 +248,37 @@
 }
 
 .cart-icon-symbol {
-  font-size: 1.5rem;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-  color: white;
-  filter: brightness(0) invert(1);
-  display: inline-block;
+  display: block;
   transition: all 0.3s ease;
+}
+
+.cart-icon-symbol:hover {
+  opacity: 0.8;
 }
 
 /* Removed size changes - cart icon stays same size */
 
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #22c55e;
+  top: -6px;
+  right: -6px;
+  background-color: #1a1a1a;
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 0;
   border-radius: 50%;
-  min-width: 20px;
-  height: 20px;
+  min-width: 18px;
+  height: 18px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1.5px solid white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .cart-amount {

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import ProductPopup from './ProductPopup'
 import './TopProducts.css'
 
 const TopProducts = () => {
-  const navigate = useNavigate()
-  const [selectedProduct, setSelectedProduct] = useState('iPhone 15 Pro')
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [isPopupOpen, setIsPopupOpen] = useState(false)
 
   const products = [
     { 
@@ -81,23 +82,33 @@ const TopProducts = () => {
     },
     { 
       id: 9, 
-      name: 'সবুজ ক্যাপসিকাম', 
-      price: 8.00, 
-      originalPrice: 20.00, 
+      name: 'Nintendo Switch OLED', 
+      price: 40000, 
+      originalPrice: null, 
       rating: 5, 
-      badge: 'Sale 50%',
-      badgeColor: '#DC143C'
+      badge: 'New',
+      badgeColor: '#10b981'
     },
     { 
       id: 10, 
-      name: 'সবুজ মরিচ', 
-      price: 34.00, 
-      originalPrice: null, 
+      name: 'Xbox Series X', 
+      price: 60000, 
+      originalPrice: 65000, 
       rating: 5, 
-      badge: null,
-      badgeColor: null
+      badge: 'Sale 8%',
+      badgeColor: '#DC143C'
     },
   ]
+
+  const handleCardClick = (product) => {
+    setSelectedProduct(product)
+    setIsPopupOpen(true)
+  }
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false)
+    setSelectedProduct(null)
+  }
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -117,8 +128,8 @@ const TopProducts = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className={`product-card ${selectedProduct === product.name ? 'selected' : ''}`}
-              onClick={() => navigate(`/product/${product.id}`)}
+              className="product-card"
+              onClick={() => handleCardClick(product)}
               style={{ cursor: 'pointer' }}
             >
               {product.badge && (
@@ -146,13 +157,26 @@ const TopProducts = () => {
                   <span className="current-price">৳{product.price.toFixed(2)}</span>
                 </div>
               </div>
-              <button className="add-to-cart-btn">
+              <button 
+                className="add-to-cart-btn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  // Handle add to cart
+                }}
+              >
                 <span>🛍️</span>
               </button>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Product Popup */}
+      <ProductPopup 
+        product={selectedProduct}
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+      />
     </section>
   )
 }

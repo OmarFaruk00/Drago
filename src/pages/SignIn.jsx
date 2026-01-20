@@ -10,19 +10,22 @@ const SignIn = () => {
 
   return (
     <div className="signin-page">
-      {/* Breadcrumbs */}
-      <div className="breadcrumbs">
-        <Link to="/" className="breadcrumb-link">Home</Link>
-        <span className="breadcrumb-separator"> &gt; </span>
-        <span className="breadcrumb-link">Account</span>
-        <span className="breadcrumb-separator"> &gt; </span>
-        <span className="breadcrumb-active">Sign In</span>
+      {/* Header Section */}
+      <div className="signin-header">
+        <div className="signin-header-content">
+          <h1 className="signin-main-title">Sign In</h1>
+          <p className="signin-tagline">Enjoy worry-free shopping with fast, secure delivery.</p>
+        </div>
+        <div className="signin-header-shapes">
+          <div className="shape-red"></div>
+          <div className="shape-gray"></div>
+        </div>
       </div>
 
-      {/* Sign In Modal */}
+      {/* Sign In Form */}
       <div className="signin-container">
-        <div className="signin-modal">
-          <h2 className="signin-title">Sign In</h2>
+        <div className="signin-form-wrapper">
+          <p className="form-instruction">Give Your Email or Phone Number</p>
           
           <form className="signin-form">
             {/* Email or Phone Input */}
@@ -61,6 +64,7 @@ const SignIn = () => {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
+                  defaultChecked
                 />
                 <span>Remember me</span>
               </label>
@@ -71,17 +75,17 @@ const SignIn = () => {
 
             {/* Login Button */}
             <button type="submit" className="login-button">
-              Login
+              Log In <span>→</span>
             </button>
-
-            {/* Register Link */}
-            <div className="register-link">
-              <span>Don't have account? </span>
-              <Link to="/register" className="register-link-text">
-                Register
-              </Link>
-            </div>
           </form>
+        </div>
+
+        {/* Footer Link */}
+        <div className="signin-footer">
+          <span>Don't Have an Account? </span>
+          <Link to="/signup" className="signup-link">
+            Sign Up
+          </Link>
         </div>
       </div>
     </div>

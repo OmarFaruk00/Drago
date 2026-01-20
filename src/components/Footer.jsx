@@ -1,10 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import './Footer.css'
 
 const Footer = () => {
+  const location = useLocation()
+  const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup' || location.pathname === '/register'
+  
   return (
-    <footer className="footer">
+    <footer className={`footer ${isAuthPage ? 'hide-on-mobile' : ''}`}>
       {/* Middle Section - Dark Gray with Columns */}
       <div className="footer-middle">
         <div className="footer-middle-container">

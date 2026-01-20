@@ -133,8 +133,13 @@ const Blog = () => {
             <aside className="blog-sidebar">
               {/* Filter Button */}
               <button className="filter-button">
-                <span className="filter-icon">🔍</span>
                 <span>Filter</span>
+                <svg className="filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="4" y1="8" x2="16" y2="8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                  <circle cx="18" cy="8" r="2" fill="white"/>
+                  <line x1="4" y1="16" x2="16" y2="16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                  <circle cx="18" cy="16" r="2" fill="white"/>
+                </svg>
               </button>
 
               {/* Search */}

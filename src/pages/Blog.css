@@ -81,19 +81,24 @@
   background-color: #FF1A0A;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  width: 100%;
 }
 
 .filter-button:hover {
   background-color: #e0160a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 26, 10, 0.3);
 }
 
 .filter-icon {
-  font-size: 1.125rem;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .sidebar-section {

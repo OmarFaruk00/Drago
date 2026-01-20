@@ -1,4 +1,4 @@
-.signin-page {
+.signup-page {
   min-height: 100vh;
   background: #f3f4f6;
   margin-top: 0;
@@ -7,7 +7,7 @@
 }
 
 /* Header Section */
-.signin-header {
+.signup-header {
   position: relative;
   padding: 3rem 1.5rem 2rem;
   background: #f3f4f6;
@@ -15,13 +15,13 @@
   margin-bottom: 1.5rem;
 }
 
-.signin-header-content {
+.signup-header-content {
   position: relative;
   z-index: 2;
   max-width: 500px;
 }
 
-.signin-main-title {
+.signup-main-title {
   font-size: 2.5rem;
   font-weight: 700;
   color: #374151;
@@ -29,14 +29,14 @@
   line-height: 1.2;
 }
 
-.signin-tagline {
+.signup-tagline {
   font-size: 1rem;
   color: #374151;
   margin: 0;
   line-height: 1.5;
 }
 
-.signin-header-shapes {
+.signup-header-shapes {
   position: absolute;
   top: 0;
   right: 0;
@@ -68,32 +68,24 @@
   z-index: 1;
 }
 
-/* Sign In Container */
-.signin-container {
+/* Sign Up Container */
+.signup-container {
   max-width: 500px;
   margin: 0 auto;
   padding: 0 1.5rem 2rem;
 }
 
-.signin-form-wrapper {
+.signup-form-wrapper {
   background: #374151;
   border-radius: 16px;
   padding: 2rem 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.form-instruction {
-  color: white;
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 0 0 1.5rem 0;
-  text-align: center;
-}
-
-.signin-form {
+.signup-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .form-group {
@@ -146,42 +138,7 @@
   outline: none;
 }
 
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  color: white;
-  font-size: 0.875rem;
-}
-
-.remember-me input[type="checkbox"] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  accent-color: #FF1A0A;
-}
-
-.forget-password {
-  color: #FF1A0A;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.forget-password:hover {
-  color: #ff4d4d;
-  text-decoration: underline;
-}
-
-.login-button {
+.create-button {
   width: 100%;
   padding: 1rem;
   background: #FF1A0A;
@@ -196,34 +153,91 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-.login-button:hover {
+.create-button:hover {
   background: #e0160a;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(255, 26, 10, 0.3);
 }
 
-.login-button span {
+.create-button span {
   font-size: 1.25rem;
 }
 
+/* Social Sign Up */
+.social-signup {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.social-signup-text {
+  color: #374151;
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.social-icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.social-icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.facebook-icon {
+  background: #1877F2;
+}
+
+.google-icon {
+  background: white;
+  border: 1px solid #e5e7eb;
+}
+
+.apple-icon {
+  background: #000000;
+}
+
 /* Footer */
-.signin-footer {
+.signup-footer {
   text-align: center;
   font-size: 0.95rem;
-  color: #6b7280;
+  color: #374151;
   margin-top: 1rem;
 }
 
-.signup-link {
+.signin-link {
   color: #FF1A0A;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s;
 }
 
-.signup-link:hover {
+.signin-link:hover {
   color: #e0160a;
   text-decoration: underline;
 }
@@ -232,62 +246,57 @@
 
 /* Tablet and Desktop Styles */
 @media (min-width: 768px) {
-  .signin-page {
+  .signup-page {
     margin-top: 140px;
   }
 
-  .signin-header {
+  .signup-header {
     padding: 4rem 2rem 3rem;
     margin-bottom: 2rem;
   }
 
-  .signin-main-title {
+  .signup-main-title {
     font-size: 3rem;
   }
 
-  .signin-tagline {
+  .signup-tagline {
     font-size: 1.125rem;
   }
 
-  .signin-container {
+  .signup-container {
     max-width: 600px;
     padding: 0 2rem 3rem;
   }
 
-  .signin-form-wrapper {
+  .signup-form-wrapper {
     padding: 2.5rem 2rem;
   }
 }
 
 /* Mobile specific adjustments */
 @media (max-width: 767px) {
-  .signin-page {
+  .signup-page {
     margin-top: 0;
   }
 
-  .signin-header {
+  .signup-header {
     padding: 2rem 1.5rem 1.5rem;
   }
 
-  .signin-main-title {
+  .signup-main-title {
     font-size: 2rem;
   }
 
-  .signin-tagline {
+  .signup-tagline {
     font-size: 0.95rem;
   }
 
-  .signin-container {
+  .signup-container {
     padding: 0 1.5rem 2rem;
   }
 
-  .signin-form-wrapper {
+  .signup-form-wrapper {
     padding: 1.75rem 1.25rem;
     border-radius: 12px;
-  }
-
-  .form-instruction {
-    font-size: 0.95rem;
-    margin-bottom: 1.25rem;
   }
 }
