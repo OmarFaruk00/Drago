@@ -13,10 +13,7 @@ const Navbar = () => {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
   const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
-  const [cartItems, setCartItems] = useState([
-    { name: 'Fresh Indian Orange', quantity: 1, price: 12.00 },
-    { name: 'Green Apple', quantity: 1, price: 14.00 }
-  ])
+  const [cartItems, setCartItems] = useState([])
   
   // Hide navbar on SignIn/SignUp pages for mobile
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup' || location.pathname === '/register'
@@ -149,9 +146,15 @@ const Navbar = () => {
               className="categories-button" 
               onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
             >
-              <span className="hamburger-icon">☰</span>
+              <svg className="hamburger-icon" width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="2" width="18" height="1.5" rx="0.75" fill="white"/>
+                <rect x="1" y="7.25" width="18" height="1.5" rx="0.75" fill="white"/>
+                <rect x="1" y="12.5" width="18" height="1.5" rx="0.75" fill="white"/>
+              </svg>
               <span>All Categories</span>
-              <span className="dropdown-arrow">▼</span>
+              <svg className="dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L6 6L11 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
             
             {/* Categories Dropdown */}
@@ -182,7 +185,7 @@ const Navbar = () => {
           <div className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
             <Link 
               to="/" 
-              className="nav-link"
+              className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
                 setIsMobileMenuOpen(false)
@@ -190,11 +193,11 @@ const Navbar = () => {
             >
               Home <span>▼</span>
             </Link>
-            <Link to="/shop" className="nav-link">Shop <span>▼</span></Link>
+            <Link to="/shop" className={`nav-link ${location.pathname === '/shop' ? 'active' : ''}`}>Shop <span>▼</span></Link>
             <a href="#pages" className="nav-link">Pages <span>▼</span></a>
             <Link to="/blog" className={`nav-link ${location.pathname === '/blog' ? 'active' : ''}`}>Blog <span>▼</span></Link>
-            <a href="#about" className="nav-link">About Us <span>▼</span></a>
-            <a href="#contact" className="nav-link">Contact Us <span>▼</span></a>
+            <a href="#about" className="nav-link">About Us</a>
+            <a href="#contact" className="nav-link">Contact Us</a>
           </div>
 
           <button 

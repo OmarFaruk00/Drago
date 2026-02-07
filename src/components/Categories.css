@@ -1,11 +1,21 @@
 .categories-section {
-  padding: 4rem 2rem;
-  background-color: #f9fafb;
+  padding: 0;
+  background-color: white;
+  width: 1280px;
+  max-width: calc(100% - 160px);
+  height: 578px;
+  min-height: 578px;
+  margin-left: 80px;
+  margin-right: 80px;
+  box-sizing: border-box;
 }
 
 .categories-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 2rem;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .section-header {
@@ -38,23 +48,23 @@
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .category-card {
   background: white;
-  border-radius: 12px;
-  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  min-height: 180px;
+  gap: 0.75rem;
+  min-height: 160px;
   justify-content: center;
 }
 
@@ -68,19 +78,48 @@
   box-shadow: 0 4px 12px rgba(220, 20, 60, 0.2);
 }
 
+.category-card.selected .category-name {
+  color: #DC143C;
+}
+
 .category-icon {
-  font-size: 4rem;
-  margin-bottom: 0.5rem;
+  font-size: 3.5rem;
+  margin-bottom: 0;
+  line-height: 1;
 }
 
 .category-name {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #1f2937;
   text-align: center;
+  transition: color 0.3s ease;
+}
+
+@media (max-width: 1400px) {
+  .categories-section {
+    width: calc(100% - 160px);
+    max-width: none;
+    margin-left: 80px;
+    margin-right: 80px;
+  }
 }
 
 @media (max-width: 968px) {
+  .categories-section {
+    width: calc(100% - 80px);
+    max-width: none;
+    margin-left: 40px;
+    margin-right: 40px;
+    height: auto;
+    min-height: auto;
+  }
+
+  .categories-container {
+    height: auto;
+    padding: 2rem 1.5rem;
+  }
+
   .categories-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
@@ -104,7 +143,18 @@
 
 @media (max-width: 640px) {
   .categories-section {
+    width: calc(100% - 32px);
+    max-width: none;
+    margin-left: 16px;
+    margin-right: 16px;
+    height: auto;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .categories-container {
     padding: 3rem 1.5rem;
+    height: auto;
   }
 
   .section-header {

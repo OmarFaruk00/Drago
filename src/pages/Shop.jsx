@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import AllFiltersPanel from '../components/AllFiltersPanel'
 import './Shop.css'
 
 const Shop = () => {
@@ -9,6 +10,7 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState('All Categories')
   const [priceRange, setPriceRange] = useState([0, 1000])
   const [selectedRating, setSelectedRating] = useState(null)
+  const [allFiltersOpen, setAllFiltersOpen] = useState(false)
 
   // Update breadcrumb in Navbar when category changes
   useEffect(() => {
@@ -134,12 +136,18 @@ const Shop = () => {
 
   return (
     <div className="shop-page">
+      <AllFiltersPanel isOpen={allFiltersOpen} onClose={() => setAllFiltersOpen(false)} />
       <div className="shop-content">
         {/* Header Section */}
         <div className="shop-header">
           <div className="shop-header-container">
             <div className="categories-dropdown">
-              <button className="categories-btn">Categories</button>
+              <button
+                className="categories-btn"
+                onClick={() => setAllFiltersOpen(true)}
+              >
+                All filters
+              </button>
             </div>
             <div className="shop-nav">
               <a href="/" className="nav-link">Home</a>

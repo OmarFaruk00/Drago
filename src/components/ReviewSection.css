@@ -1,12 +1,17 @@
 .review-section {
+  width: 1280px;
+  max-width: calc(100% - 160px);
+  margin: 0 80px;
   padding: 4rem 2rem;
   background-color: #FF1A0A;
   position: relative;
+  box-sizing: border-box;
 }
 
 .review-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .review-title {
@@ -116,7 +121,19 @@
   font-weight: 500;
 }
 
+@media (max-width: 1400px) {
+  .review-section {
+    width: calc(100% - 160px);
+    margin: 0 80px;
+  }
+}
+
 @media (max-width: 968px) {
+  .review-section {
+    width: calc(100% - 80px);
+    margin: 0 40px;
+  }
+
   .reviews-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
@@ -125,6 +142,8 @@
 
 @media (max-width: 640px) {
   .review-section {
+    width: calc(100% - 32px);
+    margin: 0 16px;
     padding: 3rem 1.5rem;
   }
 

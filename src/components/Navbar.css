@@ -106,19 +106,22 @@
   text-decoration: none;
   cursor: pointer;
   transition: opacity 0.2s;
+  margin: 0;
+  padding: 0;
 }
 
 .logo-container:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .brand-logo-img {
   width: auto;
-  height: 60px;
+  height: 59px;
   max-width: 300px;
   object-fit: contain;
   transition: all 0.3s ease;
   display: block;
+  filter: brightness(1.05);
 }
 
 /* Removed size changes - logo stays same size */
@@ -300,9 +303,9 @@
 
 /* Secondary Navigation - White Bar */
 .secondary-nav {
-  background-color: white;
+  background-color: #f5f5f5;
   border-bottom: 1px solid #e5e7eb;
-  padding: 0.75rem 0;
+  padding: 0;
   position: sticky;
   top: 0;
   z-index: 998;
@@ -367,30 +370,35 @@
 }
 
 .secondary-nav-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
   display: flex;
-  align-items: center;
-  gap: 2rem;
+  align-items: stretch;
+  gap: 0;
 }
 
 .categories-wrapper {
   position: relative;
 }
 
+.categories-wrapper {
+  background-color: #2c2c2c;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
 .categories-button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background-color: black;
-  border: 1px solid black;
-  border-radius: 4px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
   cursor: pointer;
   font-weight: 500;
   font-size: 0.95rem;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s;
   white-space: nowrap;
   text-decoration: none;
   color: white;
@@ -398,17 +406,21 @@
 }
 
 .categories-button:hover {
-  background-color: #333;
-  border-color: #333;
+  opacity: 0.9;
 }
 
 .hamburger-icon {
-  font-size: 1.25rem;
+  width: 20px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .dropdown-arrow {
-  font-size: 0.75rem;
-  color: #666;
+  width: 12px;
+  height: 8px;
+  display: block;
+  flex-shrink: 0;
 }
 
 /* Categories Dropdown Menu */
@@ -493,12 +505,14 @@
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   flex: 1;
+  padding: 0.75rem 2rem;
+  background-color: #f5f5f5;
 }
 
 .nav-link {
-  color: #1f2937;
+  color: #6b7280;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -516,6 +530,11 @@
 .nav-link.active {
   color: #DC143C;
   font-weight: 600;
+}
+
+.nav-link span {
+  font-size: 0.75rem;
+  margin-left: 0.125rem;
 }
 
 .nav-link span {

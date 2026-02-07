@@ -6,6 +6,7 @@ import './TopProducts.css'
 const TopProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [selectedCardId, setSelectedCardId] = useState(null)
 
   const products = [
     { 
@@ -103,6 +104,7 @@ const TopProducts = () => {
   const handleCardClick = (product) => {
     setSelectedProduct(product)
     setIsPopupOpen(true)
+    setSelectedCardId(product.id)
   }
 
   const handleClosePopup = () => {
@@ -128,7 +130,7 @@ const TopProducts = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="product-card"
+              className={`product-card ${selectedCardId === product.id ? 'selected' : ''}`}
               onClick={() => handleCardClick(product)}
               style={{ cursor: 'pointer' }}
             >
@@ -147,25 +149,28 @@ const TopProducts = () => {
               </div>
               <div className="product-info">
                 <div className="product-name">{product.name}</div>
-                <div className="product-rating">
-                  {renderStars(product.rating)}
-                </div>
                 <div className="product-pricing">
+                  <span className="current-price">৳{product.price.toFixed(2)}</span>
                   {product.originalPrice && (
                     <span className="original-price">৳{product.originalPrice.toFixed(2)}</span>
                   )}
-                  <span className="current-price">৳{product.price.toFixed(2)}</span>
                 </div>
+                <div className="product-rating">
+                  {renderStars(product.rating)}
+                </div>
+                <button
+                  className="add-to-cart-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    // Lock / add to cart
+                  }}
+                  aria-label="Add to cart"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25S3 3.6 3 6.5v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3A5.25 5.25 0 0012 1.5z" clipRule="evenodd" />
+                  </svg>
+                </button>
               </div>
-              <button 
-                className="add-to-cart-btn"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  // Handle add to cart
-                }}
-              >
-                <span>🛍️</span>
-              </button>
             </div>
           ))}
         </div>

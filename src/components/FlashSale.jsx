@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import flashsaleBanner from '../images/flashsale.png'
 import './FlashSale.css'
 
 const FlashSale = () => {
@@ -10,7 +11,8 @@ const FlashSale = () => {
     minutes: 30,
     seconds: 45
   })
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const productsContainerRef = useRef(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -44,56 +46,63 @@ const FlashSale = () => {
   }, [])
 
   const allProducts = [
-    { id: 1, name: 'iPhone 15 Pro', price: 120000, salePrice: 100000, discount: 17, rating: 4.8, hasGift: false },
-    { id: 2, name: 'AirPods Pro 2', price: 25000, salePrice: 20000, discount: 20, rating: 4.7, hasGift: false },
-    { id: 3, name: 'Samsung Galaxy S24', price: 95000, salePrice: 80000, discount: 16, rating: 4.6, hasGift: false },
-    { id: 4, name: 'Sony WH-1000XM5', price: 35000, salePrice: 28000, discount: 20, rating: 4.9, hasGift: false },
-    { id: 5, name: 'MacBook Pro M3', price: 180000, salePrice: 150000, discount: 17, rating: 4.8, hasGift: true },
-    { id: 6, name: 'iPad Pro 12.9"', price: 110000, salePrice: 95000, discount: 14, rating: 4.7, hasGift: false },
-    { id: 7, name: 'Apple Watch Series 9', price: 45000, salePrice: 38000, discount: 16, rating: 4.8, hasGift: false },
-    { id: 8, name: 'PlayStation 5', price: 55000, salePrice: 48000, discount: 13, rating: 4.9, hasGift: false },
+    { id: 1, name: 'Smart Watch Series X', price: 19.99, salePrice: 9.99, giftOffer: true, freeDelivery: false },
+    { id: 2, name: 'USB-C Multiport Hub', price: 45, salePrice: 29.99, giftOffer: false, freeDelivery: true },
+    { id: 3, name: 'Gaming Headset Pro', price: 75, salePrice: 59.99, giftOffer: true, freeDelivery: false },
+    { id: 4, name: 'Bluetooth Earbuds', price: 25, salePrice: 14.99, giftOffer: true, freeDelivery: false },
+    { id: 5, name: 'XINJI PX1 Portable Projector', price: 20000, salePrice: 17000, giftOffer: true, freeDelivery: false },
+    { id: 6, name: 'MacBook Pro M3', price: 180000, salePrice: 150000, giftOffer: true, freeDelivery: false },
   ]
 
-  // Get 3 products starting from currentIndex
-  const getVisibleProducts = () => {
-    const visible = []
-    for (let i = 0; i < 3; i++) {
-      const index = (currentIndex + i) % allProducts.length
-      visible.push(allProducts[index])
+  const scrollSlider = (direction) => {
+    if (productsContainerRef.current) {
+      const cardWidth = 312 + 24 // card width 312px + gap 1.5rem
+      const scrollAmount = cardWidth * 2 // scroll 2 cards at a time
+      
+      if (direction === 'left') {
+        productsContainerRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
+      } else {
+        productsContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+      }
     }
-    return visible
   }
-
-  const products = getVisibleProducts()
-
-  useEffect(() => {
-    const productTimer = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % allProducts.length)
-    }, 3000)
-
-    return () => clearInterval(productTimer)
-  }, [])
 
   const formatTime = (value) => {
     return String(value).padStart(2, '0')
   }
 
+  const totalSlides = Math.max(1, Math.ceil(allProducts.length / 4))
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index)
+    if (productsContainerRef.current) {
+      const cardWidth = 312 + 24
+      productsContainerRef.current.scrollTo({ left: index * cardWidth * 4, behavior: 'smooth' })
+    }
+  }
+
   return (
     <section className="flash-sale">
       <div className="flash-sale-header">
-        <div className="flash-sale-title">Flash Sale</div>
+        <div className="flash-sale-banner">
+          <img
+            src={flashsaleBanner}
+            alt="Flash Sale"
+            className="flash-sale-banner-img"
+          />
+        </div>
         <div className="countdown-timer">
           <div className="timer-segment">
             <div className="timer-box">{formatTime(timeLeft.days)}</div>
             <div className="timer-label">Day</div>
           </div>
           <div className="timer-segment">
-            <div className="timer-box">{formatTime(timeLeft.hours)}</div>
-            <div className="timer-label">Hour</div>
-          </div>
-          <div className="timer-segment">
             <div className="timer-box">{formatTime(timeLeft.minutes)}</div>
             <div className="timer-label">Min</div>
+          </div>
+          <div className="timer-segment">
+            <div className="timer-box">{formatTime(timeLeft.hours)}</div>
+            <div className="timer-label">Hour</div>
           </div>
           <div className="timer-segment">
             <div className="timer-box">{formatTime(timeLeft.seconds)}</div>
@@ -103,42 +112,85 @@ const FlashSale = () => {
       </div>
 
       <div className="flash-sale-content">
-        <div className="products-container">
-          {products.map((product, idx) => (
+        <button className="slider-arrow slider-arrow-left" onClick={() => scrollSlider('left')}>
+          ←
+        </button>
+        <div className="products-container" ref={productsContainerRef}>
+          {allProducts.map((product) => (
             <div 
-              key={`${product.id}-${currentIndex}-${idx}`}
+              key={product.id}
               className="product-card"
               onClick={() => navigate(`/product/${product.id}`)}
               style={{ cursor: 'pointer' }}
             >
-              {product.hasGift && (
-                <div className="gift-badge">Gift Offer</div>
-              )}
+              <div className="product-badges">
+                <span className="badge badge-sale">Sale 10%</span>
+              </div>
               <div className="product-image-container">
                 <div className="product-image-placeholder">
-                  <span>👩</span>
+                  <span>📱</span>
                 </div>
-                <div className="discount-badge">-{product.discount}%</div>
+                <div className="product-badges-on-image">
+                  {product.freeDelivery ? (
+                    <span className="badge badge-free-delivery">Free Delivery</span>
+                  ) : (
+                    <span className="badge badge-gift-offer">Gift Offer</span>
+                  )}
+                </div>
               </div>
               <div className="product-info">
-                <div className="product-header">
-                  <div className="product-rating">
-                    <span className="rating-value">{product.rating}</span>
-                    <span className="star-icon">⭐</span>
+                <div className="product-name">{product.name}</div>
+                <div className="product-pricing-row">
+                  <div className="price-section">
+                    <div className="price-container">
+                      <span className="sale-price">
+                        {product.salePrice < 500 ? `$${Number(product.salePrice).toFixed(2)}` : `৳${product.salePrice.toLocaleString('en-IN')}`}
+                      </span>
+                      {product.price && (
+                        <span className="original-price">
+                          {product.price < 500 ? `$${Number(product.price).toFixed(2)}` : `৳${product.price.toLocaleString('en-IN')}`}
+                        </span>
+                      )}
+                    </div>
+                    <div className="product-rating">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <span key={i} className="star filled">★</span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="product-name">{product.name}</div>
-                  <div className="wishlist-icon">❤️</div>
-                </div>
-                <div className="product-pricing">
-                  <span className="original-price">৳{product.price.toFixed(2).replace('.', ',')}</span>
-                  <span className="sale-price">৳{product.salePrice.toFixed(2).replace('.', ',')}</span>
+                  <button 
+                    className="add-to-cart-icon-btn"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                    aria-label="Add to cart"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 4V2C7 1.44772 7.44772 1 8 1H16C16.5523 1 17 1.44772 17 2V4H20C20.5523 4 21 4.44772 21 5C21 5.55228 20.5523 6 20 6H19V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V6H4C3.44772 6 3 5.55228 3 5C3 4.44772 3.44772 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                      <path d="M9 9V17H11V9H9ZM13 9V17H15V9H13Z" fill="currentColor"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
+        <button className="slider-arrow slider-arrow-right" onClick={() => scrollSlider('right')}>
+          →
+        </button>
       </div>
 
+      <div className="flash-sale-dots">
+        {Array.from({ length: totalSlides }, (_, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`dot ${i === currentSlide ? 'active' : ''}`}
+            onClick={() => goToSlide(i)}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
       <div className="flash-sale-footer">
         <Link to="/shop" className="see-all-button">See All Products →</Link>
       </div>

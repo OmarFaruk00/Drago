@@ -26,24 +26,15 @@ const Hero = () => {
           <div className="sale-text-small">UP TO 70%</div>
           <h1 className="hero-title">Big Sale</h1>
           <div className="hero-subtitle">Happening Now</div>
-          <Link to="/shop" className="shop-now-button">Shop now →</Link>
+          <Link to="/shop" className="shop-now-button">Shop now</Link>
+          
+          {/* Carousel Indicators */}
+          <div className="carousel-indicators">
+            <div className={`indicator ${activeSlide === 0 ? 'active' : ''}`} onClick={() => setActiveSlide(0)}></div>
+            <div className={`indicator ${activeSlide === 1 ? 'active' : ''}`} onClick={() => setActiveSlide(1)}></div>
+            <div className={`indicator ${activeSlide === 2 ? 'active' : ''}`} onClick={() => setActiveSlide(2)}></div>
+          </div>
         </div>
-      </div>
-
-      {/* Carousel Indicators */}
-      <div className="carousel-indicators">
-        <span 
-          className={`indicator ${activeSlide === 0 ? 'active' : ''}`}
-          onClick={() => setActiveSlide(0)}
-        ></span>
-        <span 
-          className={`indicator ${activeSlide === 1 ? 'active' : ''}`}
-          onClick={() => setActiveSlide(1)}
-        ></span>
-        <span 
-          className={`indicator ${activeSlide === 2 ? 'active' : ''}`}
-          onClick={() => setActiveSlide(2)}
-        ></span>
       </div>
     </section>
   )

@@ -1,13 +1,18 @@
 .summer-sale-banner {
+  width: 1280px;
+  max-width: calc(100% - 160px);
+  margin: 0 80px;
   padding: 3rem 2rem;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .summer-sale-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
@@ -125,7 +130,19 @@
   box-shadow: 0 6px 12px rgba(220, 20, 60, 0.4);
 }
 
+@media (max-width: 1400px) {
+  .summer-sale-banner {
+    width: calc(100% - 160px);
+    margin: 0 80px;
+  }
+}
+
 @media (max-width: 968px) {
+  .summer-sale-banner {
+    width: calc(100% - 80px);
+    margin: 0 40px;
+  }
+
   .summer-sale-container {
     grid-template-columns: 1fr;
   }
@@ -152,6 +169,8 @@
 
 @media (max-width: 640px) {
   .summer-sale-banner {
+    width: calc(100% - 32px);
+    margin: 0 16px;
     padding: 2rem 1rem;
   }
 
