@@ -13,19 +13,21 @@ const Hero = () => {
           <div className="image-container">
             <div className="sale-badge">70% OFF</div>
             <div className="image-placeholder">
-              <div className="illustration-placeholder">
-                <span>👩‍🦱👩</span>
-                <p>Image Placeholder</p>
-              </div>
+              <img 
+                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&h=500&fit=crop" 
+                alt="Big Sale - Shopping" 
+                className="hero-banner-img"
+              />
             </div>
           </div>
         </div>
 
         {/* Right Side - Text and CTA */}
         <div className="hero-content">
-          <div className="sale-text-small">UP TO 70%</div>
+          <div className="sale-text-small">Up to 70%</div>
           <h1 className="hero-title">Big Sale</h1>
-          <div className="hero-subtitle">Happening Now</div>
+          <div className="hero-subtitle">Update Your Style</div>
+          <p className="hero-description">Discover exclusive offers on new arrivals and update your style effortlessly. Limited-time sale is live. Don&apos;t miss out!</p>
           <Link to="/shop" className="shop-now-button">Shop now</Link>
           
           {/* Carousel Indicators */}

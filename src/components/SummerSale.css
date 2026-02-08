@@ -1,209 +1,203 @@
 .summer-sale-banner {
   width: 1280px;
   max-width: calc(100% - 160px);
-  margin: 0 80px;
-  padding: 3rem 2rem;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  margin: 0 80px 60px 80px;
+  padding: 0;
+  background: transparent;
   position: relative;
-  overflow: hidden;
   box-sizing: border-box;
 }
 
 .summer-sale-container {
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
   align-items: center;
-  border-radius: 12px;
+  gap: 2.5rem;
+  padding: 2.5rem 3rem;
+  background: #FAE9EC;
+  border-radius: 24px;
+  box-sizing: border-box;
   overflow: hidden;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* Left Section - Produce Image */
+/* Left - Promotional Image */
 .summer-sale-image {
-  background: #0f0f0f;
-  height: 100%;
-  min-height: 400px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 320px;
   overflow: hidden;
+  border-radius: 16px;
 }
 
-.produce-placeholder {
+.summer-product-img {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(34, 139, 34, 0.1) 0%, rgba(0, 100, 0, 0.1) 100%);
+  min-height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
-.produce-content {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.produce-icon {
-  font-size: 5rem;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.produce-content p {
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* Right Section - Content */
 .summer-sale-content {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  padding: 3rem 3rem;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  gap: 1.5rem;
-  min-height: 400px;
-  position: relative;
+  gap: 1rem;
+  padding-right: 1rem;
 }
 
-.sale-text-small {
-  font-size: 1rem;
+.sale-discount {
+  font-size: 1.125rem;
   font-weight: 600;
-  color: white;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  color: #e53935;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .sale-headline {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  line-height: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  line-height: 1.1;
+  margin: 0;
 }
 
-.sale-percentage {
-  font-size: 5rem;
+.sale-headline-line1,
+.sale-headline-line2 {
+  font-size: 2.75rem;
   font-weight: 800;
-  color: #DC143C;
-  line-height: 1;
-}
-
-.sale-off {
-  font-size: 3rem;
-  font-weight: 700;
-  color: white;
-  line-height: 1;
+  color: #1f2937;
 }
 
 .sale-description {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
-  max-width: 500px;
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.5;
+  max-width: 480px;
+  margin: 0;
 }
 
 .summer-shop-button {
-  background: #DC143C;
+  background: #FF1A0A;
   color: white;
   border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 8px;
-  font-size: 1.125rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 999px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   width: fit-content;
-  box-shadow: 0 4px 6px rgba(220, 20, 60, 0.3);
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .summer-shop-button:hover {
-  background: #b8122f;
+  background: #e01609;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(220, 20, 60, 0.4);
+}
+
+.shop-arrow {
+  font-size: 1.125rem;
+  opacity: 1;
+}
+
+.sale-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.sale-carousel-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid #e53935;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sale-carousel-dots .dot.active {
+  background: #e53935;
 }
 
 @media (max-width: 1400px) {
   .summer-sale-banner {
     width: calc(100% - 160px);
-    margin: 0 80px;
+    margin: 0 80px 60px 80px;
   }
 }
 
 @media (max-width: 968px) {
   .summer-sale-banner {
     width: calc(100% - 80px);
-    margin: 0 40px;
+    margin: 0 40px 40px 40px;
   }
 
   .summer-sale-container {
     grid-template-columns: 1fr;
+    padding: 2rem;
+    gap: 1.5rem;
   }
 
   .summer-sale-image {
-    min-height: 300px;
     order: 2;
+    min-height: 220px;
+    padding: 1rem;
   }
 
   .summer-sale-content {
     order: 1;
-    padding: 2.5rem 2rem;
-    min-height: auto;
+    padding-right: 0;
   }
 
-  .sale-percentage {
-    font-size: 4rem;
-  }
-
-  .sale-off {
-    font-size: 2.5rem;
+  .sale-headline-line1,
+  .sale-headline-line2 {
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 640px) {
   .summer-sale-banner {
     width: calc(100% - 32px);
-    margin: 0 16px;
-    padding: 2rem 1rem;
+    margin: 0 16px 32px 16px;
   }
 
-  .summer-sale-content {
-    padding: 2rem 1.5rem;
+  .summer-sale-container {
+    padding: 1.5rem 1.25rem;
+    gap: 1.25rem;
   }
 
-  .sale-text-small {
-    font-size: 0.875rem;
+  .summer-sale-image {
+    min-height: 180px;
+    padding: 0.75rem;
   }
 
-  .sale-percentage {
-    font-size: 3rem;
+  .sale-discount {
+    font-size: 1rem;
   }
 
-  .sale-off {
-    font-size: 2rem;
+  .sale-headline-line1,
+  .sale-headline-line2 {
+    font-size: 1.75rem;
   }
 
   .sale-description {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
 
   .summer-shop-button {
     width: 100%;
-    padding: 1rem 2rem;
-  }
-
-  .summer-sale-image {
-    min-height: 250px;
-  }
-
-  .produce-icon {
-    font-size: 4rem;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
   }
 }

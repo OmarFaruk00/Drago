@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import bagIcon from '../images/icons/cart-bag.svg'
+import starIcon from '../images/icons/star.png'
 import './ExploreProducts.css'
 
 const ExploreProducts = () => {
   const navigate = useNavigate()
-  const [activeCategory, setActiveCategory] = useState('All')
   const [selectedProduct, setSelectedProduct] = useState('iPhone 15 Pro')
-
-  const categories = ['All', 'Smartphones', 'Laptops', 'Headphones', 'View All']
 
   const allProducts = [
     // Smartphones
@@ -135,20 +134,11 @@ const ExploreProducts = () => {
     }
   ]
 
-  // Filter products based on active category
-  const products = activeCategory === 'All' 
-    ? allProducts 
-    : activeCategory === 'Smartphones'
-    ? allProducts.filter(p => p.category === 'Smartphones')
-    : activeCategory === 'Laptops'
-    ? allProducts.filter(p => p.category === 'Laptops')
-    : activeCategory === 'Headphones'
-    ? allProducts.filter(p => p.category === 'Headphones')
-    : allProducts
+  const products = allProducts.slice(0, 8)
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} className={`star ${i < rating ? 'filled' : ''}`}>★</span>
+      <img key={i} src={starIcon} alt="" className={`star star-img ${i < rating ? 'filled' : ''}`} />
     ))
   }
 
@@ -157,22 +147,6 @@ const ExploreProducts = () => {
       <div className="explore-products-container">
         <div className="section-header">
           <h2 className="explore-title">Exploure Our Products</h2>
-          <Link to="/shop" className="view-all-link">View All →</Link>
-        </div>
-        
-        {/* Category Filters */}
-        <div className="category-filters">
-          {categories.map((category, index) => (
-            <React.Fragment key={category}>
-              <button
-                className={`filter-btn ${activeCategory === category ? 'active' : ''}`}
-                onClick={() => setActiveCategory(category)}
-              >
-                {category}
-              </button>
-              {index < categories.length - 1 && <span className="filter-divider">|</span>}
-            </React.Fragment>
-          ))}
         </div>
 
         {/* Product Grid */}
@@ -220,31 +194,34 @@ const ExploreProducts = () => {
               {/* Product Info */}
               <div className="product-info">
                 <div className="product-name">{product.name}</div>
-                <div className="product-rating">
-                  {renderStars(product.rating)}
-                </div>
                 <div className="product-pricing">
+                  <span className="current-price">৳{product.price.toFixed(2)}</span>
                   {product.originalPrice && (
                     <span className="original-price">৳{product.originalPrice.toFixed(2)}</span>
                   )}
-                  <span className={`current-price ${product.originalPrice ? 'sale-price' : ''}`}>
-                    ৳{product.price.toFixed(2)}
-                  </span>
+                </div>
+                <div className="stars-and-bag-row">
+                  <div className="product-rating">
+                    {renderStars(product.rating)}
+                  </div>
+                  <button
+                    className="add-to-cart-btn"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                    aria-label="Add to cart"
+                  >
+                    <img src={bagIcon} alt="" className="bag-icon-img" />
+                  </button>
                 </div>
               </div>
-
-              {/* Add to Cart Button */}
-              <button
-                className={`add-to-cart-icon ${selectedProduct === product.name ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  // Handle add to cart
-                }}
-              >
-                🛍️
-              </button>
             </div>
           ))}
+        </div>
+
+        {/* See All button - centered below grid */}
+        <div className="explore-see-all-wrap">
+          <Link to="/shop" className="explore-see-all-btn">See All →</Link>
         </div>
       </div>
     </section>

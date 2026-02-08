@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import cartCheckIcon from '../images/icons/cart-check.svg'
+import starIcon from '../images/icons/star.png'
 import './ProductDetails.css'
 
 const ProductDetails = () => {
@@ -96,7 +98,7 @@ const ProductDetails = () => {
               <div className="product-rating">
                 <div className="stars">
                   {Array.from({ length: 5 }, (_, i) => (
-                    <span key={i} className="star filled">★</span>
+                    <img key={i} src={starIcon} alt="" className="star star-img filled" />
                   ))}
                 </div>
                 <span className="review-count">{product.reviews} Review</span>
@@ -169,7 +171,7 @@ const ProductDetails = () => {
 
               <div className="product-actions">
                 <button className="add-to-cart-btn">
-                  <span>🛍️</span>
+                  <img src={cartCheckIcon} alt="" className="add-to-cart-icon-img" />
                   Add to Cart
                 </button>
                 <button className="add-to-wishlist-btn">

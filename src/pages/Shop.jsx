@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import AllFiltersPanel from '../components/AllFiltersPanel'
+import cartCheckIcon from '../images/icons/cart-check.svg'
+import starIcon from '../images/icons/star.png'
 import './Shop.css'
 
 const Shop = () => {
@@ -128,7 +130,7 @@ const Shop = () => {
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} className={`star ${i < rating ? 'filled' : ''}`}>★</span>
+      <img key={i} src={starIcon} alt="" className={`star star-img ${i < rating ? 'filled' : ''}`} />
     ))
   }
 
@@ -306,7 +308,7 @@ const Shop = () => {
                           // Handle add to cart
                         }}
                       >
-                        🛍️
+                        <img src={cartCheckIcon} alt="" className="cart-icon-img" />
                       </button>
                     </div>
                   </div>

@@ -160,9 +160,22 @@
   gap: 2px;
 }
 
-.star {
-  color: #DC143C;
-  font-size: 1.125rem;
+.star,
+.star.star-img {
+  width: 1.125rem;
+  height: 1.125rem;
+  object-fit: contain;
+}
+
+.star-img:not(.filled) {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.star.filled,
+.star-img.filled {
+  opacity: 1;
+  filter: none;
 }
 
 .review-count {
@@ -421,6 +434,12 @@
   background: #b8122f;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.add-to-cart-btn .add-to-cart-icon-img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
 }
 
 .add-to-wishlist-btn {

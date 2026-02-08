@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom'
 import SignInModal from './SignInModal'
 import CreateAccountModal from './CreateAccountModal'
 import ShoppingCart from './ShoppingCart'
-import logoImage from '../images/logo.jpg'
+import logoImage from '../images/logo.png'
+import cartCheckIcon from '../images/icons/cart-check.svg'
 import './Navbar.css'
 
 const Navbar = () => {
@@ -111,24 +112,12 @@ const Navbar = () => {
           </div>
 
           <div className="header-right">
-            <div className="user-icon" onClick={() => setIsSignInModalOpen(true)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="11" stroke="white" strokeWidth="2" fill="none"/>
-                <circle cx="12" cy="8" r="3" stroke="white" strokeWidth="2" fill="none"/>
-                <path d="M6 20 C6 16, 8.5 14, 12 14 C15.5 14, 18 16, 18 20" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-              </svg>
-            </div>
-            <div className="header-separator"></div>
             <div className="cart-info" onClick={() => setIsCartOpen(true)}>
               <div className="cart-icon-badge">
-                <svg className="cart-icon-symbol" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="white" strokeWidth="2" fill="none"/>
-                  <line x1="3" y1="6" x2="21" y2="6" stroke="white" strokeWidth="2"/>
-                  <path d="M16 10a4 4 0 0 1-8 0" stroke="white" strokeWidth="2" fill="none"/>
-                </svg>
+                <img src={cartCheckIcon} alt="Cart" className="cart-icon-symbol cart-icon-img" />
                 <span className="cart-badge">{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
               </div>
-              <div className="cart-amount">৳{cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</div>
+              <span className="cart-amount">৳{cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</span>
             </div>
           </div>
         </div>

@@ -6,28 +6,34 @@ const SummerSale = () => {
   return (
     <section className="summer-sale-banner">
       <div className="summer-sale-container">
-        {/* Left Section - Produce Image */}
+        {/* Left - Promotional Image */}
         <div className="summer-sale-image">
-          <div className="produce-placeholder">
-            <div className="produce-content">
-              <span className="produce-icon">🥬🥦🥑</span>
-              <p>Fresh Produce Image</p>
-            </div>
-          </div>
+          <img
+            src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=700&h=400&fit=crop"
+            alt="Big Sale - Update Your Style"
+            className="summer-product-img"
+          />
         </div>
 
-        {/* Right Section - Text and CTA */}
+        {/* Right - Text & CTA */}
         <div className="summer-sale-content">
-          <div className="sale-text-small">SUMMER SALE</div>
-          <div className="sale-headline">
-            <span className="sale-percentage">37%</span>
-            <span className="sale-off">OFF</span>
-          </div>
-          <div className="sale-description">
-            Free on all your order, Free Shipping and 30 days money-back guarantee
-          </div>
-          <Link to="/shop" className="summer-shop-button">Shop Now →</Link>
+          <p className="sale-discount">Up to 70%</p>
+          <h2 className="sale-headline">
+            <span className="sale-headline-line1">Big Sale</span>
+            <span className="sale-headline-line2">Update Your Style</span>
+          </h2>
+          <p className="sale-description">
+            Discover exclusive offers on new arrivals and update your style effortlessly. Limited-time sale is live. Don&apos;t miss out!
+          </p>
+          <Link to="/shop" className="summer-shop-button">
+            Shop now <span className="shop-arrow">→</span>
+          </Link>
         </div>
+      </div>
+      <div className="sale-carousel-dots">
+        <span className="dot active"></span>
+        <span className="dot"></span>
+        <span className="dot"></span>
       </div>
     </section>
   )

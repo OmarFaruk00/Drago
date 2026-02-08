@@ -1,4 +1,6 @@
 import React from 'react'
+import cartCheckIcon from '../images/icons/cart-check.svg'
+import starIcon from '../images/icons/star.png'
 import './ProductPopup.css'
 
 const ProductPopup = ({ product, isOpen, onClose }) => {
@@ -12,7 +14,7 @@ const ProductPopup = ({ product, isOpen, onClose }) => {
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} className={`popup-star ${i < rating ? 'filled' : ''}`}>★</span>
+      <img key={i} src={starIcon} alt="" className={`popup-star star-img ${i < rating ? 'filled' : ''}`} />
     ))
   }
 
@@ -45,15 +47,17 @@ const ProductPopup = ({ product, isOpen, onClose }) => {
             </div>
             
             <div className="popup-pricing">
-              {product.originalPrice && (
-                <span className="popup-original-price">৳{product.originalPrice.toFixed(2)}</span>
-              )}
-              <span className="popup-current-price">৳{product.price.toFixed(2)}</span>
-              {product.originalPrice && (
-                <span className="popup-discount">
-                  Save ৳{(product.originalPrice - product.price).toFixed(2)}
-                </span>
-              )}
+              <>
+                {product.originalPrice && (
+                  <span className="popup-original-price">৳{product.originalPrice.toFixed(2)}</span>
+                )}
+                <span className="popup-current-price">৳{product.price.toFixed(2)}</span>
+                {product.originalPrice && (
+                  <span className="popup-discount">
+                    Save ৳{(product.originalPrice - product.price).toFixed(2)}
+                  </span>
+                )}
+              </>
             </div>
             
             <div className="popup-description">
@@ -62,6 +66,7 @@ const ProductPopup = ({ product, isOpen, onClose }) => {
             
             <div className="popup-actions">
               <button className="popup-add-to-cart-btn">
+                <img src={cartCheckIcon} alt="" className="popup-cart-icon-img" />
                 Add to Cart
               </button>
               <button className="popup-buy-now-btn">

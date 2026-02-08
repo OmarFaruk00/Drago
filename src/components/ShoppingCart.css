@@ -55,6 +55,17 @@
   z-index: 10;
 }
 
+.cart-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.cart-title-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+}
+
 .cart-title {
   font-size: 1.25rem;
   font-weight: 700;

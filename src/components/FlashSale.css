@@ -1,32 +1,33 @@
-/* Flash Sale: right after banner (Hero). Content 1240×705, padding 80 20 80 20, border-box */
+/* Flash Sale: dark section matching reference */
 .flash-sale {
   box-sizing: border-box;
   width: 1280px;
   max-width: calc(100% - 160px);
-  height: 865px;
-  min-height: 865px;
-  padding: 80px 20px 80px 20px;
+  min-height: 700px;
+  padding: 48px 24px 48px 24px;
   margin: 0 80px 80px 80px;
-  background-color: #2B2A2A;
+  background: #1a1a2e;
   position: relative;
   overflow: hidden;
-  font-family: 'Meta', 'FF Meta', 'Meta Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
-/* Header: W Fixed 444px × H Fixed 247px (banner + countdown) */
+
+/* Header: banner (left) + countdown (right) - full width like reference */
 .flash-sale-header {
   box-sizing: border-box;
-  width: 444px;
-  height: 247px;
+  width: 100%;
+  min-height: 140px;
   margin: 0 0 2rem 0;
-  padding: 0;
+  padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: nowrap;
-  gap: 1.5rem;
+  gap: 2rem;
   flex-shrink: 0;
 }
 
@@ -41,7 +42,7 @@
 .flash-sale-banner-img {
   display: block;
   max-width: 100%;
-  max-height: 247px;
+  max-height: 120px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -51,39 +52,43 @@
 .countdown-timer {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .timer-segment {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.timer-box {
-  background: #374151;
-  color: #fff;
-  font-size: 2rem;
-  font-weight: 700;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  min-width: 56px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  gap: 0.35rem;
 }
 
 .timer-label {
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timer-box {
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  min-width: 52px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .flash-sale-content {
+  width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 0 0.5rem;
   position: relative;
   display: flex;
   align-items: center;
@@ -209,8 +214,8 @@
 }
 
 
-.product-card {
-  background: #fff;
+.flash-sale .product-card {
+  background: #f3f4f6;
   border-radius: 12px;
   padding: 12px;
   width: 312px;
@@ -218,8 +223,9 @@
   height: 459px;
   flex-shrink: 0;
   position: relative;
+  border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -228,7 +234,7 @@
   box-sizing: border-box;
 }
 
-.product-card:hover {
+.flash-sale .product-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
@@ -257,6 +263,10 @@
   left: 10px;
   background: #dc2626;
   color: #fff;
+  transform: rotate(-8deg);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
 }
 
 .product-badges-on-image {
@@ -277,7 +287,7 @@
 }
 
 .badge-free-delivery {
-  background: #dc2626;
+  background: #374151;
   color: #fff;
   padding: 0.35rem 0.6rem;
   border-radius: 4px;
@@ -359,13 +369,22 @@
   justify-content: flex-start;
 }
 
-.star {
-  font-size: 0.875rem;
-  color: #d1d5db;
+.star,
+.star.star-img {
+  width: 0.875rem;
+  height: 0.875rem;
+  object-fit: contain;
 }
 
-.flash-sale .star.filled {
-  color: #eab308;
+.star-img:not(.filled) {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.flash-sale .star.filled,
+.flash-sale .star-img.filled {
+  opacity: 1;
+  filter: none;
 }
 
 .price-container {
@@ -378,13 +397,13 @@
 
 .flash-sale .original-price {
   font-size: 0.8rem;
-  color: #e11d48;
+  color: #9ca3af;
   text-decoration: line-through;
   line-height: 1.2;
   text-align: left;
 }
 
-.sale-price {
+.flash-sale .sale-price {
   font-size: 1.05rem;
   font-weight: 700;
   color: #1f2937;
@@ -392,21 +411,37 @@
   text-align: left;
 }
 
-.add-to-cart-icon-btn {
+.flash-sale .add-to-cart-icon-btn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e5e7eb;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
-.add-to-cart-icon-btn svg {
+.flash-sale .add-to-cart-icon-btn:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.flash-sale .add-to-cart-icon-btn .add-to-cart-icon-img {
+  filter: none;
+  color: #374151;
+}
+
+.flash-sale .add-to-cart-icon-btn:hover .add-to-cart-icon-img {
+  filter: brightness(0) invert(1);
+}
+
+.add-to-cart-icon-btn svg,
+.add-to-cart-icon-btn .add-to-cart-icon-img {
   width: 18px;
   height: 18px;
   color: #6b7280;
@@ -418,8 +453,13 @@
   border-color: #DC143C;
 }
 
-.add-to-cart-icon-btn:hover svg {
+.add-to-cart-icon-btn:hover svg,
+.add-to-cart-icon-btn:hover .add-to-cart-icon-img {
   color: white;
+}
+
+.add-to-cart-icon-btn:hover .add-to-cart-icon-img {
+  filter: brightness(0) invert(1);
 }
 
 .flash-sale-dots {
@@ -435,7 +475,7 @@
   height: 10px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   padding: 0;
   transition: background 0.2s;
@@ -446,7 +486,7 @@
 }
 
 .flash-sale-dots .dot:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .flash-sale-footer {

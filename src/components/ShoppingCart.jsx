@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import cartCheckIcon from '../images/icons/cart-check.svg'
 import './ShoppingCart.css'
 
 const ShoppingCart = ({ isOpen, onClose, cartItems, onRemoveItem }) => {
@@ -13,7 +14,10 @@ const ShoppingCart = ({ isOpen, onClose, cartItems, onRemoveItem }) => {
       <div className="cart-overlay" onClick={onClose}></div>
       <div className="shopping-cart-sidebar">
         <div className="cart-header">
-          <h3 className="cart-title">Shopping Cart ({totalItems})</h3>
+          <div className="cart-header-left">
+            <img src={cartCheckIcon} alt="" className="cart-title-icon" />
+            <h3 className="cart-title">Shopping Cart ({totalItems})</h3>
+          </div>
           <button className="cart-close-btn" onClick={onClose}>×</button>
         </div>
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import flashsaleBanner from '../images/flashsale.png'
+import cartCheckIcon from '../images/icons/cart-check.svg'
+import starIcon from '../images/icons/star.png'
 import './FlashSale.css'
 
 const FlashSale = () => {
@@ -46,13 +48,19 @@ const FlashSale = () => {
   }, [])
 
   const allProducts = [
-    { id: 1, name: 'Smart Watch Series X', price: 19.99, salePrice: 9.99, giftOffer: true, freeDelivery: false },
-    { id: 2, name: 'USB-C Multiport Hub', price: 45, salePrice: 29.99, giftOffer: false, freeDelivery: true },
-    { id: 3, name: 'Gaming Headset Pro', price: 75, salePrice: 59.99, giftOffer: true, freeDelivery: false },
-    { id: 4, name: 'Bluetooth Earbuds', price: 25, salePrice: 14.99, giftOffer: true, freeDelivery: false },
-    { id: 5, name: 'XINJI PX1 Portable Projector', price: 20000, salePrice: 17000, giftOffer: true, freeDelivery: false },
-    { id: 6, name: 'MacBook Pro M3', price: 180000, salePrice: 150000, giftOffer: true, freeDelivery: false },
+    { id: 1, name: 'Smart Watch Series X', price: 14.99, salePrice: 9.99, giftOffer: true, freeDelivery: false, rating: 4 },
+    { id: 2, name: 'USB-C Multiport Hub', price: 45, salePrice: 29.99, giftOffer: false, freeDelivery: true, rating: 4 },
+    { id: 3, name: 'Gaming Headset Pro', price: 79.99, salePrice: 59.99, giftOffer: true, freeDelivery: false, rating: 4 },
+    { id: 4, name: 'Bluetooth Earbuds', price: 19.99, salePrice: 14.99, giftOffer: true, freeDelivery: false, rating: 4 },
+    { id: 5, name: 'XINJI PX1 Portable Projector', price: 20000, salePrice: 17000, giftOffer: true, freeDelivery: false, rating: 4 },
+    { id: 6, name: 'MacBook Pro M3', price: 180000, salePrice: 150000, giftOffer: true, freeDelivery: false, rating: 4 },
   ]
+
+  const renderStars = (rating = 5) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <img key={i} src={starIcon} alt="" className={`star star-img ${i < rating ? 'filled' : ''}`} />
+    ))
+  }
 
   const scrollSlider = (direction) => {
     if (productsContainerRef.current) {
@@ -93,20 +101,20 @@ const FlashSale = () => {
         </div>
         <div className="countdown-timer">
           <div className="timer-segment">
+            <span className="timer-label">Day</span>
             <div className="timer-box">{formatTime(timeLeft.days)}</div>
-            <div className="timer-label">Day</div>
           </div>
           <div className="timer-segment">
+            <span className="timer-label">Min</span>
             <div className="timer-box">{formatTime(timeLeft.minutes)}</div>
-            <div className="timer-label">Min</div>
           </div>
           <div className="timer-segment">
+            <span className="timer-label">Hour</span>
             <div className="timer-box">{formatTime(timeLeft.hours)}</div>
-            <div className="timer-label">Hour</div>
           </div>
           <div className="timer-segment">
+            <span className="timer-label">Sec</span>
             <div className="timer-box">{formatTime(timeLeft.seconds)}</div>
-            <div className="timer-label">Sec</div>
           </div>
         </div>
       </div>
@@ -124,7 +132,7 @@ const FlashSale = () => {
               style={{ cursor: 'pointer' }}
             >
               <div className="product-badges">
-                <span className="badge badge-sale">Sale 10%</span>
+                <span className="badge badge-sale">Sale 50%</span>
               </div>
               <div className="product-image-container">
                 <div className="product-image-placeholder">
@@ -144,18 +152,16 @@ const FlashSale = () => {
                   <div className="price-section">
                     <div className="price-container">
                       <span className="sale-price">
-                        {product.salePrice < 500 ? `$${Number(product.salePrice).toFixed(2)}` : `৳${product.salePrice.toLocaleString('en-IN')}`}
+                        ৳{product.salePrice < 500 ? Number(product.salePrice).toFixed(2) : product.salePrice.toLocaleString('en-IN')}
                       </span>
                       {product.price && (
                         <span className="original-price">
-                          {product.price < 500 ? `$${Number(product.price).toFixed(2)}` : `৳${product.price.toLocaleString('en-IN')}`}
+                          ৳{product.price < 500 ? Number(product.price).toFixed(2) : product.price.toLocaleString('en-IN')}
                         </span>
                       )}
                     </div>
                     <div className="product-rating">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span key={i} className="star filled">★</span>
-                      ))}
+                      {renderStars(product.rating)}
                     </div>
                   </div>
                   <button 
@@ -165,10 +171,7 @@ const FlashSale = () => {
                     }}
                     aria-label="Add to cart"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M7 4V2C7 1.44772 7.44772 1 8 1H16C16.5523 1 17 1.44772 17 2V4H20C20.5523 4 21 4.44772 21 5C21 5.55228 20.5523 6 20 6H19V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V6H4C3.44772 6 3 5.55228 3 5C3 4.44772 3.44772 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-                      <path d="M9 9V17H11V9H9ZM13 9V17H15V9H13Z" fill="currentColor"/>
-                    </svg>
+                    <img src={cartCheckIcon} alt="" className="add-to-cart-icon-img" />
                   </button>
                 </div>
               </div>

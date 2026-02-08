@@ -3,10 +3,9 @@
   background-color: white;
   width: 1280px;
   max-width: calc(100% - 160px);
-  height: 578px;
-  min-height: 578px;
-  margin-left: 80px;
-  margin-right: 80px;
+  height: auto;
+  min-height: auto;
+  margin: 0 80px 1rem 80px;
   box-sizing: border-box;
 }
 
@@ -47,7 +46,7 @@
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 1.25rem;
 }
 
