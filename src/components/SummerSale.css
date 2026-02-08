@@ -201,3 +201,47 @@
     padding: 0.875rem 1.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .summer-sale-banner {
+    width: calc(100% - 24px);
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .summer-sale-container {
+    padding: 1.25rem 1rem;
+    gap: 1rem;
+  }
+
+  .summer-sale-image {
+    min-height: 160px;
+  }
+
+  .sale-headline-line1,
+  .sale-headline-line2 {
+    font-size: 1.5rem;
+  }
+
+  .sale-description {
+    font-size: 0.8125rem;
+  }
+
+  .summer-shop-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .summer-sale-banner {
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+
+  .sale-headline-line1,
+  .sale-headline-line2 {
+    font-size: 1.25rem;
+  }
+}

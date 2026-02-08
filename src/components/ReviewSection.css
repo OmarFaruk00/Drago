@@ -168,3 +168,43 @@
     font-size: 0.875rem;
   }
 }
+
+@media (max-width: 480px) {
+  .review-section {
+    width: calc(100% - 24px);
+    margin-left: 12px;
+    margin-right: 12px;
+    padding: 2.5rem 1rem;
+  }
+
+  .review-title {
+    font-size: 1.75rem;
+  }
+
+  .review-card {
+    padding: 1.25rem;
+  }
+
+  .quote-marks {
+    font-size: 2.5rem;
+  }
+
+  .author-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .review-section {
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    padding: 2rem 0.75rem;
+  }
+
+  .review-title {
+    font-size: 1.5rem;
+  }
+}

@@ -5,6 +5,7 @@
 }
 
 :root {
+  --Primary-50: #FFF1F0;
   --primary-red: #DC143C;
   --primary-green: #2d5016;
   --dark-teal: #2d5a5a;
@@ -44,6 +45,7 @@ body {
   font-size: 16px;
 }
 
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;
@@ -51,6 +53,18 @@ html {
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 375px) {
+  html {
+    font-size: 14px;
+  }
 }
 
 /* Round favicon support */
