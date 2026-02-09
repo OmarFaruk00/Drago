@@ -1,7 +1,15 @@
 /**
  * Seed Coupons for MongoDB
- * Run: MONGODB_URI=mongodb://localhost:27017/drago-store node scripts/seed-coupons.mjs
+ * Run: npm run seed:coupons
+ * Loads MONGODB_URI from .env.local
  */
+
+import { config } from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+config({ path: path.resolve(__dirname, "../.env.local") });
 
 import mongoose from "mongoose";
 import { mockCoupons } from "../src/lib/data/coupons.js";

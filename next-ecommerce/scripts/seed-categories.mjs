@@ -1,7 +1,15 @@
 /**
  * Seed Categories for MongoDB
- * Run: MONGODB_URI=mongodb://localhost:27017/drago-store node scripts/seed-categories.mjs
+ * Run: npm run seed:categories
+ * Loads MONGODB_URI from .env.local
  */
+
+import { config } from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+config({ path: path.resolve(__dirname, "../.env.local") });
 
 import mongoose from "mongoose";
 import { mockCategories } from "../src/lib/data/adminCategories.js";

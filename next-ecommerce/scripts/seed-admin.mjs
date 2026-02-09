@@ -1,8 +1,16 @@
 /**
  * Seed Admin user for MongoDB
- * Run: MONGODB_URI=mongodb://localhost:27017/drago-store node scripts/seed-admin.mjs
+ * Run: npm run seed:admin
+ * Loads MONGODB_URI from .env.local
  * Default: admin@store.com / password123
  */
+
+import { config } from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+config({ path: path.resolve(__dirname, "../.env.local") });
 
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
