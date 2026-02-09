@@ -1,129 +1,243 @@
 "use client";
 
-/**
- * Admin Dashboard - Basic UI
- * Shows overview stats, recent products (mock)
- * Protected by login - check user role
- */
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useStore } from "@/lib/store/useStore";
-import { products } from "@/lib/data/products";
+import {
+  ShoppingCart,
+  Package,
+  Users,
+  DollarSign,
+  Eye,
+  Edit,
+} from "lucide-react";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
-export default function AdminPage() {
-  const router = useRouter();
-  const user = useStore((s) => s.user);
-  const [mounted, setMounted] = useState(false);
+const statusColors = {
+  pending: "bg-amber-100 text-amber-800",
+  processing: "bg-blue-100 text-blue-800",
+  shipped: "bg-indigo-100 text-indigo-800",
+  delivered: "bg-green-100 text-green-800",
+  cancelled: "bg-red-100 text-red-800",
+};
+
+export default function AdminDashboardPage() {
+  const [stats, setStats] = useState(null);
+  const [trends, setTrends] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
+    Promise.all([
+      fetch("/api/admin/stats", { credentials: "include" }).then((r) => r.json()),
+      fetch("/api/admin/trends", { credentials: "include" }).then((r) => r.json()),
+      fetch("/api/admin/orders", { credentials: "include" }).then((r) => r.json()),
+    ])
+      .then(([s, t, o]) => {
+        setStats(s);
+        setTrends(t.trends || []);
+        setOrders(Array.isArray(o) ? o : o.orders || []);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    if (mounted && !user) {
-      router.push("/login");
-      return;
-    }
-    if (mounted && user && user.role !== "admin") {
-      router.push("/");
-    }
-  }, [mounted, user, router]);
-
-  if (!mounted || !user || user.role !== "admin") {
+  if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <p className="text-gray-600">Loading...</p>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
       </div>
     );
   }
 
-  const totalProducts = products.length;
-  const inStock = products.filter((p) => p.inStock).length;
-  const categories = [...new Set(products.map((p) => p.category))].length;
+  const cards = [
+    {
+      label: "Total Orders",
+      value: stats?.totalOrders ?? 0,
+      icon: ShoppingCart,
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+    },
+    {
+      label: "Total Products",
+      value: stats?.totalProducts ?? 0,
+      icon: Package,
+      color: "text-green-600",
+      bg: "bg-green-50",
+    },
+    {
+      label: "Total Customers",
+      value: stats?.totalUsers ?? 0,
+      icon: Users,
+      color: "text-purple-600",
+      bg: "bg-purple-50",
+    },
+    {
+      label: "Total Revenue",
+      value: formatCurrency(stats?.totalRevenue ?? 0),
+      icon: DollarSign,
+      color: "text-red-600",
+      bg: "bg-red-50",
+    },
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <span className="text-sm text-gray-600">Welcome, {user.name}</span>
-      </div>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <p className="text-sm text-gray-600">Total Products</p>
-          <p className="text-2xl font-bold text-gray-900">{totalProducts}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {cards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div
+              key={card.label}
+              className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">{card.label}</p>
+                  <p className="text-xl font-bold text-gray-900 mt-1">{card.value}</p>
+                </div>
+                <div className={`p-3 rounded-lg ${card.bg}`}>
+                  <Icon className={`w-6 h-6 ${card.color}`} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <h2 className="font-semibold text-gray-900 mb-4">Sales Trends</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trends}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#dc2626"
+                  strokeWidth={2}
+                  dot={{ fill: "#dc2626" }}
+                  name="Revenue"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <p className="text-sm text-gray-600">In Stock</p>
-          <p className="text-2xl font-bold text-green-600">{inStock}</p>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <p className="text-sm text-gray-600">Categories</p>
-          <p className="text-2xl font-bold text-gray-900">{categories}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <h2 className="font-semibold text-gray-900 mb-4">Orders Trends</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={trends}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip />
+                <Bar dataKey="orders" fill="#dc2626" radius={[4, 4, 0, 0]} name="Orders" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* Quick actions */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
-        <h2 className="font-semibold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="flex flex-wrap gap-2">
-          <span className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            Add Product (coming soon)
-          </span>
-          <span className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">
-            View Orders (coming soon)
-          </span>
+      {/* Recent Orders */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <h2 className="font-semibold text-gray-900">Recent Orders</h2>
           <Link
-            href="/products"
-            className="px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600"
+            href="/admin/orders"
+            className="text-sm font-medium text-red-600 hover:text-red-700"
           >
-            View Products
+            View all
           </Link>
         </div>
-      </div>
-
-      {/* Recent products table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <h2 className="font-semibold text-gray-900 p-4 border-b border-gray-200">
-          Products Overview
-        </h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Name</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Category</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Price</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Stock</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Order ID
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Customer
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Status
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Total
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Date
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {products.slice(0, 10).map((p) => (
-                <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900">{p.name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{p.category}</td>
-                  <td className="px-4 py-3 text-sm font-medium">{formatCurrency(p.price)}</td>
+              {(orders.slice(0, 8) || []).map((o) => (
+                <tr key={o.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                    #{String(o.id).slice(-6)}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-600">{o.customerName}</td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                        p.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                      className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
+                        statusColors[o.status] || "bg-gray-100 text-gray-800"
                       }`}
                     >
-                      {p.inStock ? "In Stock" : "Out of Stock"}
+                      {o.status}
                     </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm font-medium">{formatCurrency(o.total)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">
+                    {new Date(o.createdAt || o.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/admin/orders/${o.id}`}
+                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        title="View"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        href={`/admin/orders/${o.id}`}
+                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        title="Update Status"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="p-4 text-sm text-gray-500 border-t border-gray-200">
-          Showing 10 of {products.length} products. MongoDB integration coming later.
-        </p>
+        {(!orders || orders.length === 0) && (
+          <p className="p-8 text-center text-gray-500">No orders yet.</p>
+        )}
       </div>
     </div>
   );

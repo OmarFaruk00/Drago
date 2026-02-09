@@ -12,6 +12,9 @@ const geistSans = localFont({
 export const metadata = {
   title: "Drago Store - Modern E-Commerce",
   description: "Shop electronics, fashion, sports, and home products at great prices",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {

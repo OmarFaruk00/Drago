@@ -18,6 +18,7 @@ export const mockUsers = [
     password: "password123",
     name: "John Doe",
     role: "user",
+    phone: "+1 555-0101",
     createdAt: "2024-02-15",
   },
   {
@@ -26,6 +27,7 @@ export const mockUsers = [
     password: "password123",
     name: "Jane Smith",
     role: "user",
+    phone: "+1 555-0102",
     createdAt: "2024-03-20",
   },
 ];

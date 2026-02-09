@@ -1,24 +1,21 @@
 "use client";
 
 /**
- * ProductGrid - Dense marketplace grid (5-6 cols desktop)
- * Daraz-style compact layout, 200-240px cards
+ * ProductGrid - 4-col layout for listing (Dronado style)
+ * Responsive: 2 cols mobile, 3 tablet, 4 desktop
  */
 
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid({ products, columns = 6 }) {
-  // Dense: auto-fill for 5-6 cols, or fixed columns
-  const isDense = columns >= 5;
+export default function ProductGrid({ products, columns = 4 }) {
+  const gridCols = {
+    3: "grid-cols-2 sm:grid-cols-3",
+    4: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
+    6: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+  };
 
   return (
-    <div
-      className={`grid gap-2 sm:gap-3 ${
-        isDense
-          ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
-          : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
-      }`}
-    >
+    <div className={`grid ${gridCols[columns] || gridCols[4]} gap-3`}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

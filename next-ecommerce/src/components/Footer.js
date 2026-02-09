@@ -6,6 +6,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -14,7 +15,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand & Contact */}
           <div>
-            <h3 className="text-white text-xl font-bold mb-4">Drago</h3>
+            <Link href="/" className="inline-block mb-4">
+              <Image
+                src="/logo.png"
+                alt="Drago"
+                width={90}
+                height={32}
+                className="h-8 w-auto object-contain brightness-0 invert"
+              />
+            </Link>
             <p className="text-sm mb-4">
               Your trusted e-commerce platform for electronics and more. Quality products at great prices.
             </p>
