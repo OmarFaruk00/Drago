@@ -2,14 +2,13 @@
 
 /**
  * Navbar - Red top bar with white logo, search, cart/user
- * Design: Solid red background, white text, central search
  */
 
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 
 export default function Navbar() {

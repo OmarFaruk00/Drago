@@ -5,13 +5,12 @@
  */
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { useStore } from "@/lib/store/useStore";
 import SidebarMenu from "./SidebarMenu";
 import LogoutModal from "./LogoutModal";
 
 export default function DashboardLayout({ children }) {
-  const router = useRouter();
   const logout = useStore((s) => s.logout);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
@@ -19,8 +18,8 @@ export default function DashboardLayout({ children }) {
   const handleLogoutClick = () => setLogoutOpen(true);
   const handleLogoutConfirm = () => {
     logout();
-    router.push("/");
     setLogoutOpen(false);
+    signOut({ callbackUrl: "/" });
   };
 
   return (

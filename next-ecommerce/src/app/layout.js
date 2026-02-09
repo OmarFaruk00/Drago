@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import StoreShell from "@/components/StoreShell";
+import Providers from "@/components/Providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,7 +21,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} antialiased min-h-screen flex flex-col`}>
-        <StoreShell>{children}</StoreShell>
+        <Providers>
+          <StoreShell>{children}</StoreShell>
+        </Providers>
       </body>
     </html>
   );
