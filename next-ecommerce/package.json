@@ -9,10 +9,11 @@
     "lint": "next lint",
     "seed": "node scripts/seed-products.mjs",
     "seed:admin": "node scripts/seed-admin.mjs",
-    "seed:categories": "node scripts/seed-categories.mjs"
+    "seed:categories": "node scripts/seed-categories.mjs","seed:coupons": "node scripts/seed-coupons.mjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "framer-motion": "^12.34.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.563.0",
     "mongoose": "^8.0.0",

@@ -141,7 +141,7 @@ export const products = [
     name: "Bluetooth Portable Speaker",
     price: 2999,
     originalPrice: 3999,
-    image: "https://images.unsplash.com/photo-1545454670-ac407f78c8b0?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1543512214-659c93580adc?w=400&h=400&fit=crop",
     category: "Electronics",
     rating: 4.6,
     reviewCount: 89,

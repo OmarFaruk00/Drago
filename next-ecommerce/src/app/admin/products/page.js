@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Package, ArrowUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function AdminProductsPage() {
@@ -55,15 +55,37 @@ export default function AdminProductsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        <Link
-          href="/admin/products/add"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
-        >
-          <Plus className="w-4 h-4" />
-          Add Product
-        </Link>
+        {products.length > 0 && (
+          <Link
+            href="/admin/products/add"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+          >
+            <Plus className="w-4 h-4" />
+            Add Product
+          </Link>
+        )}
       </div>
 
+      {products.length === 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center py-16 px-6">
+          <div className="relative mb-6">
+            <ArrowUp className="absolute -top-8 left-1/2 -translate-x-1/2 w-8 h-8 text-red-600" />
+            <div className="w-24 h-24 rounded-2xl bg-red-100 flex items-center justify-center">
+              <Package className="w-12 h-12 text-red-600" strokeWidth={1.5} />
+            </div>
+          </div>
+          <p className="text-gray-600 text-center max-w-sm mb-6">
+            Your product list is empty. Add new products to start selling.
+          </p>
+          <Link
+            href="/admin/products/add"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+          >
+            <Plus className="w-5 h-5" />
+            Add New Product
+          </Link>
+        </div>
+      ) : (
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -135,9 +157,6 @@ export default function AdminProductsPage() {
             </tbody>
           </table>
         </div>
-        {products.length === 0 && (
-          <p className="p-8 text-center text-gray-500">No products yet.</p>
-        )}
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
             <p className="text-sm text-gray-500">
@@ -162,6 +181,7 @@ export default function AdminProductsPage() {
           </div>
         )}
       </div>
+      )}
 
       {/* Delete confirmation modal */}
       {confirmDelete && (

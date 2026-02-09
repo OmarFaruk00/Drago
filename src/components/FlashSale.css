@@ -296,10 +296,11 @@
 }
 
 
-.product-image-container {
+.flash-sale .product-image-container {
   position: relative;
   width: 100%;
-  height: 268px;
+  height: auto;
+  aspect-ratio: 133/74;
   background: #f9fafb;
   border-radius: 8px;
   overflow: hidden;
@@ -569,8 +570,8 @@
     min-height: 420px;
   }
 
-  .product-image-container {
-    height: 240px;
+  .flash-sale .product-image-container {
+    aspect-ratio: 133/74;
   }
 }
 
@@ -642,8 +643,8 @@
     padding: 0.75rem;
   }
 
-  .product-image-container {
-    height: 180px;
+  .flash-sale .product-image-container {
+    aspect-ratio: 133/74;
   }
 
   .product-image-placeholder {
@@ -685,8 +686,8 @@
     max-width: 220px;
   }
 
-  .product-image-container {
-    height: 160px;
+  .flash-sale .product-image-container {
+    aspect-ratio: 133/74;
   }
 
   .timer-box {

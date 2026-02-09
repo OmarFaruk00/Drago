@@ -2,11 +2,20 @@
 
 /**
  * Footer - Dark multi-column footer per design
- * Company, Customer Service, My Account, Download App, Social
+ * Company, Customer Service, My Account, Social
  */
 
 import Link from "next/link";
 import Image from "next/image";
+import { Facebook, Youtube, Instagram } from "lucide-react";
+
+function TiktokIcon({ className, size = 24 }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} width={size} height={size} aria-hidden>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
@@ -68,28 +77,36 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Download App */}
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <h4 className="text-white font-semibold mb-3">Download App</h4>
-          <div className="flex gap-3">
-            <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
-              <span className="text-2xl">📱</span>
-              <span className="text-sm">Google Play</span>
-            </a>
-            <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition">
-              <span className="text-2xl">🍎</span>
-              <span className="text-sm">App Store</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Social icons */}
+        {/* Social icons - white circles, white icons, hover: white bg + black icon */}
         <div className="border-t border-gray-800 mt-6 pt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-          <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-red-600 transition" aria-label="Facebook">📘</a>
-          <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-red-600 transition" aria-label="Twitter">🐦</a>
-          <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-red-600 transition" aria-label="Instagram">📷</a>
-          <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-red-600 transition" aria-label="LinkedIn">💼</a>
-          <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-red-600 transition" aria-label="YouTube">▶️</a>
+          <a
+            href="#"
+            className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-110"
+            aria-label="Facebook"
+          >
+            <Facebook className="w-5 h-5" strokeWidth={2} />
+          </a>
+          <a
+            href="#"
+            className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-110"
+            aria-label="YouTube"
+          >
+            <Youtube className="w-5 h-5" strokeWidth={2} />
+          </a>
+          <a
+            href="#"
+            className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-110"
+            aria-label="Instagram"
+          >
+            <Instagram className="w-5 h-5" strokeWidth={2} />
+          </a>
+          <a
+            href="#"
+            className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-110"
+            aria-label="TikTok"
+          >
+            <TiktokIcon size={20} />
+          </a>
         </div>
 
         {/* Copyright */}

@@ -25,6 +25,19 @@ const adminSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    phone: { type: String, default: "" },
+    avatar: { type: String, default: "" },
+    timezone: { type: String, default: "GMT+06:00" },
+    language: { type: String, default: "en" },
+    notificationPreferences: {
+      newOrder: { type: Boolean, default: true },
+      customerSignup: { type: Boolean, default: true },
+      stockAlert: { type: Boolean, default: true },
+      productUpdates: { type: Boolean, default: false },
+      newMessages: { type: Boolean, default: true },
+      promotionOffers: { type: Boolean, default: false },
+      securityBilling: { type: Boolean, default: true },
+    },
   },
   { timestamps: true }
 );

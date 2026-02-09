@@ -9,6 +9,8 @@ import {
   FolderTree,
   Users,
   BarChart3,
+  Tag,
+  Inbox,
   Settings,
   X,
 } from "lucide-react";
@@ -18,8 +20,10 @@ const menuItems = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
+  { href: "/admin/coupons", label: "Coupons", icon: Tag },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },
+  { href: "/admin/inbox", label: "Inbox", icon: Inbox },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
