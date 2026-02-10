@@ -9,9 +9,10 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
-import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 
 export default function ProductDetailsPage() {
+  const formatCurrency = useFormatCurrency();
   const params = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);

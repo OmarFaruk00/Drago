@@ -163,7 +163,7 @@ export default function CreateCouponPage() {
                       onChange={(e) => setForm((f) => ({ ...f, discountUnit: e.target.value }))}
                       className="px-3 py-2 border border-gray-300 rounded-lg"
                     >
-                      <option value="amount">$</option>
+                      <option value="amount">tk</option>
                       <option value="percent">%</option>
                     </select>
                   )}

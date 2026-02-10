@@ -10,9 +10,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useStore } from "@/lib/store/useStore";
-import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProductCard({ product }) {
+  const formatCurrency = useFormatCurrency();
+  const { t } = useLanguage();
   const router = useRouter();
   const addToCart = useStore((s) => s.addToCart);
   const [showActions, setShowActions] = useState(false);
@@ -66,7 +69,7 @@ export default function ProductCard({ product }) {
         />
         {!product.inStock && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <span className="bg-gray-800 text-white text-[10px] font-medium px-1.5 py-0.5 rounded">Out of Stock</span>
+            <span className="bg-gray-800 text-white text-[10px] font-medium px-1.5 py-0.5 rounded">{t("product.outOfStock")}</span>
           </div>
         )}
         {discount > 0 && (
@@ -82,7 +85,7 @@ export default function ProductCard({ product }) {
         >
           {iconBtn(null, "Wishlist", "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z")}
           {iconBtn(null, "Compare", "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4")}
-          {iconBtn(() => router.push(`/products/${product.id}`), "Quick View", "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z")}
+          {iconBtn(() => router.push(`/products/${product.id}`), t("product.quickView"), "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z")}
         </div>
       </div>
 
@@ -110,7 +113,7 @@ export default function ProductCard({ product }) {
           disabled={!product.inStock}
           className="mt-1.5 w-full py-1.5 bg-red-600 text-white text-[11px] font-medium rounded hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
         >
-          Add to Cart
+          {t("product.addToCart")}
         </button>
       </div>
     </div>

@@ -30,7 +30,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 
 const statusColors = {
   pending: "bg-amber-100 text-amber-800",
@@ -41,6 +41,7 @@ const statusColors = {
 };
 
 export default function AdminDashboardPage() {
+  const formatCurrency = useFormatCurrency();
   const [stats, setStats] = useState(null);
   const [trends, setTrends] = useState([]);
   const [orders, setOrders] = useState([]);

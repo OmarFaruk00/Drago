@@ -7,9 +7,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
-import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CheckoutPage() {
+  const formatCurrency = useFormatCurrency();
+  const { t } = useLanguage();
   const { cart, clearCart, user } = useStore();
   const [placed, setPlaced] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -71,9 +74,9 @@ export default function CheckoutPage() {
   if (cart.length === 0 && !placed) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("cart.empty")}</h1>
         <Link href="/products" className="text-red-500 hover:underline">
-          Add items to checkout
+          {t("cart.addItems")}
         </Link>
       </div>
     );
@@ -83,15 +86,13 @@ export default function CheckoutPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <div className="bg-green-50 border border-green-200 rounded-xl p-8">
-          <h1 className="text-2xl font-bold text-green-800 mb-2">Order Placed Successfully!</h1>
-          <p className="text-green-700 mb-6">
-            Your order has been placed successfully. You can track it in your dashboard.
-          </p>
+          <h1 className="text-2xl font-bold text-green-800 mb-2">{t("checkout.orderSuccessTitle")}</h1>
+          <p className="text-green-700 mb-6">{t("checkout.orderSuccessMsg")}</p>
           <Link
             href="/products"
             className="inline-block px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700"
           >
-            Continue Shopping
+            {t("cart.continueShopping")}
           </Link>
         </div>
       </div>
@@ -100,7 +101,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Checkout</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t("checkout.title")}</h1>
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Shipping form */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -168,7 +169,7 @@ export default function CheckoutPage() {
         {/* Order summary */}
         <div>
           <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
-            <h2 className="font-semibold text-gray-900 mb-4">Order Summary</h2>
+            <h2 className="font-semibold text-gray-900 mb-4">{t("cart.orderSummary")}</h2>
             <ul className="space-y-2 mb-4 max-h-64 overflow-y-auto">
               {cart.map((item) => (
                 <li key={item.id} className="flex justify-between text-sm">
@@ -181,7 +182,7 @@ export default function CheckoutPage() {
             </ul>
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between font-bold text-gray-900 text-lg">
-                <span>Total</span>
+                <span>{t("cart.total")}</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
             </div>
@@ -191,7 +192,7 @@ export default function CheckoutPage() {
               disabled={loading}
               className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition"
             >
-              {loading ? "Placing Order..." : "Place Order"}
+              {loading ? "..." : t("checkout.placeOrder")}
             </button>
           </div>
         </div>

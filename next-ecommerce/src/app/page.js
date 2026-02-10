@@ -8,6 +8,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
+import { useLanguage } from "@/contexts/LanguageContext";
 import CategorySection from "@/components/CategorySection";
 import FlashSale from "@/components/FlashSale";
 import ProductGrid from "@/components/ProductGrid";
@@ -17,6 +18,7 @@ import { categories } from "@/lib/data/categories";
 import { testimonials } from "@/lib/data/testimonials";
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -43,9 +45,9 @@ export default function HomePage() {
       <section className="py-8 md:py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Top Products</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t("home.topProducts")}</h2>
             <Link href="/products" className="text-red-600 font-medium hover:underline">
-              View All →
+              {t("home.viewAll")}
             </Link>
           </div>
           <ProductGrid products={products.slice(0, 6)} columns={6} />
@@ -58,9 +60,9 @@ export default function HomePage() {
       <section className="py-8 md:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Explore Our Products</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t("home.exploreProducts")}</h2>
             <Link href="/products" className="text-red-600 font-medium hover:underline">
-              View All →
+              {t("home.viewAll")}
             </Link>
           </div>
           <ProductGrid products={products.length > 6 ? products.slice(6, 12) : []} columns={6} />

@@ -7,15 +7,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
-import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { wishlistItems } from "@/lib/data/dashboard";
 
 export default function WishlistPage() {
   const addToCart = useStore((s) => s.addToCart);
+  const formatCurrency = useFormatCurrency();
+  const { t } = useLanguage();
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Wishlist</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{t("dashboard.wishlist")}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {wishlistItems.map((product) => (
           <div
@@ -34,7 +37,7 @@ export default function WishlistPage() {
                 onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image }, 1)}
                 className="mt-2 w-full py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700"
               >
-                Add to Cart
+                {t("product.addToCart")}
               </button>
             </div>
           </div>

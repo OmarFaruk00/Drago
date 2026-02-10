@@ -25,7 +25,7 @@ export const mockCoupons = [
     type: "free_shipping",
     discountValue: 0,
     discountUnit: "amount",
-    description: "Free shipping on orders over $50",
+    description: "Free shipping on orders over 500 tk",
     totalUsageLimit: 500,
     usagePerCustomer: 5,
     usageCount: 120,

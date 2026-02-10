@@ -8,9 +8,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
-import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 
 export default function CartItem({ item }) {
+  const formatCurrency = useFormatCurrency();
   const { updateQuantity, removeFromCart } = useStore();
 
   return (

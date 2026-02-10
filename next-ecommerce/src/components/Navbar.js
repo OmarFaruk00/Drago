@@ -10,8 +10,10 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Navbar() {
+  const { t, locale, setLocale } = useLanguage();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,24 +55,38 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search Products"
+                  placeholder={t("nav.searchProducts")}
                   className="w-full pl-10 pr-24 py-2 bg-white border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white/30 focus:outline-none"
                 />
                 <button
                   type="submit"
                   className="absolute right-0 top-0 h-full px-4 bg-gray-800 text-white hover:bg-gray-900"
                 >
-                  Search
+                  {t("nav.search")}
                 </button>
               </div>
             </form>
 
-            {/* Right: User & Cart icons - White */}
-            <div className="flex items-center gap-3">
+            {/* Right: Lang switcher, User & Cart */}
+            <div className="flex items-center gap-2">
+              <div className="flex rounded overflow-hidden border border-white/30">
+                <button
+                  onClick={() => setLocale("en")}
+                  className={`px-2 py-1 text-xs font-medium ${locale === "en" ? "bg-white text-red-600" : "text-white hover:bg-red-700"}`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLocale("bn")}
+                  className={`px-2 py-1 text-xs font-medium ${locale === "bn" ? "bg-white text-red-600" : "text-white hover:bg-red-700"}`}
+                >
+                  BN
+                </button>
+              </div>
               <Link
                 href={user ? "/dashboard" : "/login"}
                 className="p-2 text-white hover:bg-red-700 rounded transition"
-                title={user ? "Dashboard" : "Account"}
+                title={user ? t("nav.dashboard") : t("nav.account")}
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -79,7 +95,7 @@ export default function Navbar() {
               <Link
                 href="/cart"
                 className="relative p-2 text-white hover:bg-red-700 rounded transition"
-                title="Cart"
+                title={t("nav.cart")}
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -109,7 +125,7 @@ export default function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search Products"
+                placeholder={t("nav.searchProducts")}
                 className="w-full pl-10 pr-4 py-2 bg-white rounded text-gray-900 placeholder-gray-500"
               />
             </div>
@@ -121,26 +137,14 @@ export default function Navbar() {
       <div className="hidden md:block bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-6 py-3">
-            <Link href="/" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">
-              Home
-            </Link>
+            <Link href="/" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.home")}</Link>
             {user && (
-              <Link href="/dashboard" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">
-                Dashboard
-              </Link>
+              <Link href="/dashboard" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.dashboard")}</Link>
             )}
-            <Link href="/products" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">
-              All Products
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">
-              About Us
-            </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">
-              Blog
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">
-              Contact Us
-            </Link>
+            <Link href="/products" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.products")}</Link>
+            <Link href="/about" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.about")}</Link>
+            <Link href="/blog" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.blog")}</Link>
+            <Link href="/contact" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.contact")}</Link>
           </div>
         </div>
       </div>
@@ -149,13 +153,13 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
           <div className="px-4 py-3 flex flex-col gap-1">
-            <Link href="/" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Home</Link>
-            {user && <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Dashboard</Link>}
-            <Link href="/products" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">All Products</Link>
-            <Link href="/about" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">About Us</Link>
-            <Link href="/blog" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Blog</Link>
-            <Link href="/contact" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Contact Us</Link>
-            <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Cart ({cartCount})</Link>
+            <Link href="/" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.home")}</Link>
+            {user && <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.dashboard")}</Link>}
+            <Link href="/products" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.products")}</Link>
+            <Link href="/about" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.about")}</Link>
+            <Link href="/blog" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.blog")}</Link>
+            <Link href="/contact" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.contact")}</Link>
+            <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.cart")} ({cartCount})</Link>
           </div>
         </div>
       )}

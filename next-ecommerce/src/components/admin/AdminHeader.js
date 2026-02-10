@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Bell, LogOut, Menu } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AdminHeader({ onMenuClick }) {
+  const { t, locale, setLocale } = useLanguage();
   const router = useRouter();
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,6 +46,20 @@ export default function AdminHeader({ onMenuClick }) {
         </div>
       </div>
       <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex rounded overflow-hidden border border-gray-200">
+          <button
+            onClick={() => setLocale("en")}
+            className={`px-2 py-1 text-xs font-medium ${locale === "en" ? "bg-red-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLocale("bn")}
+            className={`px-2 py-1 text-xs font-medium ${locale === "bn" ? "bg-red-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+          >
+            BN
+          </button>
+        </div>
         <button
           className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg relative"
           title="Notifications"

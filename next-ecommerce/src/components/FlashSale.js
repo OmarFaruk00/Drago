@@ -8,8 +8,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductCard from "./ProductCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function FlashSale({ products }) {
+  const { t } = useLanguage();
   const [timeLeft, setTimeLeft] = useState({ days: 2, hrs: 6, min: 1, sec: 29 });
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function FlashSale({ products }) {
     <section className="py-8 md:py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">FLASH SALE</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t("home.flashSale").toUpperCase()}</h2>
           {/* Countdown timer - red/black style */}
           <div className="flex gap-2">
             {items.map(({ label, value }) => (

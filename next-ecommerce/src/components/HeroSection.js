@@ -7,6 +7,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const container = {
   hidden: { opacity: 0 },
@@ -26,6 +27,7 @@ const itemUp = {
 };
 
 export default function HeroSection() {
+  const { t } = useLanguage();
   return (
     <section className="relative bg-gray-100 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
@@ -69,13 +71,13 @@ export default function HeroSection() {
               variants={itemUp}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-2 tracking-tight"
             >
-              Big Sale
+              {t("home.hero.bigSale")}
             </motion.h1>
             <motion.p
               variants={itemUp}
               className="text-lg md:text-xl text-white/95 mb-6 drop-shadow max-w-md"
             >
-              Update Your Style
+              {t("home.hero.updateStyle")}
             </motion.p>
             <motion.div variants={itemUp}>
               <Link href="/products">
@@ -85,7 +87,7 @@ export default function HeroSection() {
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  Shop Now
+                  {t("home.hero.cta")}
                 </motion.span>
               </Link>
             </motion.div>

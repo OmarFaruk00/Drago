@@ -119,20 +119,20 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
           <div className="flex gap-2">
             <input
               type="number"
-              placeholder="Min (৳)"
+              placeholder="Min (tk)"
               value={priceMin}
               onChange={(e) => setPriceMin(e.target.value)}
               className="w-full px-2 py-1.5 border border-gray-300 rounded text-xs"
             />
             <input
               type="number"
-              placeholder="Max (৳)"
+              placeholder="Max (tk)"
               value={priceMax}
               onChange={(e) => setPriceMax(e.target.value)}
               className="w-full px-2 py-1.5 border border-gray-300 rounded text-xs"
             />
           </div>
-          <p className="text-xs text-gray-500">Range: ৳{priceMin || 0} - ৳{priceMax || priceRange}</p>
+          <p className="text-xs text-gray-500">Range: {priceMin || 0} - {priceMax || priceRange} tk</p>
           <button
             onClick={applyPriceFilter}
             className="w-full py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700"
@@ -228,7 +228,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-gray-800 line-clamp-2 group-hover:text-red-600">{p.name}</p>
-                  <p className="text-xs font-bold text-red-600 mt-0.5">৳{Number(p.price).toLocaleString()}</p>
+                  <p className="text-xs font-bold text-red-600 mt-0.5">{Number(p.price).toLocaleString()} tk</p>
                   <span className="text-amber-500 text-[10px]">★ {p.rating}</span>
                 </div>
               </Link>

@@ -14,7 +14,7 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id && !session?.user?.email) {
     return NextResponse.json({
-      totalSales: "৳0",
+      totalSales: "0 tk",
       orders: 0,
       products: 0,
       recentActivities: [],
@@ -55,7 +55,7 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    totalSales: "৳0",
+    totalSales: "0 tk",
     orders: 0,
     products: 0,
     recentActivities: [],

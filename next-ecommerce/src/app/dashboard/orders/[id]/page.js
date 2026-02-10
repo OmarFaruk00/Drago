@@ -92,7 +92,7 @@ export default function OrderDetailsPage() {
                 </Link>
                 <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
               </div>
-              <p className="font-semibold text-red-600">৳{(item.price * item.quantity).toLocaleString()}</p>
+              <p className="font-semibold text-red-600">{(item.price * item.quantity).toLocaleString()} tk</p>
             </div>
           ))}
         </div>

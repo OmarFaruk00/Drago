@@ -20,7 +20,7 @@ export default function ShopPage() {
       </div>
     )},
     { key: "stock", label: "Stock" },
-    { key: "price", label: "Price", render: (v) => `৳${Number(v).toLocaleString()}` },
+    { key: "price", label: "Price", render: (v) => `${Number(v).toLocaleString()} tk` },
     { key: "actions", label: "Actions", render: (_, row) => (
       <div className="flex gap-2">
         <button className="text-red-600 text-sm hover:underline">Edit</button>

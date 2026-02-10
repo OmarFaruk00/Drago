@@ -8,6 +8,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Youtube, Instagram } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function TiktokIcon({ className, size = 24 }) {
   return (
@@ -18,6 +19,7 @@ function TiktokIcon({ className, size = 24 }) {
 }
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="bg-gray-900 text-gray-300 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -33,46 +35,44 @@ export default function Footer() {
                 className="h-8 w-auto object-contain brightness-0 invert"
               />
             </Link>
-            <p className="text-sm mb-4">
-              Your trusted e-commerce platform for electronics and more. Quality products at great prices.
-            </p>
+            <p className="text-sm mb-4">{t("footer.tagline")}</p>
             <div className="space-y-2 text-sm">
-              <p><span className="text-gray-400">Address:</span> 123 Main St, Dhaka, Bangladesh</p>
-              <p><span className="text-gray-400">Phone:</span> +880 1XXX-XXXXXX</p>
-              <p><span className="text-gray-400">Email:</span> support@drago.com</p>
+              <p><span className="text-gray-400">{t("footer.address")}:</span> 123 Main St, Dhaka, Bangladesh</p>
+              <p><span className="text-gray-400">{t("footer.phone")}:</span> +880 1XXX-XXXXXX</p>
+              <p><span className="text-gray-400">{t("footer.email")}:</span> support@drago.com</p>
             </div>
           </div>
 
           {/* Company */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <h4 className="text-white font-semibold mb-4">{t("footer.company")}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-red-400 transition">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-red-400 transition">Contact Us</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">Our Services</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">Terms & Conditions</Link></li>
+              <li><Link href="/about" className="hover:text-red-400 transition">{t("footer.about")}</Link></li>
+              <li><Link href="/contact" className="hover:text-red-400 transition">{t("footer.contact")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.services")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.privacy")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.terms")}</Link></li>
             </ul>
           </div>
 
           {/* Customer Service */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Customer Service</h4>
+            <h4 className="text-white font-semibold mb-4">{t("footer.customerService")}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="hover:text-red-400 transition">Shipping & Return</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">FAQ</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">Payment Options</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.shipping")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.faq")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.paymentOptions")}</Link></li>
             </ul>
           </div>
 
           {/* My Account */}
           <div>
-            <h4 className="text-white font-semibold mb-4">My Account</h4>
+            <h4 className="text-white font-semibold mb-4">{t("footer.myAccount")}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/login" className="hover:text-red-400 transition">My Profile</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">Wishlist</Link></li>
-              <li><Link href="/cart" className="hover:text-red-400 transition">My Cart</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">Order Tracking</Link></li>
+              <li><Link href="/login" className="hover:text-red-400 transition">{t("footer.profile")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.wishlist")}</Link></li>
+              <li><Link href="/cart" className="hover:text-red-400 transition">{t("footer.myCart")}</Link></li>
+              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.orderTracking")}</Link></li>
             </ul>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Drago. All rights reserved.
+          © {new Date().getFullYear()} Drago. {t("footer.rights")}
         </div>
       </div>
     </footer>

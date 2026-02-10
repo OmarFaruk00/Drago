@@ -10,7 +10,7 @@ import DashboardTable from "@/components/dashboard/DashboardTable";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
-    totalSales: "৳0",
+    totalSales: "0 tk",
     orders: 0,
     products: 0,
     recentActivities: [],
