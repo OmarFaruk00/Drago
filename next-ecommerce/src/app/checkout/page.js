@@ -1,8 +1,7 @@
 "use client";
 
 /**
- * Checkout Page - UI only (no payment integration)
- * Shipping form, order summary, place order button
+ * Checkout Page - Places order to database
  */
 
 import { useState } from "react";
@@ -11,15 +10,17 @@ import { useStore } from "@/lib/store/useStore";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function CheckoutPage() {
-  const { cart, clearCart } = useStore();
+  const { cart, clearCart, user } = useStore();
   const [placed, setPlaced] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
-    fullName: "",
-    email: "",
+    fullName: user?.name || "",
+    email: user?.email || "",
     address: "",
     city: "",
     zip: "",
-    country: "",
+    country: "Bangladesh",
   });
 
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
@@ -28,11 +29,43 @@ export default function CheckoutPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
-    // Mock order placement - no payment integration
-    setPlaced(true);
-    clearCart();
+    setError("");
+    setLoading(true);
+    try {
+      const items = cart.map((i) => ({
+        id: i.id,
+        name: i.name,
+        price: i.price,
+        image: i.image,
+        quantity: i.quantity,
+      }));
+      const shippingAddress = [form.address, form.city, form.zip, form.country].filter(Boolean).join(", ");
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          customerName: form.fullName,
+          customerEmail: form.email,
+          items,
+          total: subtotal,
+          shippingAddress,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Failed to place order");
+        return;
+      }
+      setPlaced(true);
+      clearCart();
+    } catch (err) {
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (cart.length === 0 && !placed) {
@@ -52,7 +85,7 @@ export default function CheckoutPage() {
         <div className="bg-green-50 border border-green-200 rounded-xl p-8">
           <h1 className="text-2xl font-bold text-green-800 mb-2">Order Placed Successfully!</h1>
           <p className="text-green-700 mb-6">
-            Thank you for your order. (This is a demo - no actual order was placed.)
+            Your order has been placed successfully. You can track it in your dashboard.
           </p>
           <Link
             href="/products"
@@ -152,14 +185,13 @@ export default function CheckoutPage() {
                 <span>{formatCurrency(subtotal)}</span>
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-2 mb-4">
-              Payment integration will be added later. This is a UI demo.
-            </p>
+            {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
             <button
               type="submit"
-              className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition"
+              disabled={loading}
+              className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition"
             >
-              Place Order
+              {loading ? "Placing Order..." : "Place Order"}
             </button>
           </div>
         </div>

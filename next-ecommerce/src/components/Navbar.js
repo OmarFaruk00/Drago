@@ -31,14 +31,14 @@ export default function Navbar() {
       <div className="bg-red-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo - fixed navbar 64px, logo h-10 (40px) */}
-            <Link href="/" className="flex-shrink-0 flex items-center h-10">
+            {/* Logo - fixed 130×45px */}
+            <Link href="/" className="flex-shrink-0 flex items-center">
               <Image
                 src="/logo.png"
                 alt="Drago"
-                width={120}
-                height={40}
-                className="h-10 w-auto object-contain brightness-0 invert"
+                width={130}
+                height={45}
+                className="w-[130px] h-[45px] object-contain brightness-0 invert"
                 priority
               />
             </Link>

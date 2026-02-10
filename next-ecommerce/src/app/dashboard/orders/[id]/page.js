@@ -7,14 +7,42 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import StatusBadge from "@/components/dashboard/StatusBadge";
-import { orderDetails } from "@/lib/data/dashboard";
+import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 const steps = ["Pending", "Processing", "Shipped", "Delivered"];
 
 export default function OrderDetailsPage() {
   const params = useParams();
-  const order = orderDetails;
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!params?.id) return;
+    fetch(`/api/dashboard/orders/${params.id}`, { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => (data.error ? setOrder(null) : setOrder(data)))
+      .catch(() => setOrder(null))
+      .finally(() => setLoading(false));
+  }, [params?.id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-500" />
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="py-8">
+        <Link href="/dashboard/orders" className="text-sm text-red-600 hover:underline">← Back to Orders</Link>
+        <p className="text-gray-500 mt-4">Order not found.</p>
+      </div>
+    );
+  }
 
   const statusIndex = steps.findIndex((s) => s.toLowerCase() === order.status);
 
@@ -53,10 +81,10 @@ export default function OrderDetailsPage() {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
         <h2 className="px-4 py-3 font-semibold border-b">Order Items</h2>
         <div className="divide-y">
-          {order.items.map((item, i) => (
+          {(order.items || []).map((item, i) => (
             <div key={i} className="flex gap-4 p-4">
               <div className="relative w-16 h-16 rounded overflow-hidden bg-gray-100 flex-shrink-0">
-                <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
+                <Image src={item.image || "https://via.placeholder.com/64"} alt={item.name} fill className="object-cover" sizes="64px" />
               </div>
               <div className="flex-1 min-w-0">
                 <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-red-600">
@@ -78,7 +106,7 @@ export default function OrderDetailsPage() {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h3 className="font-semibold mb-2">Total</h3>
-          <p className="text-xl font-bold text-red-600">৳{order.total.toLocaleString()}</p>
+          <p className="text-xl font-bold text-red-600">{formatCurrency(order.total)}</p>
         </div>
       </div>
     </div>
