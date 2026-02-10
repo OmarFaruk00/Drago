@@ -1,14 +1,21 @@
 "use client";
 
 /**
- * FlashSale - Countdown timer + product cards
- * Design: Red/black timer (DAYS, HRS, MIN, SEC), 3 products horizontal
+ * FlashSale - Purple gradient banner with FLASH SALE + LIMITED OFFER
+ * Lightning theme, countdown timer, product cards
  */
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+function LightningIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+    </svg>
+  );
+}
 
 export default function FlashSale({ products }) {
   const { t } = useLanguage();
@@ -47,18 +54,47 @@ export default function FlashSale({ products }) {
   return (
     <section className="py-8 md:py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">{t("home.flashSale").toUpperCase()}</h2>
-          {/* Countdown timer - red/black style */}
-          <div className="flex gap-2">
-            {items.map(({ label, value }) => (
-              <div key={label} className="flex flex-col items-center">
-                <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-gray-900 text-white font-bold text-lg rounded">
-                  {String(value).padStart(2, "0")}
-                </div>
-                <span className="text-xs text-gray-500 mt-1">{label}</span>
+        {/* Flash Sale Banner - Purple gradient, lightning style */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 via-purple-600 to-purple-800 p-6 md:p-8 mb-6 border-2 border-purple-900/30">
+          {/* Dotted pattern overlay */}
+          <div className="absolute inset-0 opacity-30" style={{
+            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+            backgroundSize: "16px 16px",
+          }} />
+          <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+
+          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            {/* FLASH SALE text block */}
+            <div className="flex flex-col items-start">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="px-4 py-1 bg-red-500 text-white font-bold text-sm tracking-wider shadow-lg border-l-2 border-t-2 border-white/30">
+                  FLASH
+                </span>
+                <LightningIcon className="w-5 h-5 text-amber-400" />
               </div>
-            ))}
+              <div className="flex items-center gap-2">
+                <LightningIcon className="w-8 h-8 text-amber-400 -ml-1 hidden sm:block" />
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-amber-400 tracking-tight drop-shadow-lg">
+                  SALE
+                </h2>
+                <LightningIcon className="w-6 h-6 text-amber-400" />
+              </div>
+              <p className="mt-2 text-white font-semibold text-sm tracking-widest uppercase">
+                {t("home.limitedOffer")}
+              </p>
+            </div>
+
+            {/* Countdown timer */}
+            <div className="flex gap-2">
+              {items.map(({ label, value }) => (
+                <div key={label} className="flex flex-col items-center">
+                  <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-black/40 text-white font-bold text-lg rounded-lg border border-white/20">
+                    {String(value).padStart(2, "0")}
+                  </div>
+                  <span className="text-xs text-white/90 mt-1 font-medium">{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         {/* 3 Product cards horizontal */}
