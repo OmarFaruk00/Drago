@@ -3,6 +3,8 @@
  */
 
 import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 import connectDB from "@/lib/db/mongodb";
 import Admin from "@/lib/models/Admin";
 import { signToken } from "@/lib/auth";
@@ -20,12 +22,15 @@ export async function POST(request) {
     let admin = null;
 
     if (USE_MONGODB) {
-      await connectDB();
-      admin = await Admin.findOne({ email }).select("+password");
-      if (admin && !(await admin.comparePassword(password))) admin = null;
-    } else {
+      const conn = await connectDB();
+      if (conn) {
+        admin = await Admin.findOne({ email: email.toLowerCase().trim() }).select("+password");
+        if (admin && !(await admin.comparePassword(password))) admin = null;
+      }
+    }
+    if (!admin) {
       const mockAdmin = mockUsers.find(
-        (u) => u.email === email && u.password === password && u.role === "admin"
+        (u) => u.email.toLowerCase() === email.toLowerCase().trim() && u.password === password && u.role === "admin"
       );
       if (mockAdmin) admin = { id: mockAdmin.id, email: mockAdmin.email, name: mockAdmin.name };
     }

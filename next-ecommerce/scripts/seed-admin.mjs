@@ -37,16 +37,17 @@ async function seed() {
     const password = "password123";
     const hash = await bcrypt.hash(password, 10);
 
-    const existing = await Admin.findOne({ email });
+    const existing = await Admin.findOne({ email }).select("+password");
     if (existing) {
-      existing.password = hash;
-      existing.name = "Admin User";
-      await existing.save();
+      await Admin.updateOne(
+        { email },
+        { $set: { password: hash, name: "Admin User" } }
+      );
       console.log("Updated existing admin:", email);
     } else {
       await Admin.create({
         email,
-        password: hash,
+        password, // plain - pre-save will hash it
         name: "Admin User",
       });
       console.log("Created admin:", email);
