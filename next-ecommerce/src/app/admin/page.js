@@ -9,6 +9,15 @@ import {
   DollarSign,
   Eye,
   Edit,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Calendar,
+  CalendarDays,
+  UserPlus,
+  Percent,
+  Banknote,
+  UserCheck,
 } from "lucide-react";
 import {
   LineChart,
@@ -89,6 +98,86 @@ export default function AdminDashboardPage() {
       color: "text-red-600",
       bg: "bg-red-50",
     },
+    {
+      label: "Pending Orders",
+      value: stats?.pendingOrders ?? 0,
+      icon: Clock,
+      color: "text-amber-600",
+      bg: "bg-amber-50",
+      pctChange: stats?.pctPending ?? 0,
+    },
+    {
+      label: "Completed Orders",
+      value: stats?.completedOrders ?? 0,
+      icon: CheckCircle,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+      pctChange: stats?.pctCompleted ?? 0,
+    },
+    {
+      label: "Cancelled Orders",
+      value: stats?.cancelledOrders ?? 0,
+      icon: XCircle,
+      color: "text-red-600",
+      bg: "bg-red-50",
+      pctChange: stats?.pctCancelled ?? 0,
+    },
+    {
+      label: "Today Sales",
+      value: formatCurrency(stats?.todaySales ?? 0),
+      icon: Calendar,
+      color: "text-sky-600",
+      bg: "bg-sky-50",
+      pctChange: stats?.pctTodaySales ?? 0,
+    },
+    {
+      label: "Monthly Sales",
+      value: formatCurrency(stats?.monthlySales ?? 0),
+      icon: CalendarDays,
+      color: "text-indigo-600",
+      bg: "bg-indigo-50",
+      pctChange: stats?.pctMonthlySales ?? 0,
+    },
+    {
+      label: "Total Visitors",
+      value: (stats?.totalVisitors ?? 0).toLocaleString(),
+      icon: Eye,
+      color: "text-violet-600",
+      bg: "bg-violet-50",
+      pctChange: stats?.pctTotalVisitors ?? 0,
+    },
+    {
+      label: "New Visitors Today",
+      value: stats?.newVisitorsToday ?? 0,
+      icon: UserPlus,
+      color: "text-pink-600",
+      bg: "bg-pink-50",
+      pctChange: stats?.pctNewVisitors ?? 0,
+    },
+    {
+      label: "Conversion Rate",
+      value: `${stats?.conversionRate ?? 0}%`,
+      icon: Percent,
+      color: "text-cyan-600",
+      bg: "bg-cyan-50",
+      pctChange: stats?.pctConversion ?? 0,
+    },
+    {
+      label: "Average Order Value",
+      value: formatCurrency(stats?.averageOrderValue ?? 0),
+      icon: Banknote,
+      color: "text-teal-600",
+      bg: "bg-teal-50",
+      pctChange: stats?.pctAOV ?? 0,
+    },
+    {
+      label: "Active Users",
+      value: stats?.activeUsers ?? 0,
+      icon: UserCheck,
+      color: "text-orange-600",
+      bg: "bg-orange-50",
+      pctChange: stats?.pctActiveUsers ?? 0,
+    },
   ];
 
   return (
@@ -99,6 +188,8 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card) => {
           const Icon = card.icon;
+          const hasPct = card.pctChange != null;
+          const pctUp = hasPct && card.pctChange >= 0;
           return (
             <div
               key={card.label}
@@ -108,6 +199,11 @@ export default function AdminDashboardPage() {
                 <div>
                   <p className="text-sm font-medium text-gray-500">{card.label}</p>
                   <p className="text-xl font-bold text-gray-900 mt-1">{card.value}</p>
+                  {hasPct && (
+                    <p className={`text-xs font-medium mt-1 ${pctUp ? "text-green-600" : "text-red-600"}`}>
+                      {pctUp ? "↑" : "↓"} {Math.abs(card.pctChange)}%
+                    </p>
+                  )}
                 </div>
                 <div className={`p-3 rounded-lg ${card.bg}`}>
                   <Icon className={`w-6 h-6 ${card.color}`} />
