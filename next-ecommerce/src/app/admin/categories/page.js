@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Search, Pencil, Trash2, FolderTree, ArrowUp, Upload } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, FolderTree, Upload } from "lucide-react";
+import CategoriesEmptyState from "@/components/admin/CategoriesEmptyState";
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -114,24 +115,7 @@ export default function AdminCategoriesPage() {
       </div>
 
       {categories.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center py-16 px-6">
-          <div className="relative mb-6">
-            <ArrowUp className="absolute -top-8 left-1/2 -translate-x-1/2 w-8 h-8 text-red-600" />
-            <div className="w-24 h-24 rounded-2xl bg-red-100 flex items-center justify-center">
-              <FolderTree className="w-12 h-12 text-red-600" strokeWidth={1.5} />
-            </div>
-          </div>
-          <p className="text-gray-600 text-center max-w-sm mb-6">
-            Create your Category. Organize your products with categories to make them easy to find.
-          </p>
-          <button
-            onClick={() => setAddModalOpen(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
-          >
-            <Plus className="w-5 h-5" />
-            Add New Category
-          </button>
-        </div>
+        <CategoriesEmptyState />
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">

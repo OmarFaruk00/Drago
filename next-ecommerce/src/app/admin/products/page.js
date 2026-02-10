@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Pencil, Trash2, Plus, Package, ArrowUp } from "lucide-react";
+import { Pencil, Trash2, Plus } from "lucide-react";
+import ProductsEmptyState from "@/components/admin/ProductsEmptyState";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function AdminProductsPage() {
@@ -67,24 +68,7 @@ export default function AdminProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center py-16 px-6">
-          <div className="relative mb-6">
-            <ArrowUp className="absolute -top-8 left-1/2 -translate-x-1/2 w-8 h-8 text-red-600" />
-            <div className="w-24 h-24 rounded-2xl bg-red-100 flex items-center justify-center">
-              <Package className="w-12 h-12 text-red-600" strokeWidth={1.5} />
-            </div>
-          </div>
-          <p className="text-gray-600 text-center max-w-sm mb-6">
-            Your product list is empty. Add new products to start selling.
-          </p>
-          <Link
-            href="/admin/products/add"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
-          >
-            <Plus className="w-5 h-5" />
-            Add New Product
-          </Link>
-        </div>
+        <ProductsEmptyState />
       ) : (
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
