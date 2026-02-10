@@ -8,7 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 
 export default function Navbar() {
@@ -43,19 +43,22 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* Search - Central, white bg */}
+            {/* Search - Central, white bg, search icon inside */}
             <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-4 lg:mx-8">
-              <div className="relative w-full">
+              <div className="relative w-full flex rounded overflow-hidden">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <Search className="w-5 h-5" />
+                </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  className="w-full pl-4 pr-12 py-2 bg-white border-0 rounded focus:ring-2 focus:ring-white/30 text-gray-900 placeholder-gray-500"
+                  placeholder="Search Products"
+                  className="w-full pl-10 pr-24 py-2 bg-white border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white/30 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="absolute right-0 top-0 h-full px-4 bg-gray-800 text-white rounded-r hover:bg-gray-900"
+                  className="absolute right-0 top-0 h-full px-4 bg-gray-800 text-white hover:bg-gray-900"
                 >
                   Search
                 </button>
@@ -100,13 +103,16 @@ export default function Navbar() {
 
           {/* Mobile search */}
           <form onSubmit={handleSearch} className="md:hidden pb-3">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products..."
-              className="w-full px-4 py-2 bg-white rounded text-gray-900 placeholder-gray-500"
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search Products"
+                className="w-full pl-10 pr-4 py-2 bg-white rounded text-gray-900 placeholder-gray-500"
+              />
+            </div>
           </form>
         </div>
       </div>
