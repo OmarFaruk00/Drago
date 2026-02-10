@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { verifyToken } from "./auth";
+import { verifyToken } from "./adminJwt";
 
 export async function requireAdmin() {
   const cookieStore = cookies();

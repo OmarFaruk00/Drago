@@ -3,7 +3,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { verifyToken } from "@/lib/adminJwt";
 
 export async function GET(request) {
   const token = request.cookies?.get("adminToken")?.value;

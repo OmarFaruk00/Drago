@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 import connectDB from "@/lib/db/mongodb";
 import Admin from "@/lib/models/Admin";
-import { signToken } from "@/lib/auth";
+import { signToken } from "@/lib/adminJwt";
 import { mockUsers } from "@/lib/data/users";
 
 const USE_MONGODB = !!process.env.MONGODB_URI;
@@ -22,10 +22,14 @@ export async function POST(request) {
     let admin = null;
 
     if (USE_MONGODB) {
-      const conn = await connectDB();
-      if (conn) {
-        admin = await Admin.findOne({ email: email.toLowerCase().trim() }).select("+password");
-        if (admin && !(await admin.comparePassword(password))) admin = null;
+      try {
+        const conn = await connectDB();
+        if (conn) {
+          admin = await Admin.findOne({ email: email.toLowerCase().trim() }).select("+password");
+          if (admin && !(await admin.comparePassword(password))) admin = null;
+        }
+      } catch (dbErr) {
+        console.error("Admin login DB error:", dbErr?.message || dbErr);
       }
     }
     if (!admin) {
@@ -61,7 +65,7 @@ export async function POST(request) {
 
     return response;
   } catch (err) {
-    console.error("Admin login error:", err);
+    console.error("Admin login error:", err?.message || err);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }

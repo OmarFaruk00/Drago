@@ -1,8 +1,7 @@
 /**
- * Auth utilities - signToken, verifyToken for admin JWT + NextAuth config
+ * NextAuth config - admin JWT is in @/lib/adminJwt
  */
 
-import jwt from "jsonwebtoken";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -64,17 +63,3 @@ export const authOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   secret: process.env.NEXTAUTH_SECRET,
 };
-
-const JWT_SECRET = process.env.JWT_SECRET || "drago-store-secret-key-change-in-production";
-
-export function signToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
-}
-
-export function verifyToken(token) {
-  try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch {
-    return null;
-  }
-}
