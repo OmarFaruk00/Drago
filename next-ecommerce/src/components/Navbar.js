@@ -136,7 +136,7 @@ export default function Navbar() {
       {/* Secondary nav - White bg, dark text */}
       <div className="hidden md:block bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-6 py-3">
+          <div className="flex gap-6 py-3 items-center">
             <Link href="/" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.home")}</Link>
             {user && (
               <Link href="/dashboard" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.dashboard")}</Link>
@@ -145,6 +145,12 @@ export default function Navbar() {
             <Link href="/about" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.about")}</Link>
             <Link href="/blog" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.blog")}</Link>
             <Link href="/contact" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.contact")}</Link>
+            {!user && (
+              <>
+                <Link href="/login" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.login")}</Link>
+                <Link href="/register" className="px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition">{t("nav.signUp")}</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -159,6 +165,12 @@ export default function Navbar() {
             <Link href="/about" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.about")}</Link>
             <Link href="/blog" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.blog")}</Link>
             <Link href="/contact" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.contact")}</Link>
+            {!user && (
+              <>
+                <Link href="/login" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.login")}</Link>
+                <Link href="/register" onClick={() => setMobileOpen(false)} className="py-2 text-red-600 font-medium">{t("nav.signUp")}</Link>
+              </>
+            )}
             <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.cart")} ({cartCount})</Link>
           </div>
         </div>

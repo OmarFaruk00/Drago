@@ -16,6 +16,8 @@ export const translations = {
     "nav.account": "Account",
     "nav.search": "Search",
     "nav.searchProducts": "Search Products",
+    "nav.login": "Login",
+    "nav.signUp": "Sign Up",
 
     // Home
     "home.hero.title": "Discover Quality Products",
@@ -108,6 +110,8 @@ export const translations = {
     "nav.account": "অ্যাকাউন্ট",
     "nav.search": "অনুসন্ধান",
     "nav.searchProducts": "পণ্য খুঁজুন",
+    "nav.login": "লগইন",
+    "nav.signUp": "নিবন্ধন",
 
     "home.hero.title": "গুণগত পণ্য খুঁজুন",
     "home.hero.subtitle": "ইলেকট্রনিক্স, ফ্যাশন, স্পোর্টস ও আরও অনেক কিছু সাশ্রয়ী মূল্যে কিনুন",
