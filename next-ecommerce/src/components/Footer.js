@@ -22,63 +22,95 @@ export default function Footer() {
   const { t } = useLanguage();
   return (
     <footer className="bg-gray-900 text-gray-300 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand & Contact */}
-          <div>
-            <Link href="/" className="inline-block mb-4">
+          <div className="lg:col-span-2">
+            <Link href="/" className="block mb-4">
               <Image
                 src="/logo.png"
                 alt="Drago"
-                width={90}
-                height={32}
-                className="h-8 w-auto object-contain brightness-0 invert"
+                width={256}
+                height={90}
+                className="w-40 sm:w-64 h-auto object-contain brightness-0 invert"
               />
             </Link>
-            <p className="text-sm mb-4">{t("footer.tagline")}</p>
-            <div className="space-y-2 text-sm">
-              <p><span className="text-gray-400">{t("footer.address")}:</span> 123 Main St, Dhaka, Bangladesh</p>
-              <p><span className="text-gray-400">{t("footer.phone")}:</span> +880 1XXX-XXXXXX</p>
-              <p><span className="text-gray-400">{t("footer.email")}:</span> support@drago.com</p>
+            <div className="text-sm text-gray-200 mb-4 space-y-1">
+              <p className="font-semibold text-white text-base">About Drago</p>
+              <p className="leading-relaxed">
+                Drago is a trusted online shop in Bangladesh. Where you will find
+                all the products of fashion, electronics, and other daily life only at Drago.
+              </p>
+            </div>
+            <div className="space-y-2 text-sm text-white">
+              <p className="font-semibold">+88 01923035628</p>
+              <p className="font-semibold">drago.com.bd@gmail.com</p>
             </div>
           </div>
 
-          {/* Company */}
+          {/* About Us */}
           <div>
-            <h4 className="text-white font-semibold mb-4">{t("footer.company")}</h4>
+            <h4 className="text-white font-semibold mb-4">About Us</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-red-400 transition">{t("footer.about")}</Link></li>
-              <li><Link href="/contact" className="hover:text-red-400 transition">{t("footer.contact")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.services")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.privacy")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.terms")}</Link></li>
+              <li><Link href="/about" className="hover:text-red-400 transition">Our Mission &amp; Vision</Link></li>
+              <li><Link href="/about" className="hover:text-red-400 transition">Why Choose Us</Link></li>
+              <li><Link href="/terms" className="hover:text-red-400 transition">Terms &amp; Condition</Link></li>
+              <li><Link href="/blog" className="hover:text-red-400 transition">Blog</Link></li>
+              <li><Link href="/faq" className="hover:text-red-400 transition">FAQs</Link></li>
             </ul>
           </div>
 
-          {/* Customer Service */}
+          {/* Account */}
           <div>
-            <h4 className="text-white font-semibold mb-4">{t("footer.customerService")}</h4>
+            <h4 className="text-white font-semibold mb-4">Account</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.shipping")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.faq")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.paymentOptions")}</Link></li>
+              <li><Link href="/login" className="hover:text-red-400 transition">My Account</Link></li>
+              <li><Link href="/login" className="hover:text-red-400 transition">Login/Register</Link></li>
+              <li><Link href="/cart" className="hover:text-red-400 transition">Cart</Link></li>
+              <li><Link href="/products" className="hover:text-red-400 transition">Shop</Link></li>
+              <li><Link href="/dashboard/wishlist" className="hover:text-red-400 transition">Wishlist</Link></li>
             </ul>
           </div>
 
-          {/* My Account */}
+          {/* Privacy & Policy */}
           <div>
-            <h4 className="text-white font-semibold mb-4">{t("footer.myAccount")}</h4>
+            <h4 className="text-white font-semibold mb-4">Privacy &amp; Policy</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/login" className="hover:text-red-400 transition">{t("footer.profile")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.wishlist")}</Link></li>
-              <li><Link href="/cart" className="hover:text-red-400 transition">{t("footer.myCart")}</Link></li>
-              <li><Link href="#" className="hover:text-red-400 transition">{t("footer.orderTracking")}</Link></li>
+              <li><Link href="/policy/delivery" className="hover:text-red-400 transition">Delivery Policy</Link></li>
+              <li><Link href="/policy/return" className="hover:text-red-400 transition">Return Policy</Link></li>
+              <li><Link href="/policy/refund" className="hover:text-red-400 transition">Refund Policy</Link></li>
+              <li><Link href="/policy/cancellation" className="hover:text-red-400 transition">Cancellation Policy</Link></li>
+              <li><Link href="/policy/privacy" className="hover:text-red-400 transition">Privacy Policy</Link></li>
             </ul>
+          </div>
+
+          {/* Help & Support */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Help &amp; Support</h4>
+            <ul className="space-y-2 text-sm">
+              <li>Kenduai – Ishwarganj Road, Mymensingh 2280</li>
+              <li className="font-semibold">+88 01923035628</li>
+              <li className="font-semibold">+88 01629789435</li>
+              <li className="font-semibold">drago.com.bd@gmail.com</li>
+            </ul>
+          </div>
+
+          {/* Instagram */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Instagram</h4>
+            <div className="grid grid-cols-3 gap-2">
+              {[1, 2, 3].map((item) => (
+                <div
+                  key={item}
+                  className="h-16 w-full rounded-md bg-[url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=200&q=60')] bg-cover bg-center"
+                />
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Social icons - white circles, white icons, hover: white bg + black icon */}
-        <div className="border-t border-gray-800 mt-6 pt-6 flex flex-wrap gap-4 justify-center md:justify-start">
+        <div className="border-t border-gray-800 mt-4 pt-4 flex flex-wrap gap-4 justify-center md:justify-start">
           <a
             href="#"
             className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-110"
@@ -110,8 +142,15 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Drago. {t("footer.rights")}
+        <div className="border-t border-gray-800 mt-4 pt-4 flex flex-wrap items-center justify-between gap-4 text-sm text-gray-500">
+          <p>drago © {new Date().getFullYear()}. All Rights Reserved</p>
+          <div className="flex items-center gap-3">
+            {["/apple-pay.svg", "/visa.svg", "/mastercard.svg"].map((icon) => (
+              <div key={icon} className="w-12 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] uppercase tracking-wide">
+                {icon.includes("visa") ? "VISA" : icon.includes("master") ? "MC" : "Pay"}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

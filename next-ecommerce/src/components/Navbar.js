@@ -32,21 +32,21 @@ export default function Navbar() {
       {/* Top bar - Red background, white elements */}
       <div className="bg-red-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo - fixed 130×45px */}
-            <Link href="/" className="flex-shrink-0 flex items-center">
+          <div className="flex items-center justify-between h-16 gap-6">
+            {/* Logo */}
+            <Link href="/" className="flex-shrink-0 flex items-center h-full">
               <Image
                 src="/logo.png"
                 alt="Drago"
-                width={130}
-                height={45}
-                className="w-[130px] h-[45px] object-contain brightness-0 invert"
+                width={220}
+                height={70}
+                className="w-[180px] md:w-[220px] h-[70px] object-contain brightness-0 invert"
                 priority
               />
             </Link>
 
             {/* Search - Central, white bg, search icon inside */}
-            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-4 lg:mx-8">
+            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-1 lg:mx-4">
               <div className="relative w-full flex rounded overflow-hidden">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                   <Search className="w-5 h-5" />

@@ -16,10 +16,12 @@ import PromoBanner from "@/components/PromoBanner";
 import Testimonials from "@/components/Testimonials";
 import { categories } from "@/lib/data/categories";
 import { testimonials } from "@/lib/data/testimonials";
+import { shuffleArray } from "@/lib/utils/shuffle";
 
 export default function HomePage() {
   const { t } = useLanguage();
   const [products, setProducts] = useState([]);
+  const [shuffledProducts, setShuffledProducts] = useState([]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -28,18 +30,37 @@ export default function HomePage() {
       .catch(() => setProducts([]));
   }, []);
 
-  // Flash sale: power bank, headphones, speaker (first 3 electronics or manual pick)
-  const flashProducts = products.filter((p) =>
-    ["5", "1", "12"].includes(p.id)
-  ).length
-    ? products.filter((p) => ["5", "1", "12"].includes(p.id))
-    : products.slice(0, 3);
+  useEffect(() => {
+    if (products.length) {
+      setShuffledProducts(shuffleArray(products));
+    }
+  }, [products]);
+
+  const productPool = shuffledProducts.length ? shuffledProducts : products;
+
+  const buildSegment = (start, count) => {
+    if (!productPool.length) return [];
+    const segment = [];
+    for (let i = 0; i < count; i += 1) {
+      const index = (start + i) % productPool.length;
+      segment.push(productPool[index]);
+    }
+    return segment;
+  };
+
+  const topProductsSegment = buildSegment(0, 12);
+  const exploreProductsSegment = buildSegment(12, 12);
+
+  const topRowOne = topProductsSegment.slice(0, 6);
+  const topRowTwo = topProductsSegment.slice(6, 12);
+  const exploreRowOne = exploreProductsSegment.slice(0, 6);
+  const exploreRowTwo = exploreProductsSegment.slice(6, 12);
 
   return (
     <div>
       <HeroSection />
-      <section className="max-w-6xl mx-auto mt-12 px-4 sm:px-6">
-        <FlashSale products={flashProducts.length ? flashProducts : products} />
+      <section className="max-w-6xl mx-auto -mt-2 px-4 sm:px-6">
+        <FlashSale products={productPool} />
       </section>
       <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
         <CategorySection categories={categories} />
@@ -54,8 +75,8 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="space-y-6">
-          <ProductGrid products={products.slice(0, 6)} columns={6} />
-          <ProductGrid products={products.slice(6, 12)} columns={6} />
+          <ProductGrid products={topRowOne} columns={6} />
+          <ProductGrid products={topRowTwo} columns={6} />
         </div>
       </section>
 
@@ -71,7 +92,10 @@ export default function HomePage() {
             {t("home.viewAll")}
           </Link>
         </div>
-        <ProductGrid products={products.length > 6 ? products.slice(6, 12) : []} columns={6} />
+        <div className="space-y-6">
+          <ProductGrid products={exploreRowOne} columns={6} />
+          <ProductGrid products={exploreRowTwo} columns={6} />
+        </div>
       </section>
 
       <section className="max-w-6xl mx-auto mt-8 mb-12 px-4 sm:px-6">

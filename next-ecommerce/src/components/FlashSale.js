@@ -138,7 +138,7 @@ export default function FlashSale({ products = [] }) {
 
   return (
     <section className="py-8 md:py-12">
-      <div className="rounded-3xl border border-white/15 bg-[#02020a] p-6 md:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.45)] text-white">
+      <div className="rounded-lg border border-white/15 bg-[#02020a] p-6 md:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.45)] text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <FlashSaleLogo className="h-24 w-auto max-w-[260px]" />
           <div className="flex items-center gap-3">
