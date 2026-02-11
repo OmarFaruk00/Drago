@@ -8,6 +8,27 @@ import { USE_MONGODB } from "@/lib/config";
 import connectDB from "@/lib/db/mongodb";
 import { products, getCategories } from "@/lib/data/products";
 
+const BROKEN_UNSPLASH_ID = "photo-1543512214-659c93580adc";
+const FIXED_IMAGE_LG =
+  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=400&h=400&q=80";
+const FIXED_IMAGE_SM =
+  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=200&h=200&q=80";
+
+function fixBrokenImage(url) {
+  if (!url || typeof url !== "string") return url;
+  if (!url.includes(BROKEN_UNSPLASH_ID)) return url;
+  if (url.includes("w=200")) return FIXED_IMAGE_SM;
+  return FIXED_IMAGE_LG;
+}
+
+function normalizeProduct(product) {
+  if (!product) return product;
+  return {
+    ...product,
+    image: fixBrokenImage(product.image),
+  };
+}
+
 /**
  * Get all products with optional filters
  * @param {Object} filters - { category, search, inStock }
@@ -61,11 +82,12 @@ function getProductsFromDummy(filters) {
   if (inStock === true || inStock === "true") {
     result = result.filter((p) => p.inStock);
   }
-  return result;
+  return result.map(normalizeProduct);
 }
 
 function getProductByIdFromDummy(id) {
-  return products.find((p) => p.id === id) || null;
+  const product = products.find((p) => p.id === id) || null;
+  return normalizeProduct(product);
 }
 
 // --- MongoDB implementation ---
@@ -88,7 +110,7 @@ async function getProductsFromMongo(filters) {
   }
 
   const docs = await Product.find(query).lean();
-  return docs.map(toApiProduct);
+  return docs.map(toApiProduct).map(normalizeProduct);
 }
 
 async function getProductByIdFromMongo(id) {
@@ -102,7 +124,7 @@ async function getProductByIdFromMongo(id) {
   if (!isValidId) return null;
 
   const doc = await Product.findById(id).lean();
-  return doc ? toApiProduct(doc) : null;
+  return doc ? normalizeProduct(toApiProduct(doc)) : null;
 }
 
 async function getCategoriesFromMongo() {

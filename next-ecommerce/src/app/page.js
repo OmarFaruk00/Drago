@@ -16,19 +16,81 @@ import PromoBanner from "@/components/PromoBanner";
 import Testimonials from "@/components/Testimonials";
 import { categories } from "@/lib/data/categories";
 import { testimonials } from "@/lib/data/testimonials";
+import { products as staticProducts } from "@/lib/data/products";
 import { shuffleArray } from "@/lib/utils/shuffle";
+
+const PRODUCT_CACHE_KEY = "drago.products.cache.v1";
+const PRODUCT_CACHE_TTL = 1000 * 60 * 5; // 5 minutes
+
+const readCachedProducts = () => {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(PRODUCT_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      !Array.isArray(parsed.items) ||
+      !parsed.timestamp ||
+      Date.now() - parsed.timestamp > PRODUCT_CACHE_TTL
+    ) {
+      window.sessionStorage.removeItem(PRODUCT_CACHE_KEY);
+      return null;
+    }
+    return parsed.items;
+  } catch {
+    return null;
+  }
+};
+
+const writeCachedProducts = (items) => {
+  if (typeof window === "undefined" || !Array.isArray(items) || !items.length)
+    return;
+  try {
+    window.sessionStorage.setItem(
+      PRODUCT_CACHE_KEY,
+      JSON.stringify({ timestamp: Date.now(), items })
+    );
+  } catch {
+    // ignore quota errors
+  }
+};
 
 export default function HomePage() {
   const { t } = useLanguage();
-  const [products, setProducts] = useState([]);
+  const useDummyProducts =
+    process.env.NEXT_PUBLIC_USE_DUMMY_PRODUCTS === "true";
+  const [products, setProducts] = useState(() => {
+    if (useDummyProducts) return staticProducts;
+    const cached = readCachedProducts();
+    return cached || [];
+  });
   const [shuffledProducts, setShuffledProducts] = useState([]);
 
   useEffect(() => {
+    if (useDummyProducts) return;
+    let isActive = true;
     fetch("/api/products")
       .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch(() => setProducts([]));
-  }, []);
+      .then((data) => {
+        if (!isActive) return;
+        if (Array.isArray(data) && data.length) {
+          setProducts(data);
+          writeCachedProducts(data);
+        } else if (useDummyProducts) {
+          setProducts(staticProducts);
+        }
+      })
+      .catch(() => {
+        if (!isActive) return;
+        if (useDummyProducts) {
+          setProducts(staticProducts);
+        }
+      });
+    return () => {
+      isActive = false;
+    };
+  }, [useDummyProducts]);
 
   useEffect(() => {
     if (products.length) {
@@ -59,7 +121,7 @@ export default function HomePage() {
   return (
     <div>
       <HeroSection />
-      <section className="max-w-6xl mx-auto -mt-2 px-4 sm:px-6">
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
         <FlashSale products={productPool} />
       </section>
       <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">

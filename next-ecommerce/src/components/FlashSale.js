@@ -140,7 +140,7 @@ export default function FlashSale({ products = [] }) {
     <section className="py-8 md:py-12">
       <div className="rounded-lg border border-white/15 bg-[#02020a] p-6 md:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.45)] text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <FlashSaleLogo className="h-24 w-auto max-w-[260px]" />
+          <FlashSaleLogo className="h-28 w-auto max-w-[320px]" />
           <div className="flex items-center gap-3">
             {countdownItems.map(({ label, value }) => (
               <div key={label} className="flex flex-col items-center text-center">
@@ -165,17 +165,16 @@ export default function FlashSale({ products = [] }) {
                 }}
               >
                 {slides.map((slideProducts, idx) => (
-                  <div
-                    key={`slide-${idx}`}
-                    className="w-full flex-shrink-0 px-1"
-                  >
-                    <div className="flex flex-nowrap gap-4">
-                      {slideProducts.map((product) => (
+                  <div key={`slide-${idx}`} className="w-full flex-shrink-0 px-1">
+                    <div className="flex flex-nowrap gap-3 lg:gap-4">
+                      {slideProducts.map((product, productIndex) => (
                         <div
                           key={`${idx}-${product.id}`}
-                          className="flex-[0_0_25%] min-w-[220px]"
+                          className={`min-w-[170px] flex-[0_0_50%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] ${
+                            productIndex >= 2 ? "hidden lg:block" : "block"
+                          }`}
                         >
-                          <ProductCard product={product} />
+                          <ProductCard product={product} variant="flash" />
                         </div>
                       ))}
                     </div>

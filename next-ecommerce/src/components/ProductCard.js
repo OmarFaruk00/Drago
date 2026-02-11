@@ -13,7 +13,7 @@ import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, variant = "default" }) {
   const formatCurrency = useFormatCurrency();
   const { t } = useLanguage();
   const router = useRouter();
@@ -57,14 +57,20 @@ export default function ProductCard({ product }) {
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      {/* Image - fixed 180px height */}
+      {/* Image */}
       <Link href={`/products/${product.id}`} className="block">
-      <div className="relative h-[180px] bg-gray-50 overflow-hidden">
+      <div
+        className={`relative bg-gray-50 overflow-hidden ${
+          variant === "flash" ? "h-[220px]" : "h-[180px]"
+        }`}
+      >
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-contain p-1 group-hover:scale-105 transition-transform duration-200"
+          className={`object-contain group-hover:scale-105 transition-transform duration-200 ${
+            variant === "flash" ? "p-3" : "p-1"
+          }`}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
         />
         {!product.inStock && (

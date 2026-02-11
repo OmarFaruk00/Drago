@@ -142,15 +142,8 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-800 mt-4 pt-4 flex flex-wrap items-center justify-between gap-4 text-sm text-gray-500">
-          <p>drago © {new Date().getFullYear()}. All Rights Reserved</p>
-          <div className="flex items-center gap-3">
-            {["/apple-pay.svg", "/visa.svg", "/mastercard.svg"].map((icon) => (
-              <div key={icon} className="w-12 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] uppercase tracking-wide">
-                {icon.includes("visa") ? "VISA" : icon.includes("master") ? "MC" : "Pay"}
-              </div>
-            ))}
-          </div>
+        <div className="border-t border-gray-800 mt-4 pt-4 text-center text-sm text-gray-500">
+          drago © {new Date().getFullYear()}. All Rights Reserved
         </div>
       </div>
     </footer>

@@ -11,7 +11,7 @@ import Image from "next/image";
 import { shuffleArray } from "@/lib/utils/shuffle";
 
 export default function CategorySection({ categories }) {
-  const [shuffled, setShuffled] = useState(categories);
+  const [shuffled, setShuffled] = useState(() => shuffleArray(categories));
 
   useEffect(() => {
     setShuffled(shuffleArray(categories));
