@@ -134,7 +134,7 @@ export default function Navbar() {
       </div>
 
       {/* Secondary nav - White bg, dark text */}
-      <div className="hidden md:block bg-white border-b border-gray-200">
+      <div className="hidden md:block bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-6 py-3 items-center">
             <Link href="/" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.home")}</Link>

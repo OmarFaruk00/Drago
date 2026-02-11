@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Zustand store for cart and user state
  * - Cart: items, add/remove/update quantities
@@ -6,6 +8,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { trackAddToCart } from "@/lib/tracking/client";
 
 // Cart item structure: { id, name, price, image, quantity }
 export const useStore = create(
@@ -13,7 +16,7 @@ export const useStore = create(
     (set) => ({
       // Cart state
       cart: [],
-      addToCart: (item, quantity = 1) =>
+      addToCart: (item, quantity = 1) => {
         set((state) => {
           const existing = state.cart.find((i) => i.id === item.id);
           if (existing) {
@@ -26,7 +29,21 @@ export const useStore = create(
           return {
             cart: [...state.cart, { ...item, quantity }],
           };
-        }),
+        });
+
+        trackAddToCart({
+          value: (item.price || 0) * quantity,
+          currency: "BDT",
+          content_ids: [item.id],
+          contents: [
+            {
+              id: item.id,
+              quantity,
+              item_price: item.price,
+            },
+          ],
+        });
+      },
       removeFromCart: (id) =>
         set((state) => ({
           cart: state.cart.filter((i) => i.id !== id),

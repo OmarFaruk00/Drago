@@ -53,8 +53,8 @@ function ProductsContent() {
   const paginatedProducts = products.slice(start, end);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="min-h-screen py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Top bar: Filter btn (mobile), results count, sort, view toggle */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
@@ -173,7 +173,7 @@ function ProductsContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-8">Loading...</div>}>
+    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-8">Loading...</div>}>
       <ProductsContent />
     </Suspense>
   );

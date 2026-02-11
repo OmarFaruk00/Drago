@@ -11,7 +11,7 @@ import Image from "next/image";
 export default function PromoBanner() {
   return (
     <section className="py-8 md:py-12 bg-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full">
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-gray-800 to-gray-900 min-h-[200px] md:min-h-[280px] flex flex-col md:flex-row items-center justify-between p-8 md:p-12">
           {/* Background pattern */}
           <div className="absolute inset-0 opacity-20">

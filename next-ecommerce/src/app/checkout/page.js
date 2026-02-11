@@ -4,11 +4,12 @@
  * Checkout Page - Places order to database
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { trackLead, trackPurchase } from "@/lib/tracking/client";
 
 export default function CheckoutPage() {
   const formatCurrency = useFormatCurrency();
@@ -27,6 +28,16 @@ export default function CheckoutPage() {
   });
 
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  useEffect(() => {
+    if (cart.length === 0 || placed) return;
+    trackLead({
+      value: subtotal,
+      currency: "BDT",
+      num_items: itemCount,
+    });
+  }, [cart.length, placed, subtotal, itemCount]);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,6 +47,8 @@ export default function CheckoutPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    const cartSnapshot = cart.map((item) => ({ ...item }));
+
     try {
       const items = cart.map((i) => ({
         id: i.id,
@@ -62,6 +75,17 @@ export default function CheckoutPage() {
         setError(data.error || "Failed to place order");
         return;
       }
+      trackPurchase({
+        value: subtotal,
+        currency: "BDT",
+        content_ids: cartSnapshot.map((item) => item.id),
+        contents: cartSnapshot.map((item) => ({
+          id: item.id,
+          quantity: item.quantity,
+          item_price: item.price,
+        })),
+        num_items: cartSnapshot.reduce((sum, item) => sum + item.quantity, 0),
+      });
       setPlaced(true);
       clearCart();
     } catch (err) {
@@ -73,7 +97,7 @@ export default function CheckoutPage() {
 
   if (cart.length === 0 && !placed) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("cart.empty")}</h1>
         <Link href="/products" className="text-red-500 hover:underline">
           {t("cart.addItems")}
@@ -84,23 +108,25 @@ export default function CheckoutPage() {
 
   if (placed) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <div className="bg-green-50 border border-green-200 rounded-xl p-8">
-          <h1 className="text-2xl font-bold text-green-800 mb-2">{t("checkout.orderSuccessTitle")}</h1>
-          <p className="text-green-700 mb-6">{t("checkout.orderSuccessMsg")}</p>
-          <Link
-            href="/products"
-            className="inline-block px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700"
-          >
-            {t("cart.continueShopping")}
-          </Link>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="bg-green-50 border border-green-200 rounded-xl p-8">
+            <h1 className="text-2xl font-bold text-green-800 mb-2">{t("checkout.orderSuccessTitle")}</h1>
+            <p className="text-green-700 mb-6">{t("checkout.orderSuccessMsg")}</p>
+            <Link
+              href="/products"
+              className="inline-block px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700"
+            >
+              {t("cart.continueShopping")}
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{t("checkout.title")}</h1>
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Shipping form */}

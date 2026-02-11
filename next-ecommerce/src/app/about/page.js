@@ -15,11 +15,10 @@ export default function AboutPage() {
   ];
 
   return (
-    <div>
-      {/* Our Mission & Vision */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Our Mission & Vision</h2>
+    <div className="py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
+        <section className="space-y-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Our Mission & Vision</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-gray-600 mb-4">
@@ -40,13 +39,10 @@ export default function AboutPage() {
               />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Why Choose Us */}
-      <section className="py-12 md:py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Why Choose Us</h2>
+        <section className="space-y-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Why Choose Us</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 order-2 lg:order-1">
               <Image
@@ -81,13 +77,10 @@ export default function AboutPage() {
               </ul>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Terms & Conditions */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Terms & Conditions</h2>
+        <section className="space-y-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Terms & Conditions</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-gray-600 mb-4">
@@ -107,13 +100,10 @@ export default function AboutPage() {
               />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Contact Information */}
-      <section className="py-12 md:py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Contact Information</h2>
+        <section className="space-y-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Contact Information</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-gray-600 mb-4">123 Main Street, Dhaka, Bangladesh</p>
@@ -129,13 +119,10 @@ export default function AboutPage() {
               />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Our Awesome Team */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-10 text-center">
+        <section className="space-y-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
             Our Awesome Team
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -155,8 +142,8 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

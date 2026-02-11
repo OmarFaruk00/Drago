@@ -5,18 +5,33 @@
  * Design: Left contact info, right map
  */
 
+import { useEffect } from "react";
+import { trackContact } from "@/lib/tracking/client";
+
 export default function ContactPage() {
+  useEffect(() => {
+    trackContact({
+      content_category: "Contact",
+      event_source_url:
+        typeof window !== "undefined" ? window.location.href : undefined,
+    });
+  }, []);
+
   return (
-    <div>
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Contact Us</h1>
+    <div className="py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <section className="space-y-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Contact Us
+          </h1>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Contact Details */}
             <div className="space-y-6">
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Address</h3>
-                <p className="text-gray-600">123 Main Street, Dhaka 1000, Bangladesh</p>
+                <p className="text-gray-600">
+                  123 Main Street, Dhaka 1000, Bangladesh
+                </p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
@@ -27,8 +42,12 @@ export default function ContactPage() {
                 <p className="text-gray-600">support@drago.com</p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Working Days</h3>
-                <p className="text-gray-600">Saturday - Thursday: 9:00 AM - 8:00 PM</p>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  Working Days
+                </h3>
+                <p className="text-gray-600">
+                  Saturday - Thursday: 9:00 AM - 8:00 PM
+                </p>
                 <p className="text-gray-600">Friday: Closed</p>
               </div>
             </div>
@@ -48,8 +67,8 @@ export default function ContactPage() {
               />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

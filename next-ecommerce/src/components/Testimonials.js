@@ -10,17 +10,17 @@ import Image from "next/image";
 export default function Testimonials({ testimonials }) {
   return (
     <section className="py-12 md:py-16 bg-red-600">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full">
         <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-10">
           What Our Customers Say
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8">
           {testimonials.map((t) => (
             <div
               key={t.id}
-              className="bg-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center"
+              className="bg-white rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 shadow-lg flex flex-col items-center text-center"
             >
-              <div className="w-16 h-16 rounded-full overflow-hidden mb-4 ring-2 ring-red-100">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full overflow-hidden mb-2 md:mb-4 ring-2 ring-red-100 flex-shrink-0">
                 <Image
                   src={t.avatar}
                   alt={t.name}
@@ -29,9 +29,9 @@ export default function Testimonials({ testimonials }) {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <h3 className="font-semibold text-gray-900">{t.name}</h3>
-              <p className="text-gray-600 text-sm mt-1">&quot;{t.text}&quot;</p>
-              <div className="flex gap-0.5 mt-3 text-amber-500">
+              <h3 className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">{t.name}</h3>
+              <p className="text-gray-600 text-[10px] sm:text-xs md:text-sm mt-1 line-clamp-3 md:line-clamp-none">&quot;{t.text}&quot;</p>
+              <div className="flex gap-0.5 mt-1 md:mt-3 text-amber-500 text-xs md:text-base">
                 {Array.from({ length: t.rating }).map((_, i) => (
                   <span key={i}>★</span>
                 ))}

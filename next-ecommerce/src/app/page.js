@@ -38,38 +38,45 @@ export default function HomePage() {
   return (
     <div>
       <HeroSection />
-      <FlashSale products={flashProducts.length ? flashProducts : products} />
-      <CategorySection categories={categories} />
+      <section className="max-w-6xl mx-auto mt-12 px-4 sm:px-6">
+        <FlashSale products={flashProducts.length ? flashProducts : products} />
+      </section>
+      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
+        <CategorySection categories={categories} />
+      </section>
 
       {/* Top Products */}
-      <section className="py-8 md:py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">{t("home.topProducts")}</h2>
-            <Link href="/products" className="text-red-600 font-medium hover:underline">
-              {t("home.viewAll")}
-            </Link>
-          </div>
+      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">{t("home.topProducts")}</h2>
+          <Link href="/products" className="text-red-600 font-medium hover:underline">
+            {t("home.viewAll")}
+          </Link>
+        </div>
+        <div className="space-y-6">
           <ProductGrid products={products.slice(0, 6)} columns={6} />
+          <ProductGrid products={products.slice(6, 12)} columns={6} />
         </div>
       </section>
 
-      <PromoBanner />
+      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
+        <PromoBanner />
+      </section>
 
       {/* Explore Our Products */}
-      <section className="py-8 md:py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">{t("home.exploreProducts")}</h2>
-            <Link href="/products" className="text-red-600 font-medium hover:underline">
-              {t("home.viewAll")}
-            </Link>
-          </div>
-          <ProductGrid products={products.length > 6 ? products.slice(6, 12) : []} columns={6} />
+      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">{t("home.exploreProducts")}</h2>
+          <Link href="/products" className="text-red-600 font-medium hover:underline">
+            {t("home.viewAll")}
+          </Link>
         </div>
+        <ProductGrid products={products.length > 6 ? products.slice(6, 12) : []} columns={6} />
       </section>
 
-      <Testimonials testimonials={testimonials} />
+      <section className="max-w-6xl mx-auto mt-8 mb-12 px-4 sm:px-6">
+        <Testimonials testimonials={testimonials} />
+      </section>
     </div>
   );
 }

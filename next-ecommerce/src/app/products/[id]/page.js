@@ -41,7 +41,7 @@ export default function ProductDetailsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
         <div className="h-96 bg-gray-200 rounded-xl animate-pulse" />
       </div>
     );
@@ -49,7 +49,7 @@ export default function ProductDetailsPage() {
 
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Product not found</h1>
         <Link href="/products" className="text-red-600 hover:underline mt-4 inline-block">
           Back to products
@@ -59,7 +59,7 @@ export default function ProductDetailsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Image */}
         <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">

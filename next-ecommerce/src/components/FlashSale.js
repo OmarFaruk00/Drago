@@ -1,25 +1,102 @@
 "use client";
 
 /**
- * FlashSale - Purple gradient banner with FLASH SALE + LIMITED OFFER
- * Lightning theme, countdown timer, product cards
+ * FlashSale - 3-slide carousel (4 cards per slide) using ProductCard
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ProductCard from "./ProductCard";
-import { useLanguage } from "@/contexts/LanguageContext";
 
-function LightningIcon({ className }) {
+function FlashSaleLogo(props) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+    <svg
+      viewBox="0 0 360 150"
+      role="img"
+      aria-label="Flash Sale"
+      {...props}
+    >
+      <path
+        d="M20 40 L330 10 L340 120 L40 140 Z"
+        fill="#d71920"
+        opacity="0.95"
+      />
+      <path
+        d="M70 5 L330 5 L300 70 L40 80 Z"
+        fill="#071933"
+      />
+      <path
+        d="M320 120 L345 110 L335 150 L305 140 Z"
+        fill="#ab0f1b"
+      />
+      <path
+        d="M100 0 L145 0 L120 60 L165 60 L95 140 L120 70 L75 70 Z"
+        fill="#ffda2d"
+      />
+      <text
+        x="180"
+        y="55"
+        fill="#ffffff"
+        fontSize="36"
+        fontWeight="700"
+        fontFamily="Montserrat, Arial, sans-serif"
+        textAnchor="middle"
+      >
+        FLASH
+      </text>
+      <text
+        x="200"
+        y="110"
+        fill="#ffffff"
+        fontSize="48"
+        fontWeight="800"
+        fontFamily="Montserrat, Arial, sans-serif"
+        textAnchor="middle"
+      >
+        SALE
+      </text>
     </svg>
   );
 }
 
-export default function FlashSale({ products }) {
-  const { t } = useLanguage();
-  const [timeLeft, setTimeLeft] = useState({ days: 2, hrs: 6, min: 1, sec: 29 });
+export default function FlashSale({ products = [] }) {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 2,
+    hrs: 6,
+    min: 1,
+    sec: 29,
+  });
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const SLIDE_SIZE = 4;
+  const TOTAL_SLIDES = 3;
+  const TOTAL_PRODUCTS = SLIDE_SIZE * TOTAL_SLIDES;
+
+  const preparedProducts = useMemo(() => {
+    if (!products?.length) return [];
+    const shuffled = [...products];
+    for (let i = shuffled.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const pool = [...shuffled];
+    while (pool.length < TOTAL_PRODUCTS) {
+      pool.push(...shuffled);
+    }
+    return pool.slice(0, TOTAL_PRODUCTS);
+  }, [products]);
+
+  const slides = useMemo(() => {
+    if (!preparedProducts.length) return [];
+    const chunks = [];
+    for (let i = 0; i < TOTAL_SLIDES; i += 1) {
+      const start = i * SLIDE_SIZE;
+      const chunk = preparedProducts.slice(start, start + SLIDE_SIZE);
+      if (chunk.length) {
+        chunks.push(chunk);
+      }
+    }
+    return chunks;
+  }, [preparedProducts]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -44,64 +121,81 @@ export default function FlashSale({ products }) {
     return () => clearInterval(timer);
   }, []);
 
-  const items = [
-    { label: "DAYS", value: timeLeft.days },
-    { label: "HRS", value: timeLeft.hrs },
-    { label: "MIN", value: timeLeft.min },
-    { label: "SEC", value: timeLeft.sec },
+  useEffect(() => {
+    if (!slides.length) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const countdownItems = [
+    { label: "Day", value: timeLeft.days },
+    { label: "Hour", value: timeLeft.hrs },
+    { label: "Min", value: timeLeft.min },
+    { label: "Sec", value: timeLeft.sec },
   ];
 
   return (
-    <section className="py-8 md:py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Flash Sale Banner - Purple gradient, lightning style */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 via-purple-600 to-purple-800 p-6 md:p-8 mb-6 border-2 border-purple-900/30">
-          {/* Dotted pattern overlay */}
-          <div className="absolute inset-0 opacity-30" style={{
-            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
-          }} />
-          <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-
-          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            {/* FLASH SALE text block */}
-            <div className="flex flex-col items-start">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="px-4 py-1 bg-red-500 text-white font-bold text-sm tracking-wider shadow-lg border-l-2 border-t-2 border-white/30">
-                  FLASH
+    <section className="py-8 md:py-12">
+      <div className="rounded-3xl border border-white/15 bg-[#02020a] p-6 md:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.45)] text-white">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <FlashSaleLogo className="h-24 w-auto max-w-[260px]" />
+          <div className="flex items-center gap-3">
+            {countdownItems.map(({ label, value }) => (
+              <div key={label} className="flex flex-col items-center text-center">
+                <div className="w-14 rounded-lg bg-white px-4 py-3 text-2xl font-semibold text-gray-900 shadow-inner">
+                  {String(value).padStart(2, "0")}
+                </div>
+                <span className="mt-2 text-xs font-medium uppercase tracking-widest text-white/80">
+                  {label}
                 </span>
-                <LightningIcon className="w-5 h-5 text-amber-400" />
               </div>
-              <div className="flex items-center gap-2">
-                <LightningIcon className="w-8 h-8 text-amber-400 -ml-1 hidden sm:block" />
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-amber-400 tracking-tight drop-shadow-lg">
-                  SALE
-                </h2>
-                <LightningIcon className="w-6 h-6 text-amber-400" />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="relative">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{
+                  transform: `translateX(-${currentSlide * 100}%)`,
+                }}
+              >
+                {slides.map((slideProducts, idx) => (
+                  <div
+                    key={`slide-${idx}`}
+                    className="w-full flex-shrink-0 px-1"
+                  >
+                    <div className="flex flex-nowrap gap-4">
+                      {slideProducts.map((product) => (
+                        <div
+                          key={`${idx}-${product.id}`}
+                          className="flex-[0_0_25%] min-w-[220px]"
+                        >
+                          <ProductCard product={product} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="mt-2 text-white font-semibold text-sm tracking-widest uppercase">
-                {t("home.limitedOffer")}
-              </p>
             </div>
 
-            {/* Countdown timer */}
-            <div className="flex gap-2">
-              {items.map(({ label, value }) => (
-                <div key={label} className="flex flex-col items-center">
-                  <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-black/40 text-white font-bold text-lg rounded-lg border border-white/20">
-                    {String(value).padStart(2, "0")}
-                  </div>
-                  <span className="text-xs text-white/90 mt-1 font-medium">{label}</span>
-                </div>
+            <div className="mt-6 flex items-center justify-center gap-2">
+              {slides.map((_, idx) => (
+                <span
+                  key={`dot-${idx}`}
+                  className={`h-2.5 w-2.5 rounded-full transition ${
+                    idx === currentSlide ? "bg-red-500" : "bg-white/30"
+                  }`}
+                  aria-label={`Slide ${idx + 1}`}
+                />
               ))}
             </div>
           </div>
-        </div>
-        {/* 3 Product cards horizontal */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {products.slice(0, 3).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
         </div>
       </div>
     </section>
