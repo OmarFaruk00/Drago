@@ -83,7 +83,7 @@ export default function FlashSale({ products = [] }) {
       pool.push(...shuffled);
     }
     return pool.slice(0, TOTAL_PRODUCTS);
-  }, [products]);
+  }, [products, TOTAL_PRODUCTS]);
 
   const slides = useMemo(() => {
     if (!preparedProducts.length) return [];
