@@ -31,7 +31,7 @@ export default function OrderStatusStepper({ status }) {
               <div className="flex items-center w-full">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    isActive ? "bg-red-600 text-white" : "bg-gray-200 text-gray-500"
+                    isActive ? "bg-brand text-white" : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   {isActive ? (
@@ -45,7 +45,7 @@ export default function OrderStatusStepper({ status }) {
                 {!isLast && (
                   <div
                     className={`flex-1 h-0.5 mx-2 -mt-5 ${
-                      isActive ? "bg-red-600" : "bg-gray-200"
+                      isActive ? "bg-brand" : "bg-gray-200"
                     }`}
                   />
                 )}

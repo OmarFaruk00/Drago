@@ -44,7 +44,7 @@ export default function AdminProductsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export default function AdminProductsPage() {
         {products.length > 0 && (
           <Link
             href="/admin/products/add"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
           >
             <Plus className="w-4 h-4" />
             Add Product
@@ -101,7 +101,7 @@ export default function AdminProductsPage() {
                   <td className="px-4 py-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
                       <Image
-                        src={p.image || "/logo.png"}
+                        src={p.image || "/logo (1).png"}
                         alt={p.name}
                         width={40}
                         height={40}
@@ -122,14 +122,14 @@ export default function AdminProductsPage() {
                     <div className="flex gap-2">
                       <Link
                         href={`/admin/products/${p.id}/edit`}
-                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
                         title="Edit"
                       >
                         <Pencil className="w-4 h-4" />
                       </Link>
                       <button
                         onClick={() => setConfirmDelete(p.id)}
-                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -185,7 +185,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => handleDelete(confirmDelete)}
                 disabled={deleting === confirmDelete}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
               >
                 {deleting === confirmDelete ? "Deleting..." : "Delete"}
               </button>

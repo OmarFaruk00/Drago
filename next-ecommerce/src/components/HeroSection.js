@@ -82,7 +82,7 @@ export default function HeroSection() {
             <motion.div variants={itemUp}>
               <Link href="/products">
                 <motion.span
-                  className="inline-flex w-fit px-8 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-lg cursor-pointer"
+                  className="inline-flex w-fit px-8 py-3 bg-brand text-white font-semibold rounded-lg shadow-lg cursor-pointer"
                   whileHover={{ scale: 1.05, boxShadow: "0 20px 40px -12px rgba(220, 38, 38, 0.5)" }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}

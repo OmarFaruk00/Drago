@@ -25,14 +25,17 @@ export async function GET() {
       const orders = await Order.find(query).sort({ createdAt: -1 }).lean();
 
       return NextResponse.json(
-        orders.map((o) => ({
-          id: String(o._id).slice(-6),
-          fullId: o._id?.toString(),
-          customer: o.customerName,
-          date: new Date(o.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
-          total: formatCurrency(o.total),
-          status: o.status,
-        }))
+        orders.map((o) => {
+          const itemCount = o.items?.reduce((s, i) => s + (i.quantity || 0), 0) || 0;
+          return {
+            id: String(o._id).slice(-6),
+            fullId: o._id?.toString(),
+            customer: o.customerName,
+            date: new Date(o.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
+            total: `${formatCurrency(o.total)} (${itemCount} Product${itemCount !== 1 ? "s" : ""})`,
+            status: o.status,
+          };
+        })
       );
     }
   } catch (err) {

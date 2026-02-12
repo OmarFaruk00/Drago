@@ -65,7 +65,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -96,7 +96,7 @@ export default function AdminDashboardPage() {
       label: "Total Revenue",
       value: formatCurrency(stats?.totalRevenue ?? 0),
       icon: DollarSign,
-      color: "text-red-600",
+      color: "text-brand",
       bg: "bg-red-50",
     },
     {
@@ -119,7 +119,7 @@ export default function AdminDashboardPage() {
       label: "Cancelled Orders",
       value: stats?.cancelledOrders ?? 0,
       icon: XCircle,
-      color: "text-red-600",
+      color: "text-brand",
       bg: "bg-red-50",
       pctChange: stats?.pctCancelled ?? 0,
     },
@@ -201,7 +201,7 @@ export default function AdminDashboardPage() {
                   <p className="text-sm font-medium text-gray-500">{card.label}</p>
                   <p className="text-xl font-bold text-gray-900 mt-1">{card.value}</p>
                   {hasPct && (
-                    <p className={`text-xs font-medium mt-1 ${pctUp ? "text-green-600" : "text-red-600"}`}>
+                    <p className={`text-xs font-medium mt-1 ${pctUp ? "text-green-600" : "text-brand"}`}>
                       {pctUp ? "↑" : "↓"} {Math.abs(card.pctChange)}%
                     </p>
                   )}
@@ -260,7 +260,7 @@ export default function AdminDashboardPage() {
           <h2 className="font-semibold text-gray-900">Recent Orders</h2>
           <Link
             href="/admin/orders"
-            className="text-sm font-medium text-red-600 hover:text-red-700"
+            className="text-sm font-medium text-brand hover:text-brand-dark"
           >
             View all
           </Link>
@@ -313,14 +313,14 @@ export default function AdminDashboardPage() {
                     <div className="flex gap-2">
                       <Link
                         href={`/admin/orders/${o.id}`}
-                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-red-50 rounded"
                         title="View"
                       >
                         <Eye className="w-4 h-4" />
                       </Link>
                       <Link
                         href={`/admin/orders/${o.id}`}
-                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-red-50 rounded"
                         title="Update Status"
                       >
                         <Edit className="w-4 h-4" />

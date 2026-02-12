@@ -25,7 +25,7 @@ export default function CommentForm({ onSubmit }) {
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
-          className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+          className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
         />
         <input
           type="email"
@@ -33,7 +33,7 @@ export default function CommentForm({ onSubmit }) {
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
-          className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+          className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
         />
       </div>
       <textarea
@@ -42,18 +42,18 @@ export default function CommentForm({ onSubmit }) {
         onChange={(e) => setForm({ ...form, comment: e.target.value })}
         required
         rows={4}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
       />
       <label className="flex items-center gap-2 text-sm text-gray-600">
         <input
           type="checkbox"
           checked={form.save}
           onChange={(e) => setForm({ ...form, save: e.target.checked })}
-          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+          className="rounded border-gray-300 text-brand focus:ring-brand"
         />
         Save my name, email, and website in this browser for the next time I comment.
       </label>
-      <button type="submit" className="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700">
+      <button type="submit" className="px-6 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark">
         Post Comment
       </button>
     </form>

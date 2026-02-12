@@ -10,6 +10,13 @@ import Image from "next/image";
 import { Facebook, Youtube, Instagram } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+const INSTAGRAM_GRID_IMAGES = [
+  "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&q=60",
+  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=200&q=60",
+  "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?auto=format&fit=crop&w=200&q=60",
+  "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=200&q=60",
+];
+
 function TiktokIcon({ className, size = 24 }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} width={size} height={size} aria-hidden>
@@ -21,19 +28,15 @@ function TiktokIcon({ className, size = 24 }) {
 export default function Footer() {
   const { t } = useLanguage();
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
+    <footer className="bg-black text-gray-300 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8">
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
             <Link href="/" className="block mb-4">
-              <Image
-                src="/logo.png"
-                alt="Drago"
-                width={256}
-                height={90}
-                className="w-40 sm:w-64 h-auto object-contain brightness-0 invert"
-              />
+              <span className="text-white font-bold text-2xl sm:text-3xl tracking-tight">
+                DRAGO
+              </span>
             </Link>
             <div className="text-sm text-gray-200 mb-4 space-y-1">
               <p className="font-semibold text-white text-base">About Drago</p>
@@ -56,7 +59,7 @@ export default function Footer() {
               <li><Link href="/about" className="hover:text-red-400 transition">Why Choose Us</Link></li>
               <li><Link href="/terms" className="hover:text-red-400 transition">Terms &amp; Condition</Link></li>
               <li><Link href="/blog" className="hover:text-red-400 transition">Blog</Link></li>
-              <li><Link href="/faq" className="hover:text-red-400 transition">FAQs</Link></li>
+              <li><Link href="/faq" className="hover:text-red-400 transition">Faqs</Link></li>
             </ul>
           </div>
 
@@ -64,11 +67,12 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Account</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/login" className="hover:text-red-400 transition">My Account</Link></li>
+              <li><Link href="/account" className="hover:text-red-400 transition">My Account</Link></li>
               <li><Link href="/login" className="hover:text-red-400 transition">Login/Register</Link></li>
               <li><Link href="/cart" className="hover:text-red-400 transition">Cart</Link></li>
               <li><Link href="/products" className="hover:text-red-400 transition">Shop</Link></li>
-              <li><Link href="/dashboard/wishlist" className="hover:text-red-400 transition">Wishlist</Link></li>
+              <li><Link href="/products" className="hover:text-red-400 transition">Product</Link></li>
+              <li><Link href="/account/wishlist" className="hover:text-red-400 transition">Wishlist</Link></li>
             </ul>
           </div>
 
@@ -81,6 +85,7 @@ export default function Footer() {
               <li><Link href="/policy/refund" className="hover:text-red-400 transition">Refund Policy</Link></li>
               <li><Link href="/policy/cancellation" className="hover:text-red-400 transition">Cancellation Policy</Link></li>
               <li><Link href="/policy/privacy" className="hover:text-red-400 transition">Privacy Policy</Link></li>
+              <li><Link href="/policy/warranty" className="hover:text-red-400 transition">Warranty Policy</Link></li>
             </ul>
           </div>
 
@@ -88,22 +93,27 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Help &amp; Support</h4>
             <ul className="space-y-2 text-sm">
-              <li>Kenduai – Ishwarganj Road, Mymensingh 2280</li>
+              <li>kendua - Ishwargonj Road, Mymensingh, 2280</li>
               <li className="font-semibold">+88 01923035628</li>
-              <li className="font-semibold">+88 01629789435</li>
+              <li className="font-semibold">+88 01627975945</li>
               <li className="font-semibold">drago.com.bd@gmail.com</li>
             </ul>
           </div>
 
-          {/* Instagram */}
+          {/* Instagram - 2x2 grid, right of Help & Support */}
           <div>
             <h4 className="text-white font-semibold mb-4">Instagram</h4>
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={item}
-                  className="h-16 w-full rounded-md bg-[url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=200&q=60')] bg-cover bg-center"
-                />
+            <div className="grid grid-cols-2 gap-2 w-full max-w-[180px]">
+              {INSTAGRAM_GRID_IMAGES.map((url, i) => (
+                <div key={i} className="aspect-square relative rounded overflow-hidden">
+                  <Image
+                    src={url}
+                    alt={`Instagram ${i + 1}`}
+                    fill
+                    sizes="90px"
+                    className="object-cover"
+                  />
+                </div>
               ))}
             </div>
           </div>

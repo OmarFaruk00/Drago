@@ -34,7 +34,7 @@ export default function AdminCouponsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -45,7 +45,7 @@ export default function AdminCouponsPage() {
         <h1 className="text-2xl font-bold text-gray-900">Coupons</h1>
         <Link
           href="/admin/coupons/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
         >
           <Plus className="w-4 h-4" />
           Add Coupon
@@ -60,7 +60,7 @@ export default function AdminCouponsPage() {
             placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
           />
         </div>
         <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
@@ -96,7 +96,7 @@ export default function AdminCouponsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded bg-red-100 flex items-center justify-center shrink-0">
-                        <Tag className="w-4 h-4 text-red-600" />
+                        <Tag className="w-4 h-4 text-brand" />
                       </div>
                       <span className="font-medium text-gray-900">{c.name || c.code}</span>
                     </div>
@@ -144,7 +144,7 @@ export default function AdminCouponsPage() {
                                 .then((r) => r.ok && setCoupons((p) => p.filter((x) => x.id !== c.id)));
                               setMenuOpen(null);
                             }}
-                            className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                            className="block w-full text-left px-3 py-2 text-sm text-brand hover:bg-red-50"
                           >
                             Delete
                           </button>

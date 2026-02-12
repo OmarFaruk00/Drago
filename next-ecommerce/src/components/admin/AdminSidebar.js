@@ -56,8 +56,8 @@ export default function AdminSidebar({ sidebarOpen, onClose }) {
 
   return (
     <>
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:flex-shrink-0 lg:fixed lg:inset-y-0 lg:left-0 z-30 bg-red-600">
-        <div className="flex items-center justify-between h-16 px-6 border-b border-red-500">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:flex-shrink-0 lg:fixed lg:inset-y-0 lg:left-0 z-30 bg-brand">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-brand">
           <Link href="/admin" className="text-white font-bold text-lg">
             Admin
           </Link>
@@ -72,11 +72,11 @@ export default function AdminSidebar({ sidebarOpen, onClose }) {
         />
       )}
       <div
-        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-red-600 shadow-xl transform transition-transform duration-200 ${
+        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-brand shadow-xl transform transition-transform duration-200 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-red-500">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-brand">
           <span className="text-white font-bold text-lg">Admin</span>
           <button
             onClick={onClose}

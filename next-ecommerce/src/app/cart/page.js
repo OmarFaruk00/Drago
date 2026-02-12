@@ -23,7 +23,7 @@ export default function CartPage() {
         <p className="text-gray-600 mb-6">{t("cart.emptyHint")}</p>
         <Link
           href="/products"
-          className="inline-block px-8 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-orange-600"
+          className="inline-block px-8 py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark"
         >
           {t("cart.continueShopping")}
         </Link>
@@ -57,13 +57,13 @@ export default function CartPage() {
             </div>
             <Link
               href="/checkout"
-              className="block w-full py-3 bg-red-600 text-white text-center font-semibold rounded-lg hover:bg-orange-600 transition"
+              className="block w-full py-3 bg-brand text-white text-center font-semibold rounded-lg hover:bg-brand-dark transition"
             >
               {t("cart.checkout")}
             </Link>
             <Link
               href="/products"
-              className="block w-full py-2 mt-2 text-center text-red-600 hover:underline"
+              className="block w-full py-2 mt-2 text-center text-brand hover:underline"
             >
               {t("cart.continueShopping")}
             </Link>

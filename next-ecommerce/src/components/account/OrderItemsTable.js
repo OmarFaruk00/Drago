@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * OrderItemsTable - Ordered products with image, price, quantity, subtotal
+ * OrderItemsTable - Ordered products as card layout, each item in its own card
  */
 
 import Image from "next/image";
@@ -12,54 +12,52 @@ export default function OrderItemsTable({ items = [] }) {
   const formatCurrency = useFormatCurrency();
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <h3 className="text-base font-semibold text-gray-900 px-6 py-4 border-b border-gray-100">
-        Order Items
-      </h3>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-              <th className="px-6 py-4">Product</th>
-              <th className="px-6 py-4">Price</th>
-              <th className="px-6 py-4">Quantity</th>
-              <th className="px-6 py-4">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {items.map((item, i) => (
-              <tr key={i} className="hover:bg-gray-50/50">
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <Link
-                      href={`/products/${item.id}`}
-                      className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0"
-                    >
-                      <Image
-                        src={item.image || "https://via.placeholder.com/56"}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                        sizes="56px"
-                      />
-                    </Link>
-                    <Link
-                      href={`/products/${item.id}`}
-                      className="font-medium text-gray-900 hover:text-red-600"
-                    >
-                      {item.name}
-                    </Link>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-gray-900">{formatCurrency(item.price || 0)}</td>
-                <td className="px-6 py-4 text-gray-900">×{item.quantity || 1}</td>
-                <td className="px-6 py-4 font-medium text-gray-900">
+    <div className="space-y-4">
+      <h3 className="text-base font-semibold text-gray-900">Order Items</h3>
+      <div className="space-y-3">
+        {items.map((item, i) => (
+          <div
+            key={i}
+            className="bg-white rounded-xl border border-gray-200 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex flex-wrap items-center gap-4 sm:gap-6"
+          >
+            <Link
+              href={`/products/${item.id}`}
+              className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0"
+            >
+              <Image
+                src={item.image || "https://via.placeholder.com/80"}
+                alt={item.name}
+                fill
+                className="object-cover"
+                sizes="80px"
+              />
+            </Link>
+            <div className="flex-1 min-w-0">
+              <Link
+                href={`/products/${item.id}`}
+                className="font-medium text-gray-900 hover:text-brand"
+              >
+                {item.name}
+              </Link>
+            </div>
+            <div className="flex flex-wrap items-center gap-6 text-sm">
+              <div>
+                <span className="text-gray-500">Price: </span>
+                <span className="text-gray-900 font-medium">{formatCurrency(item.price || 0)}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Quantity: </span>
+                <span className="text-gray-900 font-medium">×{item.quantity || 1}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Subtotal: </span>
+                <span className="text-gray-900 font-semibold">
                   {formatCurrency((item.price || 0) * (item.quantity || 1))}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

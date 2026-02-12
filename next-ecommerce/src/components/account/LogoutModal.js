@@ -20,7 +20,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
         <div className="flex justify-center mb-4">
           <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
             <svg
-              className="w-7 h-7 text-red-600"
+              className="w-7 h-7 text-brand"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -50,7 +50,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
           <button
             type="button"
             onClick={onConfirm}
-            className="px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium"
+            className="px-4 py-2.5 bg-brand text-white rounded-lg hover:bg-brand-dark font-medium"
           >
             Log Out
           </button>

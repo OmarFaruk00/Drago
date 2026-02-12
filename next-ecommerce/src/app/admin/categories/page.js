@@ -82,7 +82,7 @@ export default function AdminCategoriesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -100,12 +100,12 @@ export default function AdminCategoriesPage() {
                 placeholder="Search categories..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
               />
             </div>
             <button
               onClick={() => setAddModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
             >
               <Plus className="w-4 h-4" />
               Add New Category
@@ -149,13 +149,13 @@ export default function AdminCategoriesPage() {
                       <div className="flex gap-1">
                         <Link
                           href={`/admin/categories/${cat.id}/edit`}
-                          className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                          className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
                         >
                           <Pencil className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => setConfirmDelete(cat.id)}
-                          className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                          className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -186,7 +186,7 @@ export default function AdminCategoriesPage() {
                     required
                     value={addForm.name}
                     onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     placeholder="e.g. Electronics"
                   />
                 </div>
@@ -215,7 +215,7 @@ export default function AdminCategoriesPage() {
                   <select
                     value={addForm.status}
                     onChange={(e) => setAddForm((f) => ({ ...f, status: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -232,7 +232,7 @@ export default function AdminCategoriesPage() {
                   <button
                     type="submit"
                     disabled={addSaving}
-                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                    className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
                   >
                     {addSaving ? "Saving..." : "Save Category"}
                   </button>
@@ -259,7 +259,7 @@ export default function AdminCategoriesPage() {
               <button
                 onClick={() => handleDelete(confirmDelete)}
                 disabled={deleting}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
               >
                 {deleting ? "Deleting..." : "Delete"}
               </button>

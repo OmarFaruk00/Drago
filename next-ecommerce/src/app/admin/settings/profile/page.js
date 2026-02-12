@@ -35,7 +35,7 @@ export default function ProfileSettingsPage() {
                   value={form.fullName}
                   onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))}
                   placeholder="Anamul Islam"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
               <div>
@@ -45,7 +45,7 @@ export default function ProfileSettingsPage() {
                   value={form.email}
                   onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                   placeholder="a.anamul@gmail.com"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
               <div>
@@ -55,7 +55,7 @@ export default function ProfileSettingsPage() {
                   value={form.phone}
                   onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                   placeholder="+88017XXXXXXXX"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function ProfileSettingsPage() {
                   type="password"
                   value={form.currentPassword}
                   onChange={(e) => setForm((f) => ({ ...f, currentPassword: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
               <div>
@@ -79,7 +79,7 @@ export default function ProfileSettingsPage() {
                   type="password"
                   value={form.newPassword}
                   onChange={(e) => setForm((f) => ({ ...f, newPassword: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
               <div>
@@ -88,14 +88,14 @@ export default function ProfileSettingsPage() {
                   type="password"
                   value={form.confirmPassword}
                   onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
             </div>
           </div>
 
           <div className="flex justify-end">
-            <button className="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700">
+            <button className="px-6 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark">
               Save
             </button>
           </div>

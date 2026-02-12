@@ -22,10 +22,10 @@ export default function CartItem({ item }) {
       </Link>
       {/* Details */}
       <div className="flex-1 min-w-0">
-        <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-red-600 line-clamp-2">
+        <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-brand line-clamp-2">
           {item.name}
         </Link>
-        <p className="text-red-600 font-bold mt-1">{formatCurrency(item.price * item.quantity)}</p>
+        <p className="text-brand font-bold mt-1">{formatCurrency(item.price * item.quantity)}</p>
         {/* Quantity controls */}
         <div className="flex items-center gap-2 mt-2">
           <button
@@ -43,7 +43,7 @@ export default function CartItem({ item }) {
           </button>
           <button
             onClick={() => removeFromCart(item.id)}
-            className="ml-2 text-red-500 text-sm hover:underline"
+            className="ml-2 text-brand text-sm hover:underline"
           >
             Remove
           </button>

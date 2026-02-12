@@ -37,6 +37,7 @@ export async function GET(request, { params }) {
         quantity: i.quantity,
       }));
 
+      const subtotal = (order.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
       return NextResponse.json({
         id: String(order._id).slice(-6),
         fullId: order._id?.toString(),
@@ -45,6 +46,15 @@ export async function GET(request, { params }) {
         items,
         shipping: order.shippingAddress || "",
         total: order.total,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone || "",
+        billingAddress: { name: order.customerName, address: order.shippingAddress, email: order.customerEmail, phone: order.customerPhone || "" },
+        shippingAddress: { name: order.customerName, address: order.shippingAddress, email: order.customerEmail, phone: order.customerPhone || "" },
+        paymentMethod: "Cash",
+        subtotal,
+        discountPercent: 0,
+        shippingCost: 0,
       });
     }
   } catch (err) {

@@ -5,58 +5,8 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import ProductCard from "./ProductCard";
-
-function FlashSaleLogo(props) {
-  return (
-    <svg
-      viewBox="0 0 360 150"
-      role="img"
-      aria-label="Flash Sale"
-      {...props}
-    >
-      <path
-        d="M20 40 L330 10 L340 120 L40 140 Z"
-        fill="#d71920"
-        opacity="0.95"
-      />
-      <path
-        d="M70 5 L330 5 L300 70 L40 80 Z"
-        fill="#071933"
-      />
-      <path
-        d="M320 120 L345 110 L335 150 L305 140 Z"
-        fill="#ab0f1b"
-      />
-      <path
-        d="M100 0 L145 0 L120 60 L165 60 L95 140 L120 70 L75 70 Z"
-        fill="#ffda2d"
-      />
-      <text
-        x="180"
-        y="55"
-        fill="#ffffff"
-        fontSize="36"
-        fontWeight="700"
-        fontFamily="Montserrat, Arial, sans-serif"
-        textAnchor="middle"
-      >
-        FLASH
-      </text>
-      <text
-        x="200"
-        y="110"
-        fill="#ffffff"
-        fontSize="48"
-        fontWeight="800"
-        fontFamily="Montserrat, Arial, sans-serif"
-        textAnchor="middle"
-      >
-        SALE
-      </text>
-    </svg>
-  );
-}
 
 export default function FlashSale({ products = [] }) {
   const [timeLeft, setTimeLeft] = useState({
@@ -71,18 +21,31 @@ export default function FlashSale({ products = [] }) {
   const TOTAL_SLIDES = 3;
   const TOTAL_PRODUCTS = SLIDE_SIZE * TOTAL_SLIDES;
 
-  const preparedProducts = useMemo(() => {
+  // Deterministic initial list so server and client render the same (avoids hydration error)
+  const initialPool = useMemo(() => {
     if (!products?.length) return [];
+    const pool = [];
+    while (pool.length < TOTAL_PRODUCTS) {
+      pool.push(...products);
+    }
+    return pool.slice(0, TOTAL_PRODUCTS);
+  }, [products, TOTAL_PRODUCTS]);
+
+  const [preparedProducts, setPreparedProducts] = useState(initialPool);
+
+  // Shuffle only on client after mount so server and first client paint match
+  useEffect(() => {
+    if (!products?.length) return;
     const shuffled = [...products];
     for (let i = shuffled.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    const pool = [...shuffled];
+    const pool = [];
     while (pool.length < TOTAL_PRODUCTS) {
       pool.push(...shuffled);
     }
-    return pool.slice(0, TOTAL_PRODUCTS);
+    setPreparedProducts(pool.slice(0, TOTAL_PRODUCTS));
   }, [products, TOTAL_PRODUCTS]);
 
   const slides = useMemo(() => {
@@ -131,25 +94,32 @@ export default function FlashSale({ products = [] }) {
 
   const countdownItems = [
     { label: "Day", value: timeLeft.days },
-    { label: "Hour", value: timeLeft.hrs },
     { label: "Min", value: timeLeft.min },
+    { label: "Hour", value: timeLeft.hrs },
     { label: "Sec", value: timeLeft.sec },
   ];
 
   return (
-    <section className="py-8 md:py-12">
-      <div className="rounded-lg border border-white/15 bg-[#02020a] p-6 md:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.45)] text-white">
+    <section className="pt-4 pb-8 md:pt-6 md:pb-12">
+      <div className="border border-white/15 bg-[#02020a] p-6 md:p-8 text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <FlashSaleLogo className="h-28 w-auto max-w-[320px]" />
-          <div className="flex items-center gap-3">
+          <Image
+            src="/flash-sale-banner.png"
+            alt="Flash Sale"
+            width={360}
+            height={150}
+            className="h-28 w-auto max-w-[320px] object-contain"
+            priority
+          />
+          <div className="flex items-center gap-4">
             {countdownItems.map(({ label, value }) => (
-              <div key={label} className="flex flex-col items-center text-center">
-                <div className="w-14 rounded-lg bg-white px-4 py-3 text-2xl font-semibold text-gray-900 shadow-inner">
-                  {String(value).padStart(2, "0")}
-                </div>
-                <span className="mt-2 text-xs font-medium uppercase tracking-widest text-white/80">
+              <div key={label} className="flex flex-col items-center text-center gap-2">
+                <span className="text-xs font-normal uppercase tracking-widest text-white/90">
                   {label}
                 </span>
+                <div className="w-14 rounded-lg bg-gray-100 px-4 py-3 text-2xl font-bold text-gray-900 tabular-nums">
+                  {String(value).padStart(2, "0")}
+                </div>
               </div>
             ))}
           </div>
@@ -188,7 +158,7 @@ export default function FlashSale({ products = [] }) {
                 <span
                   key={`dot-${idx}`}
                   className={`h-2.5 w-2.5 rounded-full transition ${
-                    idx === currentSlide ? "bg-red-500" : "bg-white/30"
+                    idx === currentSlide ? "bg-brand" : "bg-white/30"
                   }`}
                   aria-label={`Slide ${idx + 1}`}
                 />

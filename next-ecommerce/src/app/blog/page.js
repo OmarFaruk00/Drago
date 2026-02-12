@@ -23,8 +23,8 @@ export default function BlogPage() {
               <Image src={post.image} alt={post.title} fill className="object-cover group-hover:scale-105" />
             </div>
             <div className="p-4">
-              <p className="text-xs text-red-600 font-medium">{post.category}</p>
-              <h2 className="font-semibold text-gray-900 mt-1 line-clamp-2 group-hover:text-red-600">{post.title}</h2>
+              <p className="text-xs text-brand font-medium">{post.category}</p>
+              <h2 className="font-semibold text-gray-900 mt-1 line-clamp-2 group-hover:text-brand">{post.title}</h2>
               <p className="text-sm text-gray-500 mt-1">
                 {post.date} · {post.author}
               </p>

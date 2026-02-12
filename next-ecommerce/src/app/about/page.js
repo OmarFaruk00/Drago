@@ -55,23 +55,23 @@ export default function AboutPage() {
             <div className="order-1 lg:order-2">
               <ul className="space-y-4 text-gray-600">
                 <li className="flex gap-3">
-                  <span className="text-red-600 font-bold">•</span>
+                  <span className="text-brand font-bold">•</span>
                   <span>100% genuine products with warranty</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-red-600 font-bold">•</span>
+                  <span className="text-brand font-bold">•</span>
                   <span>Fast delivery across Bangladesh</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-red-600 font-bold">•</span>
+                  <span className="text-brand font-bold">•</span>
                   <span>24/7 customer support</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-red-600 font-bold">•</span>
+                  <span className="text-brand font-bold">•</span>
                   <span>Easy returns and refunds</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-red-600 font-bold">•</span>
+                  <span className="text-brand font-bold">•</span>
                   <span>Secure payment options</span>
                 </li>
               </ul>

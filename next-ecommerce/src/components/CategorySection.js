@@ -1,45 +1,47 @@
 "use client";
 
 /**
- * CategorySection - Horizontal scroll of category icons
- * Design: Mobile, Laptop, Camera, Headphone, Watch, Speaker, etc.
+ * CategorySection - Grid of category cards (half the size of Top Products cards)
+ * Design: Square cards, image on top, category name below, white bg, subtle border
  */
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { shuffleArray } from "@/lib/utils/shuffle";
 
 export default function CategorySection({ categories }) {
-  const [shuffled, setShuffled] = useState(() => shuffleArray(categories));
-
-  useEffect(() => {
-    setShuffled(shuffleArray(categories));
-  }, [categories]);
-
-  const displayCategories = shuffled.length ? shuffled : categories;
   return (
     <section className="py-8 md:py-12">
       <div className="w-full">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Categories</h2>
-        {/* 3 rows grid - 3 cols on desktop (3+3+2), scroll on mobile */}
-        <div className="flex gap-3 overflow-x-auto pb-2 md:overflow-visible md:grid md:grid-cols-4 md:grid-rows-2 md:gap-x-6 md:gap-y-6 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-          {displayCategories.map((cat) => (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
+          <Link
+            href="/products"
+            className="text-brand font-medium hover:underline flex items-center gap-1"
+          >
+            See All Products
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        {/* 6 per row, 2 rows = 12 cards. Subtle border so cards blend but remain discernible */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+          {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug || cat.name}`}
-              className="flex-shrink-0 flex flex-col items-center gap-1.5 w-20 md:w-24 group"
+              className="flex flex-col items-center bg-white rounded-lg border border-brand/10 overflow-hidden group hover:border-brand/25 transition"
             >
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-gray-100 border border-gray-200 group-hover:border-red-500 transition">
+              <div className="aspect-square w-full relative bg-gray-50 overflow-hidden">
                 <Image
-                  src={cat.image || `https://via.placeholder.com/80?text=${cat.icon}`}
+                  src={cat.image || `https://via.placeholder.com/96?text=${cat.icon}`}
                   alt={cat.name}
-                  width={80}
-                  height={80}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-contain p-2 group-hover:scale-105 transition-transform"
+                  sizes="(max-width: 640px) 25vw, (max-width: 1024px) 20vw, 100px"
                 />
               </div>
-              <span className="text-[11px] md:text-[13px] font-medium text-gray-700 group-hover:text-red-600 text-center">
+              <span className="py-2 text-[11px] sm:text-xs font-medium text-gray-900 text-center group-hover:text-brand">
                 {cat.name}
               </span>
             </Link>

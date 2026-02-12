@@ -63,7 +63,7 @@ export default function NotificationSettingsPage() {
             >
               Cancel
             </Link>
-            <button className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700">
+            <button className="px-6 py-2.5 bg-brand text-white rounded-lg hover:bg-brand-dark">
               Save
             </button>
           </div>

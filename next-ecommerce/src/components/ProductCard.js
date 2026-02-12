@@ -13,7 +13,7 @@ import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function ProductCard({ product, variant = "default" }) {
+export default function ProductCard({ product, variant = "default", priority = false }) {
   const formatCurrency = useFormatCurrency();
   const { t } = useLanguage();
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function ProductCard({ product, variant = "default" }) {
         e.stopPropagation();
         onClick?.(e);
       }}
-      className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow border border-gray-100 text-gray-600 hover:text-red-600 hover:border-red-200 transition"
+      className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow border border-gray-100 text-gray-600 hover:text-brand hover:border-brand/30 transition"
       title={title}
     >
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@ export default function ProductCard({ product, variant = "default" }) {
 
   return (
     <div
-      className="group block bg-white rounded border border-gray-100 overflow-hidden w-full hover:shadow-md hover:border-red-100 transition-all duration-200"
+      className="group block bg-white rounded border border-gray-100 overflow-hidden w-full hover:shadow-md hover:border-brand/20 transition-all duration-200"
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
@@ -61,15 +61,17 @@ export default function ProductCard({ product, variant = "default" }) {
       <Link href={`/products/${product.id}`} className="block">
       <div
         className={`relative bg-gray-50 overflow-hidden ${
-          variant === "flash" ? "h-[220px]" : "h-[180px]"
+          variant === "flash" ? "aspect-square w-full" : "h-[180px]"
         }`}
       >
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className={`object-contain group-hover:scale-105 transition-transform duration-200 ${
-            variant === "flash" ? "p-3" : "p-1"
+          priority={priority}
+          loading={priority ? undefined : "lazy"}
+          className={`group-hover:scale-105 transition-transform duration-200 ${
+            variant === "flash" ? "object-cover p-2" : "object-contain p-1"
           }`}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
         />
@@ -79,7 +81,7 @@ export default function ProductCard({ product, variant = "default" }) {
           </div>
         )}
         {discount > 0 && (
-          <span className="absolute top-1 left-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+          <span className="absolute top-1 left-1 bg-brand text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
             {discount}% OFF
           </span>
         )}
@@ -99,7 +101,7 @@ export default function ProductCard({ product, variant = "default" }) {
       {/* Content - tight padding */}
       <div className="p-2">
         <Link href={`/products/${product.id}`}>
-          <h3 className="text-[11px] leading-tight text-gray-800 line-clamp-2 min-h-[28px] group-hover:text-red-600">
+          <h3 className="text-[11px] leading-tight text-gray-800 line-clamp-2 min-h-[28px] group-hover:text-brand">
             {product.name}
           </h3>
         </Link>
@@ -109,7 +111,7 @@ export default function ProductCard({ product, variant = "default" }) {
           <span className="text-[9px] text-gray-400">({product.reviewCount})</span>
         </div>
         <div className="mt-1 flex items-baseline gap-1 flex-wrap">
-          <span className="text-sm font-bold text-red-600">{formatCurrency(product.price)}</span>
+          <span className="text-sm font-bold text-brand">{formatCurrency(product.price)}</span>
           {product.originalPrice > product.price && (
             <span className="text-[10px] text-gray-400 line-through">{formatCurrency(product.originalPrice)}</span>
           )}
@@ -117,7 +119,7 @@ export default function ProductCard({ product, variant = "default" }) {
         <button
           onClick={handleAddToCart}
           disabled={!product.inStock}
-          className="mt-1.5 w-full py-1.5 bg-red-600 text-white text-[11px] font-medium rounded hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+          className="mt-1.5 w-full py-1.5 bg-brand text-white text-[11px] font-medium rounded hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition"
         >
           {t("product.addToCart")}
         </button>

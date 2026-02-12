@@ -27,7 +27,7 @@ export default function CommentSection({ postComments = comments }) {
                   <span className="text-sm text-gray-500">{c.date}</span>
                 </div>
                 <p className="mt-1 text-gray-600 text-sm">{c.text}</p>
-                <button className="mt-2 text-sm text-red-600 hover:underline">Reply</button>
+                <button className="mt-2 text-sm text-brand hover:underline">Reply</button>
               </div>
             </li>
           ))}

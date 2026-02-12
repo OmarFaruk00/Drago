@@ -51,7 +51,7 @@ export default function AdminInboxPage() {
             <input
               type="search"
               placeholder="Search conversations..."
-              className="w-full pl-10 pr-4 py-2 bg-white border border-red-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full pl-10 pr-4 py-2 bg-white border border-red-200 rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
             />
           </div>
         </div>
@@ -61,10 +61,10 @@ export default function AdminInboxPage() {
               key={c.id}
               onClick={() => setSelected(c)}
               className={`w-full flex items-center gap-3 p-4 text-left transition ${
-                selected?.id === c.id ? "bg-red-100 border-l-4 border-red-600" : "hover:bg-red-50"
+                selected?.id === c.id ? "bg-red-100 border-l-4 border-brand" : "hover:bg-red-50"
               }`}
             >
-              <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-semibold shrink-0">
+              <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center text-brand-dark font-semibold shrink-0">
                 {(c.name || "?")[0]}
               </div>
               <div className="min-w-0 flex-1">
@@ -73,7 +73,7 @@ export default function AdminInboxPage() {
               </div>
               <div className="shrink-0 text-right">
                 {c.hasUnread && (
-                  <span className="block w-2 h-2 rounded-full bg-red-500 mb-1 ml-auto" />
+                  <span className="block w-2 h-2 rounded-full bg-brand mb-1 ml-auto" />
                 )}
                 <span className="text-xs text-gray-500">{c.lastTime}</span>
               </div>
@@ -99,7 +99,7 @@ export default function AdminInboxPage() {
                   <div
                     className={`max-w-[75%] rounded-2xl px-4 py-2 ${
                       m.sender === "admin"
-                        ? "bg-red-600 text-white rounded-br-md"
+                        ? "bg-brand text-white rounded-br-md"
                         : "bg-white text-gray-900 border border-gray-200 rounded-bl-md"
                     }`}
                   >
@@ -124,11 +124,11 @@ export default function AdminInboxPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 flex items-center gap-1"
+                className="px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark flex items-center gap-1"
               >
                 <Send className="w-4 h-4" />
                 Send

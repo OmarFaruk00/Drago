@@ -27,8 +27,8 @@ function Toggle({ checked, onChange }) {
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${
-        checked ? "bg-red-600" : "bg-gray-200"
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 ${
+        checked ? "bg-brand" : "bg-gray-200"
       }`}
     >
       <span
@@ -110,7 +110,7 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -126,7 +126,7 @@ export default function AdminSettingsPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px ${
               activeTab === tab.id
-                ? "border-red-600 text-red-600"
+                ? "border-brand text-brand"
                 : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
           >
@@ -145,7 +145,7 @@ export default function AdminSettingsPage() {
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                   />
                 </div>
                 <div>
@@ -163,7 +163,7 @@ export default function AdminSettingsPage() {
                     type="tel"
                     value={form.phone}
                     onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                   />
                 </div>
                 <div>
@@ -190,7 +190,7 @@ export default function AdminSettingsPage() {
                     <select
                       value={form.timezone}
                       onChange={(e) => setForm((f) => ({ ...f, timezone: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     >
                       <option value="GMT+06:00">GMT +06:00</option>
                       <option value="GMT+00:00">GMT +00:00</option>
@@ -202,7 +202,7 @@ export default function AdminSettingsPage() {
                     <select
                       value={form.language}
                       onChange={(e) => setForm((f) => ({ ...f, language: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     >
                       <option value="en">English</option>
                       <option value="bn">Bangla</option>
@@ -211,7 +211,7 @@ export default function AdminSettingsPage() {
                 </div>
                 <button
                   type="button"
-                  className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                  className="flex items-center gap-2 text-brand hover:text-brand-dark"
                 >
                   <Key className="w-4 h-4" />
                   Change Password
@@ -262,14 +262,14 @@ export default function AdminSettingsPage() {
                   notificationPreferences: settings.notificationPreferences || {},
                 })
               }
-              className="px-6 py-2.5 border border-red-600 text-red-600 rounded-lg hover:bg-red-50"
+              className="px-6 py-2.5 border border-brand text-brand rounded-lg hover:bg-red-50"
             >
               Discard
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              className="px-6 py-2.5 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
             >
               {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
             </button>

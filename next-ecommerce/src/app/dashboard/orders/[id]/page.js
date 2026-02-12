@@ -30,7 +30,7 @@ export default function OrderDetailsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-500" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand" />
       </div>
     );
   }
@@ -38,7 +38,7 @@ export default function OrderDetailsPage() {
   if (!order) {
     return (
       <div className="py-8">
-        <Link href="/dashboard/orders" className="text-sm text-red-600 hover:underline">← Back to Orders</Link>
+        <Link href="/dashboard/orders" className="text-sm text-brand hover:underline">← Back to Orders</Link>
         <p className="text-gray-500 mt-4">Order not found.</p>
       </div>
     );
@@ -48,7 +48,7 @@ export default function OrderDetailsPage() {
 
   return (
     <div>
-      <Link href="/dashboard/orders" className="text-sm text-red-600 hover:underline mb-4 inline-block">
+      <Link href="/dashboard/orders" className="text-sm text-brand hover:underline mb-4 inline-block">
         ← Back to Orders
       </Link>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -66,7 +66,7 @@ export default function OrderDetailsPage() {
             <div key={step} className="flex flex-col items-center flex-1">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
-                  i <= statusIndex ? "bg-red-600 text-white" : "bg-gray-200 text-gray-500"
+                  i <= statusIndex ? "bg-brand text-white" : "bg-gray-200 text-gray-500"
                 }`}
               >
                 {i + 1}
@@ -87,12 +87,12 @@ export default function OrderDetailsPage() {
                 <Image src={item.image || "https://via.placeholder.com/64"} alt={item.name} fill className="object-cover" sizes="64px" />
               </div>
               <div className="flex-1 min-w-0">
-                <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-red-600">
+                <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-brand">
                   {item.name}
                 </Link>
                 <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
               </div>
-              <p className="font-semibold text-red-600">{(item.price * item.quantity).toLocaleString()} tk</p>
+              <p className="font-semibold text-brand">{(item.price * item.quantity).toLocaleString()} tk</p>
             </div>
           ))}
         </div>
@@ -106,7 +106,7 @@ export default function OrderDetailsPage() {
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h3 className="font-semibold mb-2">Total</h3>
-          <p className="text-xl font-bold text-red-600">{formatCurrency(order.total)}</p>
+          <p className="text-xl font-bold text-brand">{formatCurrency(order.total)}</p>
         </div>
       </div>
     </div>

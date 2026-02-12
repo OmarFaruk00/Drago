@@ -34,7 +34,7 @@ export default function StoreSettingsPage() {
                   type="text"
                   value={form.storeName}
                   onChange={(e) => setForm((f) => ({ ...f, storeName: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 />
               </div>
               <div>
@@ -66,7 +66,7 @@ export default function StoreSettingsPage() {
                 <select
                   value={form.country}
                   onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 >
                   <option>Bangladesh</option>
                   <option>United States</option>
@@ -78,7 +78,7 @@ export default function StoreSettingsPage() {
                 <select
                   value={form.currency}
                   onChange={(e) => setForm((f) => ({ ...f, currency: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 >
                   <option>BDT</option>
                   <option>tk</option>
@@ -91,7 +91,7 @@ export default function StoreSettingsPage() {
                 <select
                   value={form.language}
                   onChange={(e) => setForm((f) => ({ ...f, language: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 >
                   <option>English</option>
                   <option>Bangla</option>
@@ -102,7 +102,7 @@ export default function StoreSettingsPage() {
                 <select
                   value={form.dateFormat}
                   onChange={(e) => setForm((f) => ({ ...f, dateFormat: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 >
                   <option>DD/MM/YYYY</option>
                   <option>MM/DD/YYYY</option>
@@ -113,7 +113,7 @@ export default function StoreSettingsPage() {
           </div>
 
           <div className="flex justify-end">
-            <button className="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700">
+            <button className="px-6 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark">
               Save
             </button>
           </div>

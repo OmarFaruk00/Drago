@@ -23,7 +23,7 @@ export default function PromoBanner() {
             <p className="text-white/90 text-lg mb-4">On Latest Smartphones</p>
             <Link
               href="/products?category=Electronics"
-              className="inline-flex px-8 py-3 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition"
+              className="inline-flex px-8 py-3 bg-brand text-white font-semibold rounded hover:bg-brand-dark transition"
             >
               Shop Now
             </Link>

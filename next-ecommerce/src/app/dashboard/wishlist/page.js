@@ -29,13 +29,13 @@ export default function WishlistPage() {
               <Image src={product.image} alt={product.name} fill className="object-cover" sizes="80px" />
             </Link>
             <div className="min-w-0 flex-1">
-              <Link href={`/products/${product.id}`} className="font-medium text-gray-900 hover:text-red-600 line-clamp-2 text-sm">
+              <Link href={`/products/${product.id}`} className="font-medium text-gray-900 hover:text-brand line-clamp-2 text-sm">
                 {product.name}
               </Link>
-              <p className="text-sm font-bold text-red-600 mt-1">{formatCurrency(product.price)}</p>
+              <p className="text-sm font-bold text-brand mt-1">{formatCurrency(product.price)}</p>
               <button
                 onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image }, 1)}
-                className="mt-2 w-full py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700"
+                className="mt-2 w-full py-1.5 bg-brand text-white text-xs font-medium rounded hover:bg-brand-dark"
               >
                 {t("product.addToCart")}
               </button>

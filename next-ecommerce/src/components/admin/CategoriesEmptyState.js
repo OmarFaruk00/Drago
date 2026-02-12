@@ -11,8 +11,8 @@ export default function CategoriesEmptyState() {
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center py-16 px-6">
       <div className="relative mb-6">
         <div className="w-24 h-24 rounded-2xl bg-red-100 flex items-center justify-center">
-          <FolderPlus className="w-12 h-12 text-red-600" strokeWidth={1.5} />
-          <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+          <FolderPlus className="w-12 h-12 text-brand" strokeWidth={1.5} />
+          <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-brand rounded-full flex items-center justify-center">
             <Plus className="w-4 h-4 text-white" strokeWidth={2.5} />
           </div>
         </div>
@@ -23,7 +23,7 @@ export default function CategoriesEmptyState() {
       </p>
       <Link
         href="/admin/categories/add"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
       >
         <Plus className="w-5 h-5" />
         Add New Category

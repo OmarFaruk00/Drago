@@ -21,7 +21,7 @@ export default function OrdersPage() {
   }, []);
 
   const columns = [
-    { key: "id", label: "Order ID", render: (v, row) => <Link href={`/dashboard/orders/${row.fullId}`} className="text-red-600 hover:underline">#{v}</Link> },
+    { key: "id", label: "Order ID", render: (v, row) => <Link href={`/dashboard/orders/${row.fullId}`} className="text-brand hover:underline">#{v}</Link> },
     { key: "customer", label: "Customer" },
     { key: "date", label: "Date" },
     { key: "total", label: "Total" },
@@ -31,7 +31,7 @@ export default function OrdersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-500" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand" />
       </div>
     );
   }
@@ -42,7 +42,7 @@ export default function OrdersPage() {
       {orders.length > 0 ? (
         <DashboardTable columns={columns} rows={orders} statusKey="status" />
       ) : (
-        <p className="text-gray-500 py-8">No orders yet. <Link href="/products" className="text-red-600 hover:underline">Start shopping</Link></p>
+        <p className="text-gray-500 py-8">No orders yet. <Link href="/products" className="text-brand hover:underline">Start shopping</Link></p>
       )}
     </div>
   );

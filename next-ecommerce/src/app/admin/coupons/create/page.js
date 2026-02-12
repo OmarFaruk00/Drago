@@ -98,7 +98,7 @@ export default function CreateCouponPage() {
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+            className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save"}
           </button>
@@ -106,7 +106,7 @@ export default function CreateCouponPage() {
       </div>
 
       {errors.submit && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm">{errors.submit}</div>
+        <div className="p-4 bg-red-50 text-brand rounded-lg text-sm">{errors.submit}</div>
       )}
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -121,12 +121,12 @@ export default function CreateCouponPage() {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 ${
-                    errors.name ? "border-red-500" : "border-gray-300"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand ${
+                    errors.name ? "border-brand" : "border-gray-300"
                   }`}
                   placeholder="e.g. Summer Sale"
                 />
-                {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                {errors.name && <p className="mt-1 text-sm text-brand">{errors.name}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Coupon Code *</label>
@@ -134,12 +134,12 @@ export default function CreateCouponPage() {
                   type="text"
                   value={form.code}
                   onChange={(e) => setForm((f) => ({ ...f, code: e.target.value.toUpperCase() }))}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 ${
-                    errors.code ? "border-red-500" : "border-gray-300"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand ${
+                    errors.code ? "border-brand" : "border-gray-300"
                   }`}
                   placeholder="e.g. SAVE20"
                 />
-                {errors.code && <p className="mt-1 text-sm text-red-600">{errors.code}</p>}
+                {errors.code && <p className="mt-1 text-sm text-brand">{errors.code}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Discount Value *</label>
@@ -152,8 +152,8 @@ export default function CreateCouponPage() {
                     value={form.discountValue}
                     onChange={(e) => setForm((f) => ({ ...f, discountValue: e.target.value }))}
                     disabled={form.type === "free_shipping"}
-                    className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 ${
-                      errors.discountValue ? "border-red-500" : "border-gray-300"
+                    className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand ${
+                      errors.discountValue ? "border-brand" : "border-gray-300"
                     }`}
                     placeholder={form.type === "percentage" ? "10" : "10.00"}
                   />
@@ -168,7 +168,7 @@ export default function CreateCouponPage() {
                     </select>
                   )}
                 </div>
-                {errors.discountValue && <p className="mt-1 text-sm text-red-600">{errors.discountValue}</p>}
+                {errors.discountValue && <p className="mt-1 text-sm text-brand">{errors.discountValue}</p>}
               </div>
             </div>
             <div className="mt-4">
@@ -177,7 +177,7 @@ export default function CreateCouponPage() {
                 rows={3}
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                 placeholder="Optional description"
               />
             </div>
@@ -202,13 +202,13 @@ export default function CreateCouponPage() {
                       }))
                     }
                     className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition ${
-                      selected ? "border-red-600 bg-red-50" : "border-gray-200 hover:border-gray-300"
+                      selected ? "border-brand bg-red-50" : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     {selected && (
-                      <Check className="absolute top-2 right-2 w-5 h-5 text-red-600" />
+                      <Check className="absolute top-2 right-2 w-5 h-5 text-brand" />
                     )}
-                    <Icon className={`w-8 h-8 ${selected ? "text-red-600" : "text-gray-400"}`} />
+                    <Icon className={`w-8 h-8 ${selected ? "text-brand" : "text-gray-400"}`} />
                     <span className="text-sm font-medium text-center">{t.label}</span>
                   </button>
                 );
@@ -227,7 +227,7 @@ export default function CreateCouponPage() {
                   min="0"
                   value={form.totalUsageLimit}
                   onChange={(e) => setForm((f) => ({ ...f, totalUsageLimit: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                   placeholder="Leave empty for unlimited"
                 />
               </div>
@@ -238,7 +238,7 @@ export default function CreateCouponPage() {
                   min="0"
                   value={form.usagePerCustomer}
                   onChange={(e) => setForm((f) => ({ ...f, usagePerCustomer: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                   placeholder="Leave empty for unlimited"
                 />
               </div>
@@ -255,11 +255,11 @@ export default function CreateCouponPage() {
                   type="date"
                   value={form.startDate}
                   onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 ${
-                    errors.startDate ? "border-red-500" : "border-gray-300"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand ${
+                    errors.startDate ? "border-brand" : "border-gray-300"
                   }`}
                 />
-                {errors.startDate && <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>}
+                {errors.startDate && <p className="mt-1 text-sm text-brand">{errors.startDate}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">End Date *</label>
@@ -267,11 +267,11 @@ export default function CreateCouponPage() {
                   type="date"
                   value={form.endDate}
                   onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 ${
-                    errors.endDate ? "border-red-500" : "border-gray-300"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand ${
+                    errors.endDate ? "border-brand" : "border-gray-300"
                   }`}
                 />
-                {errors.endDate && <p className="mt-1 text-sm text-red-600">{errors.endDate}</p>}
+                {errors.endDate && <p className="mt-1 text-sm text-brand">{errors.endDate}</p>}
               </div>
             </div>
           </div>
@@ -285,7 +285,7 @@ export default function CreateCouponPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+            className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save"}
           </button>

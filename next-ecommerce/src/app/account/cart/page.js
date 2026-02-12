@@ -26,7 +26,7 @@ export default function AccountCartPage() {
           <p className="text-gray-500 mb-6">Add items to your cart to checkout.</p>
           <Link
             href="/products"
-            className="inline-block px-6 py-3 border-2 border-red-600 text-red-600 font-medium rounded-lg hover:bg-red-50"
+            className="inline-block px-6 py-3 border-2 border-brand text-brand font-medium rounded-lg hover:bg-brand/5"
           >
             Return to shop
           </Link>
@@ -63,7 +63,7 @@ export default function AccountCartPage() {
                           >
                             <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
                           </Link>
-                          <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-red-600">
+                          <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-brand">
                             {item.name}
                           </Link>
                         </div>
@@ -92,7 +92,7 @@ export default function AccountCartPage() {
                       <td className="px-6 py-4">
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="p-2 text-gray-400 hover:text-red-600"
+                          className="p-2 text-gray-400 hover:text-brand"
                           title="Remove"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,13 +108,13 @@ export default function AccountCartPage() {
             <div className="px-6 py-4 border-t border-gray-100 flex justify-between">
               <Link
                 href="/products"
-                className="px-5 py-2.5 border-2 border-red-600 text-red-600 font-medium rounded-lg hover:bg-red-50"
+                className="px-5 py-2.5 border-2 border-brand text-brand font-medium rounded-lg hover:bg-brand/5"
               >
                 Return to shop
               </Link>
               <button
-                className="px-5 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700"
-                onClick={() => window.location.reload()}
+                className="px-5 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark"
+                type="button"
               >
                 Update Cart
               </button>
@@ -132,7 +132,7 @@ export default function AccountCartPage() {
                   key={coupon.id}
                   className="rounded-lg overflow-hidden border border-gray-200"
                 >
-                  <div className="bg-red-600 text-white px-4 py-2 flex justify-between items-center text-sm rounded-t-lg">
+                  <div className="bg-brand text-white px-4 py-2 flex justify-between items-center text-sm rounded-t-lg">
                     <span className="font-medium">Coupon</span>
                     <span>Valid Until {coupon.validUntil}</span>
                   </div>
@@ -156,7 +156,7 @@ export default function AccountCartPage() {
                       className={`px-4 py-2 font-medium rounded-lg shrink-0 ${
                         coupon.applyVariant === "black"
                           ? "bg-black text-white hover:bg-gray-800"
-                          : "bg-red-600 text-white hover:bg-red-700"
+                          : "bg-brand text-white hover:bg-brand-dark"
                       }`}
                     >
                       Apply
@@ -195,7 +195,7 @@ export default function AccountCartPage() {
             <div className="p-6 pt-0">
               <Link
                 href="/checkout"
-                className="block w-full py-3 bg-red-600 text-white text-center font-semibold rounded-lg hover:bg-red-700"
+                className="block w-full py-3 bg-brand text-white text-center font-semibold rounded-lg hover:bg-brand-dark"
               >
                 Proceed to checkout
               </Link>

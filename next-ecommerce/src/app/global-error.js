@@ -8,7 +8,7 @@ export default function GlobalError({ error, reset }) {
         <p className="text-gray-600 mb-6 text-center max-w-md">{error?.message || "An unexpected error occurred"}</p>
         <button
           onClick={reset}
-          className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark"
         >
           Try again
         </button>

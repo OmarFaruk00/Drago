@@ -89,7 +89,7 @@ function LoginForm() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>
+              <div className="p-3 bg-red-50 text-brand rounded-lg text-sm">{error}</div>
             )}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -98,7 +98,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="you@example.com"
               />
             </div>
@@ -109,21 +109,21 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="••••••••"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition"
+              className="w-full py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand disabled:opacity-50 transition"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
           <p className="mt-4 text-center text-gray-600 text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-red-500 hover:underline">
+            <Link href="/register" className="text-brand hover:underline">
               Register
             </Link>
           </p>
@@ -137,7 +137,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-500" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand" />
       </div>
     }>
       <LoginForm />

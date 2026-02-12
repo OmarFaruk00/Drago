@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function Testimonials({ testimonials }) {
   return (
-    <section className="py-12 md:py-16 bg-red-600">
+    <section className="py-12 md:py-16 bg-brand">
       <div className="w-full">
         <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-10">
           What Our Customers Say

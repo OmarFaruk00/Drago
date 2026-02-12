@@ -1,35 +1,88 @@
 "use client";
 
 /**
- * My Profile - 4 stat cards + Recent Order History
+ * My Profile - 4 stat cards + Recent Order History (real-time from API)
  */
 
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-
-const statCards = [
-  { label: "Total Orders", value: 20, icon: "cart-check", bg: "bg-green-100", iconColor: "text-green-600" },
-  { label: "Shopping", value: 3, icon: "bag", bg: "bg-pink-100", iconColor: "text-pink-600" },
-  { label: "Pending", value: 12, icon: "refresh", bg: "bg-amber-100", iconColor: "text-amber-600" },
-  { label: "Cancel", value: 2, icon: "x", bg: "bg-red-100", iconColor: "text-red-600" },
-];
-
-const recentOrders = [
-  { id: "0210814", date: "March 13, 2014", total: "$135.00 (5 Products)", status: "Delivered" },
-  { id: "0210815", date: "March 12, 2014", total: "$89.00 (2 Products)", status: "Pending" },
-  { id: "0210816", date: "March 10, 2014", total: "$245.00 (8 Products)", status: "Canceled" },
-];
+import { useStore } from "@/lib/store/useStore";
+import { accountOrdersList } from "@/lib/data/accountOrders";
 
 const statusColors = {
+  delivered: "bg-green-100 text-green-800",
   Delivered: "bg-green-100 text-green-800",
+  pending: "bg-amber-100 text-amber-800",
   Pending: "bg-amber-100 text-amber-800",
+  cancelled: "bg-red-100 text-red-800",
   Canceled: "bg-red-100 text-red-800",
-  Incoming: "bg-orange-100 text-orange-800",
+  processing: "bg-blue-100 text-blue-800",
+  shipped: "bg-purple-100 text-purple-800",
 };
 
+const fetchStats = () =>
+  fetch("/api/dashboard/stats", { credentials: "include" }).then((r) => r.json());
+
+const fetchOrders = () =>
+  fetch("/api/dashboard/orders", { credentials: "include" }).then((r) => r.json());
+
 export default function ProfilePage() {
+  const cart = useStore((s) => s.cart);
+  const [stats, setStats] = useState({ orders: 0, pendingCount: 0, cancelledCount: 0 });
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadData = useCallback(() => {
+    Promise.all([fetchStats(), fetchOrders()])
+      .then(([statsData, ordersData]) => {
+        setStats({
+          orders: statsData.orders ?? 0,
+          pendingCount: statsData.pendingCount ?? 0,
+          cancelledCount: statsData.cancelledCount ?? 0,
+        });
+        const list = Array.isArray(ordersData) && ordersData.length > 0 ? ordersData : accountOrdersList;
+        setRecentOrders(list.slice(0, 6));
+      })
+      .catch(() => {
+        setRecentOrders(accountOrdersList.slice(0, 6));
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    loadData();
+    const interval = setInterval(loadData, 30000);
+    return () => clearInterval(interval);
+  }, [loadData]);
+
+  useEffect(() => {
+    const onFocus = () => loadData();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [loadData]);
+
+  const statCards = [
+    { label: "Total Orders", value: stats.orders, icon: "cart-check", bg: "bg-green-100", iconColor: "text-green-600" },
+    { label: "Shopping", value: cart.length, icon: "bag", bg: "bg-pink-100", iconColor: "text-pink-600" },
+    { label: "Pending", value: stats.pendingCount, icon: "refresh", bg: "bg-amber-100", iconColor: "text-amber-600" },
+    { label: "Cancel", value: stats.cancelledCount, icon: "x", bg: "bg-red-100", iconColor: "text-brand" },
+  ];
+
+  const getStatusLabel = (s) => {
+    if (!s) return "Pending";
+    const v = String(s).toLowerCase();
+    if (v === "delivered") return "Delivered";
+    if (v === "cancelled") return "Canceled";
+    return String(s).charAt(0).toUpperCase() + String(s).slice(1);
+  };
 
   return (
-    <div>
+    <div className="relative">
+      {loading && (
+        <div className="absolute top-2 right-2 z-10">
+          <div className="animate-spin rounded-full h-5 w-5 border-2 border-brand border-t-transparent" title="Refreshing..." />
+        </div>
+      )}
       {/* Stat cards - equal width, aligned with sidebar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full">
         {statCards.map((card) => (
@@ -71,7 +124,7 @@ export default function ProfilePage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <h2 className="text-lg font-semibold text-gray-900">Recent Order History</h2>
-          <Link href="/account/orders" className="text-red-600 text-sm font-medium hover:underline">
+          <Link href="/account/orders" className="text-black text-sm font-medium hover:underline">
             View All
           </Link>
         </div>
@@ -93,12 +146,12 @@ export default function ProfilePage() {
                   <td className="px-6 py-4 text-gray-600">{order.date}</td>
                   <td className="px-6 py-4 text-gray-900">{order.total}</td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || "bg-gray-100 text-gray-800"}`}>
-                      {order.status}
+                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors[order.status?.toLowerCase()] || "bg-gray-100 text-gray-800"}`}>
+                      {getStatusLabel(order.status)}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <Link href="/account/orders" className="text-red-600 text-sm hover:underline">
+                    <Link href={`/account/orders/${order.fullId || order.id}`} className="text-brand text-sm hover:underline">
                       View Details
                     </Link>
                   </td>
@@ -110,7 +163,7 @@ export default function ProfilePage() {
         <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500">
           <span>Showing 1-{recentOrders.length} of 99</span>
           <div className="flex gap-2">
-            <button className="w-8 h-8 rounded bg-red-600 text-white text-sm font-medium">1</button>
+            <button className="w-8 h-8 rounded bg-brand text-white text-sm font-medium">1</button>
             <button className="w-8 h-8 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm">2</button>
             <button className="w-8 h-8 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm">3</button>
           </div>

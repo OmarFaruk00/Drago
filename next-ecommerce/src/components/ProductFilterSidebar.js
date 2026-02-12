@@ -92,7 +92,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
                         updateParams("category", sub.slug);
                         onClose?.();
                       }}
-                      className={`block w-full text-left px-4 py-1.5 text-xs ${currentCategory === sub.slug ? "text-red-600 font-medium" : "text-gray-600 hover:text-red-600"}`}
+                      className={`block w-full text-left px-4 py-1.5 text-xs ${currentCategory === sub.slug ? "text-brand font-medium" : "text-gray-600 hover:text-brand"}`}
                     >
                       {sub.name} ({sub.count})
                     </button>
@@ -114,7 +114,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
             max="1000"
             value={priceRange}
             onChange={(e) => setPriceRange(Number(e.target.value))}
-            className="w-full h-1.5 rounded bg-gray-200 appearance-none cursor-pointer accent-red-600"
+            className="w-full h-1.5 rounded bg-gray-200 appearance-none cursor-pointer accent-brand"
           />
           <div className="flex gap-2">
             <input
@@ -135,7 +135,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
           <p className="text-xs text-gray-500">Range: {priceMin || 0} - {priceMax || priceRange} tk</p>
           <button
             onClick={applyPriceFilter}
-            className="w-full py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700"
+            className="w-full py-1.5 bg-brand text-white text-xs font-medium rounded hover:bg-brand-dark"
           >
             Apply
           </button>
@@ -151,7 +151,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
               key={c.name}
               onClick={() => updateParams("color", currentColor === c.name ? "" : c.name)}
               className={`w-7 h-7 rounded-full border-2 transition ${
-                currentColor === c.name ? "border-red-600 ring-1 ring-red-600" : "border-gray-300 hover:border-gray-400"
+                currentColor === c.name ? "border-brand ring-1 ring-brand" : "border-gray-300 hover:border-gray-400"
               }`}
               style={{ backgroundColor: c.value }}
               title={c.name}
@@ -168,7 +168,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
             <button
               key={s}
               onClick={() => updateParams("size", currentSize === s ? "" : s)}
-              className={`px-2.5 py-1 text-xs border rounded ${currentSize === s ? "border-red-600 bg-red-50 text-red-700" : "border-gray-300 hover:border-gray-400"}`}
+              className={`px-2.5 py-1 text-xs border rounded ${currentSize === s ? "border-brand bg-brand/10 text-brand" : "border-gray-300 hover:border-gray-400"}`}
             >
               {s}
             </button>
@@ -184,7 +184,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
             <button
               key={r}
               onClick={() => updateParams("rating", currentRating === String(r) ? "" : String(r))}
-              className={`flex items-center gap-1 w-full text-left px-2 py-1 text-xs rounded ${currentRating === String(r) ? "bg-red-50 text-red-700" : "text-gray-600 hover:bg-gray-50"}`}
+              className={`flex items-center gap-1 w-full text-left px-2 py-1 text-xs rounded ${currentRating === String(r) ? "bg-brand/10 text-brand" : "text-gray-600 hover:bg-gray-50"}`}
             >
               <span className="text-amber-500">{Array(r).fill("★").join("")}</span>
               {r === 5 ? "5 stars" : `${r} stars & up`}
@@ -203,7 +203,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
                 type="checkbox"
                 checked={currentBrand === b}
                 onChange={() => updateParams("brand", currentBrand === b ? "" : b)}
-                className="w-3.5 h-3.5 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                className="w-3.5 h-3.5 rounded border-gray-300 text-brand focus:ring-brand"
               />
               <span className="text-xs text-gray-700">{b}</span>
             </label>
@@ -227,8 +227,8 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
                   <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-105" sizes="56px" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-gray-800 line-clamp-2 group-hover:text-red-600">{p.name}</p>
-                  <p className="text-xs font-bold text-red-600 mt-0.5">{Number(p.price).toLocaleString()} tk</p>
+                  <p className="text-xs text-gray-800 line-clamp-2 group-hover:text-brand">{p.name}</p>
+                  <p className="text-xs font-bold text-brand mt-0.5">{Number(p.price).toLocaleString()} tk</p>
                   <span className="text-amber-500 text-[10px]">★ {p.rating}</span>
                 </div>
               </Link>

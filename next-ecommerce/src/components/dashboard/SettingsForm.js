@@ -47,7 +47,7 @@ export default function SettingsForm({ user }) {
             type="text"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
           />
         </div>
         <div>
@@ -56,7 +56,7 @@ export default function SettingsForm({ user }) {
             type="email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
           />
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function SettingsForm({ user }) {
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           placeholder="Leave blank to keep current"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
         />
       </div>
 
@@ -79,7 +79,7 @@ export default function SettingsForm({ user }) {
           value={form.address}
           onChange={(e) => setForm({ ...form, address: e.target.value })}
           placeholder="Street address"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 mb-2"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand mb-2"
         />
         <div className="grid grid-cols-2 gap-2">
           <input
@@ -87,19 +87,19 @@ export default function SettingsForm({ user }) {
             value={form.city}
             onChange={(e) => setForm({ ...form, city: e.target.value })}
             placeholder="City"
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
           />
           <input
             type="text"
             value={form.zip}
             onChange={(e) => setForm({ ...form, zip: e.target.value })}
             placeholder="ZIP"
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
           />
         </div>
       </div>
 
-      <button type="submit" className="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700">
+      <button type="submit" className="px-6 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark">
         Save Changes
       </button>
     </form>

@@ -17,6 +17,8 @@ export async function GET() {
       totalSales: "0 tk",
       orders: 0,
       products: 0,
+      pendingCount: 0,
+      cancelledCount: 0,
       recentActivities: [],
     });
   }
@@ -35,6 +37,9 @@ export async function GET() {
         return sum + qty;
       }, 0);
 
+      const pendingCount = orders.filter((o) => (o.status || "").toLowerCase() === "pending").length;
+      const cancelledCount = orders.filter((o) => (o.status || "").toLowerCase() === "cancelled").length;
+
       const recentActivities = orders.slice(0, 5).map((o) => ({
         id: o._id?.toString(),
         fullId: o._id?.toString(),
@@ -47,6 +52,8 @@ export async function GET() {
         totalSales: formatCurrency(totalSales),
         orders: orders.length,
         products: totalItems,
+        pendingCount,
+        cancelledCount,
         recentActivities,
       });
     }
@@ -58,6 +65,8 @@ export async function GET() {
     totalSales: "0 tk",
     orders: 0,
     products: 0,
+    pendingCount: 0,
+    cancelledCount: 0,
     recentActivities: [],
   });
 }

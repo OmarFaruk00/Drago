@@ -32,7 +32,7 @@ export default function AdminCustomersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function AdminCustomersPage() {
             placeholder="Search customers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
           />
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function AdminCustomersPage() {
                 <tr key={u.id || u._id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-medium">
+                      <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center text-brand font-medium">
                         {(u.name || "?").charAt(0)}
                       </div>
                       <span className="font-medium text-gray-900">{u.name}</span>
@@ -106,7 +106,7 @@ export default function AdminCustomersPage() {
                   <td className="px-4 py-3">
                     <Link
                       href={`/admin/customers/${u.id}`}
-                      className="inline-flex items-center gap-1.5 px-2 py-1 text-sm text-red-600 hover:bg-red-50 rounded"
+                      className="inline-flex items-center gap-1.5 px-2 py-1 text-sm text-brand hover:bg-red-50 rounded"
                     >
                       <Eye className="w-4 h-4" />
                       View

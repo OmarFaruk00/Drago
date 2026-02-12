@@ -30,13 +30,13 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50">
       {/* Top bar - Red background, white elements */}
-      <div className="bg-red-600">
+      <div className="bg-brand">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-6">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 flex items-center h-full">
               <Image
-                src="/logo.png"
+                src="/logo (1).png"
                 alt="Drago"
                 width={220}
                 height={70}
@@ -45,10 +45,10 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* Search - Central, white bg, search icon inside */}
+            {/* Search - Input + dark button, single rounded unit, transparent input with border */}
             <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-1 lg:mx-4">
-              <div className="relative w-full flex rounded overflow-hidden">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <div className="relative w-full flex rounded-lg overflow-hidden border border-white/40 bg-white/10">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none">
                   <Search className="w-5 h-5" />
                 </div>
                 <input
@@ -56,11 +56,11 @@ export default function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t("nav.searchProducts")}
-                  className="w-full pl-10 pr-24 py-2 bg-white border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white/30 focus:outline-none"
+                  className="flex-1 pl-10 pr-4 py-2.5 bg-transparent border-0 text-white placeholder-gray-300 focus:ring-0 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="absolute right-0 top-0 h-full px-4 bg-gray-800 text-white hover:bg-gray-900"
+                  className="px-5 py-2.5 bg-gray-900 text-white font-medium hover:bg-black transition shrink-0"
                 >
                   {t("nav.search")}
                 </button>
@@ -72,20 +72,20 @@ export default function Navbar() {
               <div className="flex rounded overflow-hidden border border-white/30">
                 <button
                   onClick={() => setLocale("en")}
-                  className={`px-2 py-1 text-xs font-medium ${locale === "en" ? "bg-white text-red-600" : "text-white hover:bg-red-700"}`}
+                  className={`px-2 py-1 text-xs font-medium ${locale === "en" ? "bg-white text-brand" : "text-white hover:bg-brand-dark"}`}
                 >
                   EN
                 </button>
                 <button
                   onClick={() => setLocale("bn")}
-                  className={`px-2 py-1 text-xs font-medium ${locale === "bn" ? "bg-white text-red-600" : "text-white hover:bg-red-700"}`}
+                  className={`px-2 py-1 text-xs font-medium ${locale === "bn" ? "bg-white text-brand" : "text-white hover:bg-brand-dark"}`}
                 >
                   BN
                 </button>
               </div>
               <Link
                 href={user ? "/dashboard" : "/login"}
-                className="p-2 text-white hover:bg-red-700 rounded transition"
+                className="p-2 text-white hover:bg-brand-dark rounded transition"
                 title={user ? t("nav.dashboard") : t("nav.account")}
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,21 +94,21 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/cart"
-                className="relative p-2 text-white hover:bg-red-700 rounded transition"
+                className="relative p-2 text-white hover:bg-brand-dark rounded transition"
                 title={t("nav.cart")}
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-white text-red-600 text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 bg-white text-brand text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
               </Link>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden p-2 text-white hover:bg-red-700 rounded"
+                className="md:hidden p-2 text-white hover:bg-brand-dark rounded"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {mobileOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
@@ -137,18 +137,18 @@ export default function Navbar() {
       <div className="hidden md:block bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-6 py-3 items-center">
-            <Link href="/" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.home")}</Link>
+            <Link href="/" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.home")}</Link>
             {user && (
-              <Link href="/dashboard" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.dashboard")}</Link>
+              <Link href="/dashboard" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.dashboard")}</Link>
             )}
-            <Link href="/products" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.products")}</Link>
-            <Link href="/about" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.about")}</Link>
-            <Link href="/blog" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.blog")}</Link>
-            <Link href="/contact" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.contact")}</Link>
+            <Link href="/products" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.products")}</Link>
+            <Link href="/about" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.about")}</Link>
+            <Link href="/blog" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.blog")}</Link>
+            <Link href="/contact" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.contact")}</Link>
             {!user && (
               <>
-                <Link href="/login" className="text-gray-700 hover:text-red-600 text-sm font-medium transition">{t("nav.login")}</Link>
-                <Link href="/register" className="px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition">{t("nav.signUp")}</Link>
+                <Link href="/login" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.login")}</Link>
+                <Link href="/register" className="px-3 py-1.5 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark transition">{t("nav.signUp")}</Link>
               </>
             )}
           </div>
@@ -168,7 +168,7 @@ export default function Navbar() {
             {!user && (
               <>
                 <Link href="/login" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.login")}</Link>
-                <Link href="/register" onClick={() => setMobileOpen(false)} className="py-2 text-red-600 font-medium">{t("nav.signUp")}</Link>
+                <Link href="/register" onClick={() => setMobileOpen(false)} className="py-2 text-brand font-medium">{t("nav.signUp")}</Link>
               </>
             )}
             <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.cart")} ({cartCount})</Link>

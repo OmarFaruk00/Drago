@@ -38,7 +38,7 @@ export default function OrderHistoryTable({
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900">Order History</h2>
-        <Link href="/account/orders" className="text-gray-900 text-sm font-medium hover:underline">
+        <Link href="/account/orders" className="text-black text-sm font-medium hover:underline">
           View All
         </Link>
       </div>
@@ -67,7 +67,7 @@ export default function OrderHistoryTable({
                 <td className="px-6 py-4">
                   <Link
                     href={`/account/orders/${order.fullId || order.id}`}
-                    className="text-red-600 text-sm font-medium hover:underline"
+                    className="text-brand text-sm font-medium hover:underline"
                   >
                     View Details
                   </Link>
@@ -102,7 +102,7 @@ export default function OrderHistoryTable({
                   key={p}
                   onClick={() => onPageChange?.(p)}
                   className={`w-8 h-8 rounded-lg text-sm font-medium ${
-                    p === currentPage ? "bg-red-600 text-white" : "border border-red-600 text-red-600 hover:bg-red-50"
+                    p === currentPage ? "bg-brand text-white" : "border border-brand text-brand hover:bg-brand/5"
                   }`}
                 >
                   {p}

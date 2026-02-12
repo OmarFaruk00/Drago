@@ -34,11 +34,11 @@ export default function BlogDetailsPage() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
       {/* Breadcrumbs */}
       <nav className="text-sm text-gray-500 mb-6">
-        <Link href="/" className="hover:text-red-600">
+        <Link href="/" className="hover:text-brand">
           Home
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/blog" className="hover:text-red-600">
+        <Link href="/blog" className="hover:text-brand">
           Blog
         </Link>
         <span className="mx-2">/</span>

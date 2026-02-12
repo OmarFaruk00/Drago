@@ -99,7 +99,7 @@ export default function CheckoutPage() {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("cart.empty")}</h1>
-        <Link href="/products" className="text-red-500 hover:underline">
+        <Link href="/products" className="text-brand hover:underline">
           {t("cart.addItems")}
         </Link>
       </div>
@@ -140,7 +140,7 @@ export default function CheckoutPage() {
               value={form.fullName}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
             />
             <input
               type="email"
@@ -149,7 +149,7 @@ export default function CheckoutPage() {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
             />
             <input
               type="text"
@@ -158,7 +158,7 @@ export default function CheckoutPage() {
               value={form.address}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
             />
             <div className="grid grid-cols-2 gap-4">
               <input
@@ -168,7 +168,7 @@ export default function CheckoutPage() {
                 value={form.city}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
               />
               <input
                 type="text"
@@ -177,7 +177,7 @@ export default function CheckoutPage() {
                 value={form.zip}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
               />
             </div>
             <input
@@ -187,7 +187,7 @@ export default function CheckoutPage() {
               value={form.country}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
             />
           </div>
         </div>
@@ -212,11 +212,11 @@ export default function CheckoutPage() {
                 <span>{formatCurrency(subtotal)}</span>
               </div>
             </div>
-            {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
+            {error && <p className="text-sm text-brand mb-4">{error}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition"
+              className="w-full py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:opacity-50 transition"
             >
               {loading ? "..." : t("checkout.placeOrder")}
             </button>

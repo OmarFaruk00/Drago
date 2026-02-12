@@ -39,7 +39,7 @@ export default function WishlistPage() {
                       <Link href={`/products/${item.id}`} className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                         <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
                       </Link>
-                      <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-red-600">
+                      <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-brand">
                         {item.name}
                       </Link>
                     </div>
@@ -59,14 +59,14 @@ export default function WishlistPage() {
                       <button
                         onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, image: item.image }, 1)}
                         disabled={!item.inStock}
-                        className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed"
                       >
                         Add to Cart
                       </button>
                       {isStoreWishlist && (
                       <button
                         onClick={() => removeFromWishlist(item.id)}
-                        className="p-2 text-gray-400 hover:text-red-600"
+                        className="p-2 text-gray-400 hover:text-brand"
                         title="Remove"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +84,7 @@ export default function WishlistPage() {
         {items.length === 0 && (
           <div className="px-6 py-12 text-center text-gray-500">
             <p className="mb-4">Your wishlist is empty.</p>
-            <Link href="/products" className="text-red-600 font-medium hover:underline">
+            <Link href="/products" className="text-brand font-medium hover:underline">
               Browse products
             </Link>
           </div>

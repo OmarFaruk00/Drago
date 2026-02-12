@@ -106,7 +106,7 @@ export default function AddProductPage() {
 
       <form onSubmit={handleSubmit} className="max-w-3xl">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-sm">
+          <div className="mb-6 p-4 bg-red-50 text-brand rounded-lg text-sm">
             {error}
           </div>
         )}
@@ -123,7 +123,7 @@ export default function AddProductPage() {
                 required
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="Enter product name"
               />
             </div>
@@ -135,7 +135,7 @@ export default function AddProductPage() {
                 rows={4}
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="Product description"
               />
             </div>
@@ -151,7 +151,7 @@ export default function AddProductPage() {
                   required
                   value={form.price}
                   onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                   placeholder="0.00"
                 />
               </div>
@@ -164,7 +164,7 @@ export default function AddProductPage() {
                   min="0"
                   value={form.stock}
                   onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                   placeholder="0"
                 />
               </div>
@@ -176,7 +176,7 @@ export default function AddProductPage() {
               <select
                 value={form.category}
                 onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
               >
                 {categories.map((c) => (
                   <option key={c} value={c}>
@@ -245,7 +245,7 @@ export default function AddProductPage() {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50"
+            className="px-6 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark disabled:opacity-50"
           >
             {loading ? "Saving..." : "Save Product"}
           </button>

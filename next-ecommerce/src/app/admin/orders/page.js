@@ -55,7 +55,7 @@ export default function AdminOrdersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
       </div>
     );
   }
@@ -109,7 +109,7 @@ export default function AdminOrdersPage() {
                       disabled={updating === o.id}
                       className={`text-xs font-medium px-2 py-1 rounded border ${
                         statusColors[o.status] || "bg-gray-100"
-                      } border-transparent focus:ring-2 focus:ring-red-500`}
+                      } border-transparent focus:ring-2 focus:ring-brand`}
                     >
                       {STATUS_OPTIONS.map((s) => (
                         <option key={s} value={s}>
@@ -128,14 +128,14 @@ export default function AdminOrdersPage() {
                     <div className="flex gap-2">
                       <Link
                         href={`/admin/orders/${o.id}`}
-                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-red-50 rounded"
                         title="View Order"
                       >
                         <Eye className="w-4 h-4" />
                       </Link>
                       <Link
                         href={`/admin/orders/${o.id}`}
-                        className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-red-50 rounded"
                         title="Update Status"
                       >
                         <Edit className="w-4 h-4" />

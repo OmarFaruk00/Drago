@@ -41,7 +41,7 @@ export default function AdminHeader({ onMenuClick }) {
           <input
             type="search"
             placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
           />
         </div>
       </div>
@@ -49,13 +49,13 @@ export default function AdminHeader({ onMenuClick }) {
         <div className="flex rounded overflow-hidden border border-gray-200">
           <button
             onClick={() => setLocale("en")}
-            className={`px-2 py-1 text-xs font-medium ${locale === "en" ? "bg-red-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+            className={`px-2 py-1 text-xs font-medium ${locale === "en" ? "bg-brand text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
           >
             EN
           </button>
           <button
             onClick={() => setLocale("bn")}
-            className={`px-2 py-1 text-xs font-medium ${locale === "bn" ? "bg-red-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+            className={`px-2 py-1 text-xs font-medium ${locale === "bn" ? "bg-brand text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
           >
             BN
           </button>
@@ -65,13 +65,13 @@ export default function AdminHeader({ onMenuClick }) {
           title="Notifications"
         >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand rounded-full" />
         </button>
         {loading ? (
           <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
         ) : admin ? (
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white text-sm font-medium">
+            <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-medium">
               {admin.name?.charAt(0) || "A"}
             </div>
             <span className="hidden md:inline text-sm font-medium text-gray-700">

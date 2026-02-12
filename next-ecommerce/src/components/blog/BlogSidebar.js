@@ -17,7 +17,7 @@ export default function BlogSidebar({ recentPosts = blogPosts }) {
         <ul className="space-y-1">
           {topCategories.map((c) => (
             <li key={c.name}>
-              <Link href={`/products?category=${c.name}`} className="text-gray-600 hover:text-red-600 text-sm">
+              <Link href={`/products?category=${c.name}`} className="text-gray-600 hover:text-brand text-sm">
                 {c.name} ({c.count})
               </Link>
             </li>
@@ -34,7 +34,7 @@ export default function BlogSidebar({ recentPosts = blogPosts }) {
               key={tag}
               href={`/blog?tag=${tag}`}
               className={`px-3 py-1 text-xs rounded border transition ${
-                i < 2 ? "border-red-500 bg-red-50 text-red-600" : "border-gray-200 text-gray-600 hover:border-red-300"
+                i < 2 ? "border-brand bg-red-50 text-brand" : "border-gray-200 text-gray-600 hover:border-red-300"
               }`}
             >
               {tag}
@@ -54,7 +54,7 @@ export default function BlogSidebar({ recentPosts = blogPosts }) {
                   <Image src={p.image} alt="" fill className="object-cover group-hover:scale-105" sizes="64px" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-gray-800 line-clamp-2 group-hover:text-red-600">{p.title}</p>
+                  <p className="text-sm text-gray-800 line-clamp-2 group-hover:text-brand">{p.title}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{p.date}</p>
                 </div>
               </Link>
@@ -74,8 +74,8 @@ export default function BlogSidebar({ recentPosts = blogPosts }) {
           />
         </div>
         <p className="text-sm font-semibold text-gray-800 mt-2">Fresh Deals</p>
-        <span className="inline-block mt-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">80% OFF</span>
-        <Link href="/products" className="mt-3 inline-block px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">
+        <span className="inline-block mt-1 px-2 py-0.5 bg-brand text-white text-xs font-bold rounded">80% OFF</span>
+        <Link href="/products" className="mt-3 inline-block px-4 py-2 bg-brand text-white text-sm font-medium rounded hover:bg-brand-dark">
           Shop Now
         </Link>
       </div>

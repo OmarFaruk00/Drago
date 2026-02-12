@@ -106,7 +106,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>
+              <div className="p-3 bg-red-50 text-brand rounded-lg text-sm">{error}</div>
             )}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                 value={form.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="Your name"
               />
             </div>
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="you@example.com"
               />
             </div>
@@ -141,21 +141,21 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 minLength={6}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="••••••••"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition"
+              className="w-full py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand disabled:opacity-50 transition"
             >
               {loading ? "Creating account..." : "Create Account"}
             </button>
           </form>
           <p className="mt-4 text-center text-gray-600 text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-red-500 hover:underline">
+            <Link href="/login" className="text-brand hover:underline">
               Sign In
             </Link>
           </p>

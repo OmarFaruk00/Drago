@@ -142,7 +142,7 @@ function ProductsContent() {
                               params.set("page", String(p));
                               router.push(`/products?${params.toString()}`);
                             }}
-                            className={`w-9 h-9 text-sm border ${page === p ? "bg-red-600 border-red-600 text-white" : "hover:bg-gray-50"}`}
+                            className={`w-9 h-9 text-sm border ${page === p ? "bg-brand border-brand text-white" : "hover:bg-gray-50"}`}
                           >
                             {p}
                           </button>

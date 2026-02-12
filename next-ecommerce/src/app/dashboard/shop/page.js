@@ -23,7 +23,7 @@ export default function ShopPage() {
     { key: "price", label: "Price", render: (v) => `${Number(v).toLocaleString()} tk` },
     { key: "actions", label: "Actions", render: (_, row) => (
       <div className="flex gap-2">
-        <button className="text-red-600 text-sm hover:underline">Edit</button>
+        <button className="text-brand text-sm hover:underline">Edit</button>
         <button className="text-gray-500 text-sm hover:underline">Delete</button>
       </div>
     )},
@@ -33,7 +33,7 @@ export default function ShopPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Shop</h1>
-        <button className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700">
+        <button className="px-4 py-2 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark">
           Add New
         </button>
       </div>

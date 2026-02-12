@@ -51,7 +51,7 @@ export default function ProductDetailsPage() {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Product not found</h1>
-        <Link href="/products" className="text-red-600 hover:underline mt-4 inline-block">
+        <Link href="/products" className="text-brand hover:underline mt-4 inline-block">
           Back to products
         </Link>
       </div>
@@ -83,7 +83,7 @@ export default function ProductDetailsPage() {
             <span className="text-gray-400">({product.reviewCount} reviews)</span>
           </div>
           <div className="flex items-center gap-2 mb-6">
-            <span className="text-3xl font-bold text-red-600">
+            <span className="text-3xl font-bold text-brand">
               {formatCurrency(product.price)}
             </span>
             {product.originalPrice > product.price && (
@@ -99,7 +99,7 @@ export default function ProductDetailsPage() {
           {product.inStock ? (
             <span className="inline-block text-green-600 font-medium mb-4">In Stock</span>
           ) : (
-            <span className="inline-block text-red-600 font-medium mb-4">Out of Stock</span>
+            <span className="inline-block text-brand font-medium mb-4">Out of Stock</span>
           )}
 
           {/* Quantity & Add to cart */}
@@ -122,12 +122,12 @@ export default function ProductDetailsPage() {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="px-8 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+              className="px-8 py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition"
             >
               Add to Cart
             </button>
           </div>
-          <Link href="/products" className="inline-block mt-6 text-red-600 hover:underline">
+          <Link href="/products" className="inline-block mt-6 text-brand hover:underline">
             ← Back to products
           </Link>
         </div>
