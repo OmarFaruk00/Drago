@@ -16,6 +16,14 @@ export const useStore = create(
     (set) => ({
       // Cart state
       cart: [],
+      wishlist: [],
+      addToWishlist: (item) =>
+        set((state) => {
+          if (state.wishlist.some((w) => w.id === item.id)) return state;
+          return { wishlist: [...state.wishlist, { ...item, inStock: item.inStock ?? true }] };
+        }),
+      removeFromWishlist: (id) =>
+        set((state) => ({ wishlist: state.wishlist.filter((w) => w.id !== id) })),
       addToCart: (item, quantity = 1) => {
         set((state) => {
           const existing = state.cart.find((i) => i.id === item.id);
