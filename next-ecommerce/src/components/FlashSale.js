@@ -104,7 +104,7 @@ export default function FlashSale({ products = [] }) {
       <div className="border border-white/15 bg-[#02020a] p-6 md:p-8 text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <Image
-            src="/flash-sale-banner.png"
+            src="/flash-sale-banner.png.jpg"
             alt="Flash Sale"
             width={360}
             height={150}
