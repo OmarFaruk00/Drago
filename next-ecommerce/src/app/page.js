@@ -120,7 +120,7 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto mt-0 px-4 sm:px-6">
         <FlashSale products={productPool} />
       </section>
-      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
         <CategorySection categories={categories} />
       </section>
 

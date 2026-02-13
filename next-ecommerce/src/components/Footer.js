@@ -36,13 +36,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8">
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
-            <Link href="/" className="block mb-4">
+            <Link href="/" className="block mb-3 p-0 m-0">
               <Image
-                src="/logo (1).png"
+                src="/logo.png"
                 alt="Drago"
-                width={140}
-                height={140}
-                className="h-16 w-auto brightness-0 invert object-contain"
+                width={180}
+                height={180}
+                className="h-20 md:h-24 w-auto brightness-0 invert object-contain p-0 m-0"
               />
             </Link>
             <div className="text-sm text-gray-200 mb-4 space-y-1">

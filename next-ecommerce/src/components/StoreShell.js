@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import LiveChatIcon from "./LiveChatIcon";
 
 export default function StoreShell({ children }) {
   const pathname = usePathname();
@@ -17,6 +18,7 @@ export default function StoreShell({ children }) {
       <Navbar />
       <main className="flex-1 bg-gray-100">{children}</main>
       <Footer />
+      <LiveChatIcon />
     </>
   );
 }
