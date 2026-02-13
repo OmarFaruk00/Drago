@@ -6,10 +6,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 
 export default function FlashSale({ products = [] }) {
-  const [expanded, setExpanded] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 2,
     hrs: 6,
@@ -104,16 +105,26 @@ export default function FlashSale({ products = [] }) {
     <section className="pt-4 pb-8 md:pt-6 md:pb-12">
       <div className="border border-white/15 bg-[#02020a] p-6 md:p-8 text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          {/* FLASH SALE banner - use flash-sale-banner.png (transparent/dark bg, no white) */}
-          <Image
-            src="/flash-sale-banner.png"
-            alt="Flash Sale"
-            width={360}
-            height={150}
-            className="h-28 w-auto max-w-[320px] object-contain"
-            priority
-          />
-          <div className="flex items-center gap-4">
+          {/* FLASH SALE banner - uses provided flash-sale-banner image */}
+          <div className="h-28 flex items-center">
+            <Image
+              src="/flash-sale-banner.png.jpg"
+              alt="Flash Sale"
+              width={280}
+              height={112}
+              className="h-full w-auto max-w-[280px] object-contain object-left"
+              priority
+            />
+          </div>
+          <div className="flex flex-col items-end gap-3">
+            <Link
+              href="/products"
+              className="flex items-center gap-1 text-white text-sm font-medium hover:text-brand transition"
+            >
+              View All
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <div className="flex items-center gap-4">
             {countdownItems.map(({ label, value }) => (
               <div key={label} className="flex flex-col items-center text-center gap-2">
                 <span className="text-xs font-normal uppercase tracking-widest text-white/90">
@@ -124,6 +135,7 @@ export default function FlashSale({ products = [] }) {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </div>
 
@@ -155,7 +167,7 @@ export default function FlashSale({ products = [] }) {
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-center gap-2 relative">
+            <div className="mt-6 flex items-center justify-center gap-2">
               {slides.map((_, idx) => (
                 <span
                   key={`dot-${idx}`}
@@ -165,27 +177,10 @@ export default function FlashSale({ products = [] }) {
                   aria-label={`Slide ${idx + 1}`}
                 />
               ))}
-              <button
-                type="button"
-                onClick={() => setExpanded(!expanded)}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-white text-sm font-medium hover:text-brand transition"
-              >
-                {expanded ? "See Less" : "See All"}
-              </button>
             </div>
           </div>
         </div>
 
-        {/* Expanded: all flash sale products grid - opens below within home page */}
-        {expanded && products.length > 0 && (
-          <div className="mt-8 pt-8 border-t border-white/15">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} variant="flash" />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );

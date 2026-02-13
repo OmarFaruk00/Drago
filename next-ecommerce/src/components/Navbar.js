@@ -28,39 +28,40 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 overflow-visible">
       {/* Top bar - Red background, white elements */}
-      <div className="bg-brand">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-6">
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0 flex items-center h-full">
+      <div className="bg-brand overflow-visible">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+          <div className="flex items-center justify-between h-14 gap-4 overflow-visible">
+            {/* Logo - scale(1.4) to enlarge, overflow-visible so it stands out */}
+            <Link href="/" className="flex-shrink-0 flex items-center h-full p-0 m-0 overflow-visible">
               <Image
-                src="/logo (1).png"
+                src="/logo.png"
                 alt="Drago"
-                width={220}
-                height={70}
-                className="w-[180px] md:w-[220px] h-[70px] object-contain brightness-0 invert"
+                width={200}
+                height={200}
+                className="h-full w-auto object-contain brightness-0 invert block m-0 scale-[1.4] origin-center"
+                style={{ padding: "2px 0" }}
                 priority
               />
             </Link>
 
             {/* Search - Input + dark button, single rounded unit, transparent input with border */}
-            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-1 lg:mx-4">
-              <div className="relative w-full flex rounded-lg overflow-hidden border border-white/40 bg-white/10">
+            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-1 lg:mx-3">
+              <div className="relative w-full flex rounded-md overflow-hidden border border-white/40 bg-white/10">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none">
-                  <Search className="w-5 h-5" />
+                  <Search className="w-4 h-4" />
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t("nav.searchProducts")}
-                  className="flex-1 pl-10 pr-4 py-2.5 bg-transparent border-0 text-white placeholder-gray-300 focus:ring-0 focus:outline-none"
+                  className="flex-1 pl-10 pr-4 py-2 bg-transparent border-0 text-white placeholder-gray-300 focus:ring-0 focus:outline-none text-sm"
                 />
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-gray-900 text-white font-medium hover:bg-black transition shrink-0"
+                  className="px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-black transition shrink-0"
                 >
                   {t("nav.search")}
                 </button>
@@ -88,7 +89,7 @@ export default function Navbar() {
                 className="p-2 text-white hover:bg-brand-dark rounded transition"
                 title={user ? t("nav.dashboard") : t("nav.account")}
               >
-                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </Link>
@@ -97,7 +98,7 @@ export default function Navbar() {
                 className="relative p-2 text-white hover:bg-brand-dark rounded transition"
                 title={t("nav.cart")}
               >
-                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {cartCount > 0 && (
@@ -135,8 +136,8 @@ export default function Navbar() {
 
       {/* Secondary nav - White bg, dark text */}
       <div className="hidden md:block bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-6 py-3 items-center">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex gap-4 py-2 items-center">
             <Link href="/" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.home")}</Link>
             {user && (
               <Link href="/dashboard" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.dashboard")}</Link>

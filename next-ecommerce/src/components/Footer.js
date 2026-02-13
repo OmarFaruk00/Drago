@@ -37,9 +37,13 @@ export default function Footer() {
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
             <Link href="/" className="block mb-4">
-              <span className="text-white font-bold text-2xl sm:text-3xl tracking-tight">
-                DRAGO
-              </span>
+              <Image
+                src="/logo (1).png"
+                alt="Drago"
+                width={140}
+                height={140}
+                className="h-16 w-auto brightness-0 invert object-contain"
+              />
             </Link>
             <div className="text-sm text-gray-200 mb-4 space-y-1">
               <p className="font-semibold text-white text-base">About Drago</p>
