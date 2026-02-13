@@ -194,7 +194,7 @@ export default function AdminDashboardPage() {
           return (
             <div
               key={card.label}
-              className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm"
+              className="rounded-xl border border-gray-200 p-5 shadow-sm backdrop-blur-sm bg-white/80 cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-2 hover:border-blue-500 hover:shadow-xl hover:bg-white"
             >
               <div className="flex items-center justify-between">
                 <div>
