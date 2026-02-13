@@ -95,10 +95,10 @@ export default function OrderDetailsPage() {
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-6 py-6 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-4 border-b border-gray-100">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Order Details</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-lg font-bold text-gray-900">Order Details</h1>
+          <p className="text-xs text-gray-500 mt-1">
             • {order.date} • {items.length} Product{items.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -110,34 +110,34 @@ export default function OrderDetailsPage() {
         </Link>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 space-y-4">
         {/* Table 1: Billing + Shipping | Table 2: Order ID, Payment, Summary - side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Billing Address + Shipping Address - one table */}
           <div className="rounded-lg border border-gray-200 overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left px-4 py-3 font-semibold text-gray-900">Billing Address</th>
-                  <th className="text-left px-4 py-3 font-semibold text-gray-900">Shipping Address</th>
+                  <th className="text-left px-3 py-2 font-semibold text-gray-900">Billing Address</th>
+                  <th className="text-left px-3 py-2 font-semibold text-gray-900">Shipping Address</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-700 align-top">{billing.name || "—"}</td>
-                  <td className="px-4 py-3 text-gray-700 align-top">{shipping.name || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700 align-top">{billing.name || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700 align-top">{shipping.name || "—"}</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-700 align-top whitespace-pre-line">{billing.address || "—"}</td>
-                  <td className="px-4 py-3 text-gray-700 align-top whitespace-pre-line">{shipping.address || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700 align-top whitespace-pre-line">{billing.address || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700 align-top whitespace-pre-line">{shipping.address || "—"}</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-700">Email: {billing.email || "—"}</td>
-                  <td className="px-4 py-3 text-gray-700">Email: {shipping.email || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700">Email: {billing.email || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700">Email: {shipping.email || "—"}</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 text-gray-700">Phone: {billing.phone || "—"}</td>
-                  <td className="px-4 py-3 text-gray-700">Phone: {shipping.phone || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700">Phone: {billing.phone || "—"}</td>
+                  <td className="px-3 py-2 text-gray-700">Phone: {shipping.phone || "—"}</td>
                 </tr>
               </tbody>
             </table>
@@ -145,37 +145,37 @@ export default function OrderDetailsPage() {
 
           {/* Order ID, Payment Method, Summary - another table */}
           <div className="rounded-lg border border-gray-200 overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left px-4 py-3 font-semibold text-gray-900 w-1/2">Order ID</th>
-                  <th className="text-left px-4 py-3 font-semibold text-gray-900">Payment Method</th>
+                  <th className="text-left px-3 py-2 font-semibold text-gray-900 w-1/2">Order ID</th>
+                  <th className="text-left px-3 py-2 font-semibold text-gray-900">Payment Method</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-900">#{summary.orderId}</td>
-                  <td className="px-4 py-3 text-gray-900">{summary.paymentMethod}</td>
+                  <td className="px-3 py-2 text-gray-900">#{summary.orderId}</td>
+                  <td className="px-3 py-2 text-gray-900">{summary.paymentMethod}</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-600">Subtotal</td>
-                  <td className="px-4 py-3 text-gray-900">{formatCurrency(summary.subtotal || 0)}</td>
+                  <td className="px-3 py-2 text-gray-600">Subtotal</td>
+                  <td className="px-3 py-2 text-gray-900">{formatCurrency(summary.subtotal || 0)}</td>
                 </tr>
                 {summary.discountPercent > 0 && (
                   <tr className="border-b border-gray-100">
-                    <td className="px-4 py-3 text-gray-600">Discount</td>
-                    <td className="px-4 py-3 text-gray-900">{summary.discountPercent}%</td>
+                    <td className="px-3 py-2 text-gray-600">Discount</td>
+                    <td className="px-3 py-2 text-gray-900">{summary.discountPercent}%</td>
                   </tr>
                 )}
                 <tr className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-600">Shipping</td>
-                  <td className="px-4 py-3 text-gray-900">
+                  <td className="px-3 py-2 text-gray-600">Shipping</td>
+                  <td className="px-3 py-2 text-gray-900">
                     {(summary.shipping || 0) === 0 ? "Free" : formatCurrency(summary.shipping)}
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 font-bold text-gray-900">Total</td>
-                  <td className="px-4 py-3 font-bold text-brand">{formatCurrency(summary.total || 0)}</td>
+                  <td className="px-3 py-2 font-bold text-gray-900">Total</td>
+                  <td className="px-3 py-2 font-bold text-brand">{formatCurrency(summary.total || 0)}</td>
                 </tr>
               </tbody>
             </table>

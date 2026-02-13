@@ -27,8 +27,8 @@ export default function OrderTrackingStepper({ status }) {
   const currentStep = STATUS_TO_STEP[s] ?? 0;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-      <div className="flex items-start justify-between gap-2">
+    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+      <div className="flex items-start justify-between gap-1">
         {STEPS.map((step, i) => {
           const isActive = i <= currentStep && currentStep >= 0;
           const isCompleted = i < currentStep;
@@ -37,7 +37,7 @@ export default function OrderTrackingStepper({ status }) {
             <div key={step.key} className="flex flex-1 flex-col items-center min-w-0">
               <div className="flex items-center w-full">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
                     isActive
                       ? "bg-brand border-brand text-white"
                       : "border-2 border-dashed border-gray-300 bg-white text-gray-400"
@@ -45,25 +45,25 @@ export default function OrderTrackingStepper({ status }) {
                 >
                   {isActive ? (
                     isCompleted ? (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <span className="text-sm font-semibold">{i + 1}</span>
+                      <span className="text-xs font-semibold">{i + 1}</span>
                     )
                   ) : (
-                    <span className="text-sm font-medium">{i + 1}</span>
+                    <span className="text-xs font-medium">{i + 1}</span>
                   )}
                 </div>
                 {!isLast && (
                   <div
-                    className={`flex-1 h-1 mx-1 -mt-5 rounded ${
+                    className={`flex-1 h-0.5 mx-0.5 -mt-4 rounded ${
                       isActive ? "bg-brand" : "bg-gray-200 border border-dashed border-gray-300"
                     }`}
                   />
                 )}
               </div>
-              <p className={`text-xs mt-2 font-medium text-center ${isActive ? "text-brand" : "text-gray-500"}`}>
+              <p className={`text-[10px] mt-1.5 font-medium text-center leading-tight ${isActive ? "text-brand" : "text-gray-500"}`}>
                 {step.label}
               </p>
             </div>

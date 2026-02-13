@@ -12,41 +12,41 @@ export default function OrderItemsTable({ items = [] }) {
   const formatCurrency = useFormatCurrency();
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-base font-semibold text-gray-900">Order Items</h3>
-      <div className="space-y-3">
+    <div className="space-y-3">
+      <h3 className="text-sm font-semibold text-gray-900">Order Items</h3>
+      <div className="space-y-2">
         {items.map((item, i) => (
           <div
             key={i}
-            className="bg-white rounded-xl border border-gray-200 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex flex-wrap items-center gap-4 sm:gap-6"
+            className="bg-white rounded-lg border border-gray-200 p-3 shadow-[0_1px_2px_rgba(0,0,0,0.05)] flex flex-wrap items-center gap-3 sm:gap-4"
           >
             <Link
               href={`/products/${item.id}`}
-              className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0"
+              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-md overflow-hidden bg-gray-100 flex-shrink-0"
             >
               <Image
-                src={item.image || "https://via.placeholder.com/80"}
+                src={item.image || "https://via.placeholder.com/56"}
                 alt={item.name}
                 fill
                 className="object-cover"
-                sizes="80px"
+                sizes="56px"
               />
             </Link>
             <div className="flex-1 min-w-0">
               <Link
                 href={`/products/${item.id}`}
-                className="font-medium text-gray-900 hover:text-brand"
+                className="text-sm font-medium text-gray-900 hover:text-brand line-clamp-1"
               >
                 {item.name}
               </Link>
             </div>
-            <div className="flex flex-wrap items-center gap-6 text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-xs">
               <div>
                 <span className="text-gray-500">Price: </span>
                 <span className="text-gray-900 font-medium">{formatCurrency(item.price || 0)}</span>
               </div>
               <div>
-                <span className="text-gray-500">Quantity: </span>
+                <span className="text-gray-500">Qty: </span>
                 <span className="text-gray-900 font-medium">×{item.quantity || 1}</span>
               </div>
               <div>

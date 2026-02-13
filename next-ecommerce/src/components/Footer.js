@@ -9,6 +9,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Youtube, Instagram } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useStore } from "@/lib/store/useStore";
+import AuthLink from "./account/AuthLink";
 
 const INSTAGRAM_GRID_IMAGES = [
   "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&q=60",
@@ -27,6 +29,7 @@ function TiktokIcon({ className, size = 24 }) {
 
 export default function Footer() {
   const { t } = useLanguage();
+  const user = useStore((s) => s.user);
   return (
     <footer className="bg-black text-gray-300 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -63,16 +66,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Account */}
+          {/* Account - Cart, Shop, Product, Wishlist: logged in → page, else → register */}
           <div>
             <h4 className="text-white font-semibold mb-4">Account</h4>
             <ul className="space-y-2 text-sm">
               <li><Link href="/account" className="hover:text-red-400 transition">My Account</Link></li>
-              <li><Link href="/login" className="hover:text-red-400 transition">Login/Register</Link></li>
-              <li><Link href="/cart" className="hover:text-red-400 transition">Cart</Link></li>
-              <li><Link href="/products" className="hover:text-red-400 transition">Shop</Link></li>
-              <li><Link href="/products" className="hover:text-red-400 transition">Product</Link></li>
-              <li><Link href="/account/wishlist" className="hover:text-red-400 transition">Wishlist</Link></li>
+              {!user && (
+                <li><Link href="/login" className="hover:text-red-400 transition">Login/Register</Link></li>
+              )}
+              <li><AuthLink href="/account/cart" className="hover:text-red-400 transition">Cart</AuthLink></li>
+              <li><AuthLink href="/products" className="hover:text-red-400 transition">Shop</AuthLink></li>
+              <li><AuthLink href="/products" className="hover:text-red-400 transition">Product</AuthLink></li>
+              <li><AuthLink href="/account/wishlist" className="hover:text-red-400 transition">Wishlist</AuthLink></li>
             </ul>
           </div>
 

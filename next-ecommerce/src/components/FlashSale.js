@@ -9,6 +9,7 @@ import Image from "next/image";
 import ProductCard from "./ProductCard";
 
 export default function FlashSale({ products = [] }) {
+  const [expanded, setExpanded] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 2,
     hrs: 6,
@@ -154,7 +155,7 @@ export default function FlashSale({ products = [] }) {
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-center gap-2">
+            <div className="mt-6 flex items-center justify-center gap-2 relative">
               {slides.map((_, idx) => (
                 <span
                   key={`dot-${idx}`}
@@ -164,9 +165,27 @@ export default function FlashSale({ products = [] }) {
                   aria-label={`Slide ${idx + 1}`}
                 />
               ))}
+              <button
+                type="button"
+                onClick={() => setExpanded(!expanded)}
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-white text-sm font-medium hover:text-brand transition"
+              >
+                {expanded ? "See Less" : "See All"}
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Expanded: all flash sale products grid - opens below within home page */}
+        {expanded && products.length > 0 && (
+          <div className="mt-8 pt-8 border-t border-white/15">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} variant="flash" />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
