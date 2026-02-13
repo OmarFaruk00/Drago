@@ -18,30 +18,30 @@ export default function CategorySection({ categories }) {
             href="/products"
             className="text-brand font-medium hover:underline flex items-center gap-1"
           >
-            See All Products
+            View All
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
         </div>
-        {/* 6 per row, 2 rows = 12 cards. Subtle border so cards blend but remain discernible */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+        {/* 6 per row, 2 rows = 12 cards. Compact spacing like reference */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 lg:gap-4">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug || cat.name}`}
-              className="flex flex-col items-center bg-white rounded-lg border border-brand/10 overflow-hidden group hover:border-brand/25 transition"
+              className="flex flex-col items-center bg-white rounded-md border border-brand/10 overflow-hidden group hover:border-brand/25 transition w-full"
             >
               <div className="aspect-square w-full relative bg-gray-50 overflow-hidden">
                 <Image
                   src={cat.image || `https://via.placeholder.com/96?text=${cat.icon}`}
                   alt={cat.name}
                   fill
-                  className="object-contain p-2 group-hover:scale-105 transition-transform"
-                  sizes="(max-width: 640px) 25vw, (max-width: 1024px) 20vw, 100px"
+                  className="object-contain p-1 group-hover:scale-105 transition-transform"
+                  sizes="(max-width: 640px) 25vw, 80px"
                 />
               </div>
-              <span className="py-2 text-[11px] sm:text-xs font-medium text-gray-900 text-center group-hover:text-brand">
+              <span className="py-1 text-[10px] font-medium text-gray-900 text-center group-hover:text-brand line-clamp-2 leading-tight">
                 {cat.name}
               </span>
             </Link>

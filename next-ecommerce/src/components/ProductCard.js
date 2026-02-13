@@ -9,7 +9,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -17,21 +16,14 @@ export default function ProductCard({ product, variant = "default", priority = f
   const formatCurrency = useFormatCurrency();
   const { t } = useLanguage();
   const router = useRouter();
-  const addToCart = useStore((s) => s.addToCart);
   const [showActions, setShowActions] = useState(false);
+  const [displayRating, setDisplayRating] = useState(() =>
+    Math.round(Number(product.rating) || 0)
+  );
 
   const discount = product.originalPrice > product.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
-
-  const handleAddToCart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(
-      { id: product.id, name: product.name, price: product.price, image: product.image },
-      1
-    );
-  };
 
   const iconBtn = (onClick, title, d) => (
     <button
@@ -101,28 +93,57 @@ export default function ProductCard({ product, variant = "default", priority = f
       {/* Content - tight padding */}
       <div className="p-2">
         <Link href={`/products/${product.id}`}>
-          <h3 className="text-[11px] leading-tight text-gray-800 line-clamp-2 min-h-[28px] group-hover:text-brand">
+          <h3 className="text-[11px] font-bold leading-tight text-gray-800 line-clamp-2 min-h-[28px] group-hover:text-brand">
             {product.name}
           </h3>
         </Link>
-        <div className="flex items-center gap-0.5 mt-1">
-          <span className="text-amber-500 text-[10px]">★</span>
-          <span className="text-[10px] text-gray-600">{product.rating}</span>
-          <span className="text-[9px] text-gray-400">({product.reviewCount})</span>
-        </div>
         <div className="mt-1 flex items-baseline gap-1 flex-wrap">
           <span className="text-sm font-bold text-brand">{formatCurrency(product.price)}</span>
           {product.originalPrice > product.price && (
             <span className="text-[10px] text-gray-400 line-through">{formatCurrency(product.originalPrice)}</span>
           )}
         </div>
-        <button
-          onClick={handleAddToCart}
-          disabled={!product.inStock}
-          className="mt-1.5 w-full py-1.5 bg-brand text-white text-[11px] font-medium rounded hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition"
-        >
-          {t("product.addToCart")}
-        </button>
+        <div className="flex items-center justify-between mt-1">
+          <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setDisplayRating((prev) => (prev === star ? Math.max(0, star - 1) : star));
+                }}
+                className="p-0.5 focus:outline-none"
+                aria-label={`Rate ${star} stars`}
+              >
+                <svg
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                  fill={star <= displayRating ? "#f59e0b" : "none"}
+                  stroke={star <= displayRating ? "#f59e0b" : "#d1d5db"}
+                  strokeWidth={1.5}
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(`/products/${product.id}`);
+            }}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 shadow-sm border border-gray-200 text-gray-600 hover:bg-gray-200 hover:border-gray-300 transition shrink-0"
+            aria-label="View product"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );
