@@ -68,6 +68,10 @@ export default function ProductDetailsPage() {
   const [activeTab, setActiveTab] = useState("specification");
   const [loading, setLoading] = useState(true);
   const addToCart = useStore((s) => s.addToCart);
+  const addToWishlist = useStore((s) => s.addToWishlist);
+  const removeFromWishlist = useStore((s) => s.removeFromWishlist);
+  const wishlist = useStore((s) => s.wishlist);
+  const isInWishlist = product && wishlist?.some((w) => w.id === product.id);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -314,10 +318,17 @@ export default function ProductDetailsPage() {
                 </button>
                 <button
                   type="button"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  onClick={() => {
+                    if (!product) return;
+                    if (isInWishlist) removeFromWishlist(product.id);
+                    else addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, inStock: product.inStock });
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition ${
+                    isInWishlist ? "border-brand/50 text-brand bg-brand/5" : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                   aria-label="Wishlist"
                 >
-                  <Heart className="w-5 h-5" />
+                  <Heart className={`w-5 h-5 ${isInWishlist ? "fill-red-500 stroke-red-500" : "fill-none stroke-current"}`} strokeWidth={2} />
                 </button>
               </div>
               <a

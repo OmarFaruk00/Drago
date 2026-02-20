@@ -1,0 +1,73 @@
+===============================================
+Vercel Environment Variables - Copy Paste
+===============================================
+
+প্রতিটি variable আলাদা আলাদা add করুন Vercel এ।
+Name | Value এ আলাদা paste করবেন।
+
+---
+
+✅ REQUIRED (প্রয়োজনীয়):
+
+Name: NEXTAUTH_SECRET
+Value: drago-store-2024-secret-key-change-this-in-production
+(বা নিজে থেকে একটা random string দিন: https://generate-secret.vercel.app/32)
+
+---
+
+Name: NEXTAUTH_URL
+Value: https://drago.vercel.app
+(Deploy এর পর আপনার actual URL দিয়ে replace করবেন। যেমন: https://your-project.vercel.app)
+
+---
+
+❌ OPTIONAL (যদি MongoDB use করতে চান):
+
+Name: MONGODB_URI
+Value: mongodb+srv://username:password@cluster.mongodb.net/drago-store?retryWrites=true&w=majority
+(MongoDB Atlas থেকে আপনার connection string দিন)
+
+---
+
+❌ OPTIONAL (যদি Google Login চান):
+
+Name: GOOGLE_CLIENT_ID
+Value: আপনার-google-client-id
+
+Name: GOOGLE_CLIENT_SECRET
+Value: আপনার-google-client-secret
+
+---
+
+❌ OPTIONAL (যদি Facebook Login চান):
+
+Name: FACEBOOK_CLIENT_ID
+Value: আপনার-facebook-app-id
+
+Name: FACEBOOK_CLIENT_SECRET
+Value: আপনার-facebook-app-secret
+
+---
+
+❌ OPTIONAL (Admin JWT):
+
+Name: JWT_SECRET
+Value: drago-admin-secret-2024-change-in-prod
+
+---
+
+❌ OPTIONAL (Dummy products - MongoDB না থাকলে):
+
+Name: NEXT_PUBLIC_USE_DUMMY_PRODUCTS
+Value: true
+
+---
+
+===============================================
+Minimum দিয়ে চালাতে চাইলে শুধু এ ২টা add করুন:
+===============================================
+
+1. NEXTAUTH_SECRET = drago-store-2024-secret-key
+2. NEXTAUTH_URL = https://your-project.vercel.app
+
+(Deploy হয়ে গেলে Vercel আপনাকে URL দেবে, সেটা NEXTAUTH_URL এ দিন)

@@ -8,7 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, Search } from "lucide-react";
+import { Menu, Search, Heart } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -17,8 +17,9 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { cart, user, logout } = useStore();
+  const { cart, wishlist, user, logout } = useStore();
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+  const wishlistCount = wishlist?.length ?? 0;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -92,6 +93,18 @@ export default function Navbar() {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
+              </Link>
+              <Link
+                href="/account/wishlist"
+                className="relative p-2 text-white hover:bg-brand-dark rounded transition"
+                title="Favorite / Wishlist"
+              >
+                <Heart className="w-5 h-5" strokeWidth={2} />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-white text-brand text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center min-w-[16px]">
+                    {wishlistCount > 99 ? "99+" : wishlistCount}
+                  </span>
+                )}
               </Link>
               <Link
                 href="/cart"
@@ -172,6 +185,7 @@ export default function Navbar() {
                 <Link href="/register" onClick={() => setMobileOpen(false)} className="py-2 text-brand font-medium">{t("nav.signUp")}</Link>
               </>
             )}
+            <Link href="/account/wishlist" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Favorite ({wishlistCount})</Link>
             <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.cart")} ({cartCount})</Link>
           </div>
         </div>
