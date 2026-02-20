@@ -45,7 +45,7 @@ export default function ProductCard({ product, variant = "default", priority = f
 
   return (
     <div
-      className="group block bg-white rounded border border-gray-100 overflow-hidden w-full hover:shadow-md hover:border-brand/20 transition-all duration-200"
+      className="group block bg-white rounded-xl shadow-sm overflow-hidden w-full hover:shadow-md transition-all duration-200"
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >

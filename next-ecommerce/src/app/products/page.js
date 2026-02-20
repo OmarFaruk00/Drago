@@ -101,8 +101,9 @@ function ProductsContent() {
             onClose={() => setSidebarOpen(false)}
           />
 
-          {/* Product grid - 4 columns desktop, right spacing */}
+          {/* Product grid - white card container */}
           <div className="flex-1 min-w-0">
+            <div className="bg-white rounded-xl shadow-sm p-6">
             {loading ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {Array.from({ length: 8 }).map((_, i) => (
@@ -110,7 +111,7 @@ function ProductsContent() {
                 ))}
               </div>
             ) : products.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
+              <div className="text-center py-16">
                 <p className="text-lg text-gray-600">No products found.</p>
                 <p className="mt-2 text-sm text-gray-500">Try adjusting your filters.</p>
               </div>
@@ -164,6 +165,7 @@ function ProductsContent() {
                 )}
               </>
             )}
+            </div>
           </div>
         </div>
       </div>

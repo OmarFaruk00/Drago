@@ -102,10 +102,10 @@ export default function FlashSale({ products = [] }) {
   ];
 
   return (
-    <section className="pt-4 pb-4 md:pt-6 md:pb-6">
-      <div className="border border-white/15 bg-[#02020a] p-6 md:p-8 text-white">
+    <section className="pt-2 pb-2 md:pt-4 md:pb-4">
+      <div className="border border-gray-800 bg-[#02020a] p-4 md:p-6 text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          {/* FLASH SALE banner - uses provided flash-sale-banner image */}
+          {/* FLASH SALE banner - original image */}
           <div className="h-28 flex items-center">
             <Image
               src="/flash-sale-banner.png.jpg"

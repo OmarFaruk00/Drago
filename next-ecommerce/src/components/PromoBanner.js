@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export default function PromoBanner() {
   return (
-    <section className="py-8 md:py-12 bg-gray-100">
+    <section className="py-4 md:py-6 bg-white">
       <div className="w-full">
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-gray-800 to-gray-900 min-h-[200px] md:min-h-[280px] flex flex-col md:flex-row items-center justify-between p-8 md:p-12">
           {/* Background pattern */}

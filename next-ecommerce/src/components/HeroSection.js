@@ -29,8 +29,8 @@ const itemUp = {
 export default function HeroSection() {
   const { t } = useLanguage();
   return (
-    <section className="relative bg-gray-100 overflow-hidden pt-0">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-0 pb-8 md:pb-12">
+    <section className="relative bg-white overflow-hidden pt-0">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-0 pb-4 md:pb-6">
         <motion.div
           className="relative min-h-[280px] md:min-h-[360px] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300"
           initial={{ opacity: 0, y: 20 }}

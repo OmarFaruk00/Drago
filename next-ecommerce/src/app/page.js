@@ -117,46 +117,54 @@ export default function HomePage() {
   return (
     <div>
       <HeroSection />
-      <section className="max-w-6xl mx-auto mt-0 px-4 sm:px-6">
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
         <FlashSale products={productPool} />
       </section>
+
+      {/* Top Products - moved up, same gap as other sections */}
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">{t("home.topProducts")}</h2>
+            <Link href="/products" className="text-brand font-medium hover:underline">
+              {t("home.viewAll")}
+            </Link>
+          </div>
+          <div className="space-y-6">
+            <ProductGrid products={topRowOne} columns={6} priorityCount={6} />
+            <ProductGrid products={topRowTwo} columns={6} priorityCount={0} />
+          </div>
+        </div>
+      </section>
+
+      {/* Categories - same as Top/Explore: white card container */}
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <CategorySection categories={categories} />
+        </div>
+      </section>
+
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
-        <CategorySection categories={categories} />
-      </section>
-
-      {/* Top Products */}
-      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">{t("home.topProducts")}</h2>
-          <Link href="/products" className="text-brand font-medium hover:underline">
-            {t("home.viewAll")}
-          </Link>
-        </div>
-        <div className="space-y-6">
-          <ProductGrid products={topRowOne} columns={6} priorityCount={6} />
-          <ProductGrid products={topRowTwo} columns={6} priorityCount={0} />
-        </div>
-      </section>
-
-      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
         <PromoBanner />
       </section>
 
       {/* Explore Our Products */}
-      <section className="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">{t("home.exploreProducts")}</h2>
-          <Link href="/products" className="text-brand font-medium hover:underline">
-            {t("home.viewAll")}
-          </Link>
-        </div>
-        <div className="space-y-6">
-          <ProductGrid products={exploreRowOne} columns={6} priorityCount={0} />
-          <ProductGrid products={exploreRowTwo} columns={6} priorityCount={0} />
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">{t("home.exploreProducts")}</h2>
+            <Link href="/products" className="text-brand font-medium hover:underline">
+              {t("home.viewAll")}
+            </Link>
+          </div>
+          <div className="space-y-6">
+            <ProductGrid products={exploreRowOne} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRowTwo} columns={6} priorityCount={0} />
+          </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto mt-8 mb-12 px-4 sm:px-6">
+      <section className="max-w-6xl mx-auto mt-4 mb-12 px-4 sm:px-6">
         <Testimonials testimonials={testimonials} />
       </section>
     </div>

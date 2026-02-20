@@ -10,8 +10,7 @@ import Image from "next/image";
 
 export default function CategorySection({ categories }) {
   return (
-    <section className="py-8 md:py-12">
-      <div className="w-full">
+    <div className="w-full">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Categories</h2>
           <Link
@@ -30,7 +29,7 @@ export default function CategorySection({ categories }) {
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug || cat.name}`}
-              className="flex flex-col items-center bg-white rounded-md border border-brand/10 overflow-hidden group hover:border-brand/25 transition w-full"
+              className="flex flex-col items-center bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition w-full"
             >
               <div className="aspect-square w-full relative bg-gray-50 overflow-hidden">
                 <Image
@@ -47,7 +46,6 @@ export default function CategorySection({ categories }) {
             </Link>
           ))}
         </div>
-      </div>
-    </section>
+    </div>
   );
 }

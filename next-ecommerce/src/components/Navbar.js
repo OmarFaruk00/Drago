@@ -33,15 +33,15 @@ export default function Navbar() {
       <div className="bg-brand overflow-visible">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
           <div className="flex items-center justify-between h-14 gap-4 overflow-visible">
-            {/* Logo - scale(1.4) to enlarge, overflow-visible so it stands out */}
+            {/* Logo - max size, overflow-visible so it stands out */}
             <Link href="/" className="flex-shrink-0 flex items-center h-full p-0 m-0 overflow-visible">
               <Image
                 src="/logo.png"
                 alt="Drago"
-                width={200}
-                height={200}
-                className="h-full w-auto object-contain brightness-0 invert block m-0 scale-[1.4] origin-center"
-                style={{ padding: "2px 0" }}
+                width={280}
+                height={280}
+                className="h-full w-auto object-contain brightness-0 invert block m-0 scale-[2.75] origin-center"
+                style={{ padding: "0" }}
                 priority
               />
             </Link>

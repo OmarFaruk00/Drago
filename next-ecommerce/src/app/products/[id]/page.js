@@ -137,7 +137,7 @@ export default function ProductDetailsPage() {
   ];
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* Breadcrumb - dark bar in navbar area: Home > Products > Category > Product Name */}
       <nav className="w-full py-3 flex items-center gap-2 text-sm" style={{ backgroundColor: "#404040" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center gap-2 flex-wrap">
@@ -402,11 +402,12 @@ export default function ProductDetailsPage() {
           </div>
         </div>
 
-        {/* Related Products */}
+        {/* Related Products - light grey bg, white card container */}
         {relatedProducts.length > 0 && (
-          <section className="mt-10">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Related Products</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <section className="mt-10 py-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Related Products</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {relatedProducts.map((p) => (
                 <Link
                   key={p.id}
@@ -453,6 +454,7 @@ export default function ProductDetailsPage() {
                   </div>
                 </Link>
               ))}
+              </div>
             </div>
           </section>
         )}
