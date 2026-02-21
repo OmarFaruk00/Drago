@@ -121,6 +121,62 @@ export async function findOrCreateOAuthUser(profile) {
   return findOrCreateOAuthUserMongo(profile);
 }
 
+/**
+ * Request password reset - generates token and saves to user
+ * @param {string} email
+ * @returns {Promise<{ok: boolean, resetUrl?: string}>}
+ */
+export async function requestPasswordReset(email) {
+  if (!USE_MONGODB) {
+    return { ok: true };
+  }
+  const conn = await connectDB();
+  if (!conn) return { ok: true };
+  const User = (await import("@/lib/models/User")).default;
+  const user = await User.findOne({ email }).select("+password").lean();
+  if (!user || !user.password) return { ok: true };
+  const crypto = await import("crypto");
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiry = new Date(Date.now() + 60 * 60 * 1000);
+  await User.updateOne(
+    { _id: user._id },
+    { $set: { resetToken: token, resetTokenExpiry: expiry } }
+  );
+  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const resetUrl = `${baseUrl}/reset-password?token=${token}`;
+  return { ok: true, resetUrl: process.env.NODE_ENV === "development" ? resetUrl : undefined };
+}
+
+/**
+ * Reset password with token
+ * @param {string} token
+ * @param {string} newPassword
+ * @returns {Promise<{ok: boolean, error?: string}>}
+ */
+export async function resetPassword(token, newPassword) {
+  if (!newPassword || newPassword.length < 6) {
+    return { ok: false, error: "Password must be at least 6 characters" };
+  }
+  if (!USE_MONGODB) {
+    return { ok: false, error: "Password reset is not available. Please use MongoDB." };
+  }
+  const conn = await connectDB();
+  if (!conn) return { ok: false, error: "Database unavailable" };
+  const User = (await import("@/lib/models/User")).default;
+  const bcrypt = (await import("bcryptjs")).default;
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExpiry: { $gt: new Date() },
+  }).lean();
+  if (!user) return { ok: false, error: "Invalid or expired reset link" };
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await User.updateOne(
+    { _id: user._id },
+    { $set: { password: hashed }, $unset: { resetToken: 1, resetTokenExpiry: 1 } }
+  );
+  return { ok: true };
+}
+
 async function findOrCreateOAuthUserMongo(profile) {
   const conn = await connectDB();
   if (!conn) return null;

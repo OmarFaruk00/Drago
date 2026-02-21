@@ -86,14 +86,14 @@ export default function Navbar() {
                 </button>
               </div>
               <Link
-                href={user ? "/dashboard" : "/login"}
+                href={user ? "/account/profile" : "/login"}
                 className="flex items-center gap-1.5 p-2 text-white hover:bg-brand-dark rounded transition"
-                title={user ? t("nav.dashboard") : t("nav.account")}
+                title={user ? t("footer.profile") : t("nav.account")}
               >
                 <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{user ? t("nav.dashboard") : t("nav.account")}</span>
+                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{user ? t("footer.profile") : t("nav.account")}</span>
               </Link>
               <Link
                 href="/account/wishlist"
@@ -156,9 +156,6 @@ export default function Navbar() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-4 py-2 items-center">
             <Link href="/" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.home")}</Link>
-            {user && (
-              <Link href="/dashboard" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.dashboard")}</Link>
-            )}
             <Link href="/products" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.products")}</Link>
             <Link href="/about" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.about")}</Link>
             <Link href="/blog" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.blog")}</Link>
@@ -178,7 +175,6 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
           <div className="px-4 py-3 flex flex-col gap-1">
             <Link href="/" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.home")}</Link>
-            {user && <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.dashboard")}</Link>}
             <Link href="/products" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.products")}</Link>
             <Link href="/about" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.about")}</Link>
             <Link href="/blog" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.blog")}</Link>

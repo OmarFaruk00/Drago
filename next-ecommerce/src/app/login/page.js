@@ -77,6 +77,11 @@ function LoginForm() {
                 className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="••••••••"
               />
+              <div className="flex justify-end mt-1">
+                <Link href="/forgot-password" className="text-xs text-brand hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
             </div>
             <button
               type="submit"
