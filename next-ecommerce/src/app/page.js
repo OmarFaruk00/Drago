@@ -121,7 +121,14 @@ export default function HomePage() {
         <FlashSale products={productPool} />
       </section>
 
-      {/* Top Products - moved up, same gap as other sections */}
+      {/* Categories - Top Products এর উপরে */}
+      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <CategorySection categories={categories} />
+        </div>
+      </section>
+
+      {/* Top Products */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
         <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
@@ -134,13 +141,6 @@ export default function HomePage() {
             <ProductGrid products={topRowOne} columns={6} priorityCount={6} />
             <ProductGrid products={topRowTwo} columns={6} priorityCount={0} />
           </div>
-        </div>
-      </section>
-
-      {/* Categories - same as Top/Explore: white card container */}
-      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <CategorySection categories={categories} />
         </div>
       </section>
 

@@ -118,7 +118,7 @@ export default function FlashSale({ products = [] }) {
           </div>
           <div className="flex flex-col items-end gap-3">
             <Link
-              href="/products"
+              href="/flash-sale"
               className="flex items-center gap-1 text-white text-sm font-medium hover:text-brand transition"
             >
               View All
