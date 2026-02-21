@@ -16,10 +16,14 @@ const STEPS = [
 const STATUS_TO_STEP = {
   pending: 0,
   order_received: 0,
+  confirmed: 0,
   processing: 1,
+  shipping: 2,
   shipped: 2,
   delivered: 3,
   cancelled: -1,
+  return: -1,
+  hold: -1,
 };
 
 export default function OrderTrackingStepper({ status }) {

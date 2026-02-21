@@ -18,6 +18,9 @@ import {
   Percent,
   Banknote,
   UserCheck,
+  Truck,
+  RotateCcw,
+  PauseCircle,
 } from "lucide-react";
 import {
   LineChart,
@@ -34,10 +37,14 @@ import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 
 const statusColors = {
   pending: "bg-amber-100 text-amber-800",
+  confirmed: "bg-blue-100 text-blue-800",
   processing: "bg-blue-100 text-blue-800",
+  shipping: "bg-cyan-100 text-cyan-800",
   shipped: "bg-indigo-100 text-indigo-800",
   delivered: "bg-green-100 text-green-800",
   cancelled: "bg-red-100 text-red-800",
+  return: "bg-orange-100 text-orange-800",
+  hold: "bg-gray-100 text-gray-800",
 };
 
 export default function AdminDashboardPage() {
@@ -108,20 +115,48 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctPending ?? 0,
     },
     {
-      label: "Completed Orders",
-      value: stats?.completedOrders ?? 0,
+      label: "Confirm Order",
+      value: stats?.confirmedOrders ?? 0,
       icon: CheckCircle,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
-      pctChange: stats?.pctCompleted ?? 0,
+      color: "text-blue-600",
+      bg: "bg-blue-50",
     },
     {
-      label: "Cancelled Orders",
+      label: "Shipping Order",
+      value: stats?.shippingOrders ?? 0,
+      icon: Truck,
+      color: "text-cyan-600",
+      bg: "bg-cyan-50",
+    },
+    {
+      label: "Cancel Order",
       value: stats?.cancelledOrders ?? 0,
       icon: XCircle,
       color: "text-brand",
       bg: "bg-red-50",
       pctChange: stats?.pctCancelled ?? 0,
+    },
+    {
+      label: "Return Order",
+      value: stats?.returnOrders ?? 0,
+      icon: RotateCcw,
+      color: "text-orange-600",
+      bg: "bg-orange-50",
+    },
+    {
+      label: "Hold Order",
+      value: stats?.holdOrders ?? 0,
+      icon: PauseCircle,
+      color: "text-gray-600",
+      bg: "bg-gray-50",
+    },
+    {
+      label: "Delivery Order",
+      value: stats?.completedOrders ?? 0,
+      icon: Truck,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+      pctChange: stats?.pctCompleted ?? 0,
     },
     {
       label: "Today Sales",
@@ -186,7 +221,7 @@ export default function AdminDashboardPage() {
       <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {cards.map((card) => {
           const Icon = card.icon;
           const hasPct = card.pctChange != null;
@@ -194,20 +229,20 @@ export default function AdminDashboardPage() {
           return (
             <div
               key={card.label}
-              className="rounded-xl border border-gray-200 p-5 shadow-sm backdrop-blur-sm bg-white/80 cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-2 hover:border-blue-500 hover:shadow-xl hover:bg-white"
+              className="rounded-lg border border-gray-200 p-3 shadow-sm backdrop-blur-sm bg-white/80 cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg hover:bg-white"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-500">{card.label}</p>
-                  <p className="text-xl font-bold text-gray-900 mt-1">{card.value}</p>
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium text-gray-500 truncate">{card.label}</p>
+                  <p className="text-base font-bold text-gray-900 mt-0.5">{card.value}</p>
                   {hasPct && (
-                    <p className={`text-xs font-medium mt-1 ${pctUp ? "text-green-600" : "text-brand"}`}>
+                    <p className={`text-[10px] font-medium mt-0.5 ${pctUp ? "text-green-600" : "text-brand"}`}>
                       {pctUp ? "↑" : "↓"} {Math.abs(card.pctChange)}%
                     </p>
                   )}
                 </div>
-                <div className={`p-3 rounded-lg ${card.bg}`}>
-                  <Icon className={`w-6 h-6 ${card.color}`} />
+                <div className={`p-2 rounded-md shrink-0 ${card.bg}`}>
+                  <Icon className={`w-5 h-5 ${card.color}`} />
                 </div>
               </div>
             </div>

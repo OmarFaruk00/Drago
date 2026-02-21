@@ -9,14 +9,18 @@ import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 
 const statusColors = {
-  delivered: "bg-green-100 text-green-800",
-  Delivered: "bg-green-100 text-green-800",
   pending: "bg-amber-100 text-amber-800",
   Pending: "bg-amber-100 text-amber-800",
+  confirmed: "bg-blue-100 text-blue-800",
+  processing: "bg-blue-100 text-blue-800",
+  shipping: "bg-cyan-100 text-cyan-800",
+  shipped: "bg-indigo-100 text-indigo-800",
+  delivered: "bg-green-100 text-green-800",
+  Delivered: "bg-green-100 text-green-800",
   cancelled: "bg-red-100 text-red-800",
   Canceled: "bg-red-100 text-red-800",
-  processing: "bg-blue-100 text-blue-800",
-  shipped: "bg-purple-100 text-purple-800",
+  return: "bg-orange-100 text-orange-800",
+  hold: "bg-gray-100 text-gray-800",
 };
 
 const fetchStats = () =>

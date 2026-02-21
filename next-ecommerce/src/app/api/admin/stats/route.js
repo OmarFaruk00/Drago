@@ -31,6 +31,10 @@ export async function GET() {
       const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const pendingOrders = orders.filter((o) => o.status === "pending").length;
+      const confirmedOrders = orders.filter((o) => o.status === "confirmed").length;
+      const shippingOrders = orders.filter((o) => o.status === "shipping").length;
+      const returnOrders = orders.filter((o) => o.status === "return").length;
+      const holdOrders = orders.filter((o) => o.status === "hold").length;
       const completedOrders = orders.filter((o) => o.status === "delivered").length;
       const cancelledOrders = orders.filter((o) => o.status === "cancelled").length;
       const todaySales = orders
@@ -49,6 +53,10 @@ export async function GET() {
         totalOrders,
         totalRevenue,
         pendingOrders,
+        confirmedOrders,
+        shippingOrders,
+        returnOrders,
+        holdOrders,
         completedOrders,
         cancelledOrders,
         todaySales,
@@ -80,6 +88,10 @@ export async function GET() {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const pendingOrders = orders.filter((o) => o.status === "pending").length;
+    const confirmedOrders = orders.filter((o) => o.status === "confirmed").length;
+    const shippingOrders = orders.filter((o) => o.status === "shipping").length;
+    const returnOrders = orders.filter((o) => o.status === "return").length;
+    const holdOrders = orders.filter((o) => o.status === "hold").length;
     const completedOrders = orders.filter((o) => o.status === "delivered").length;
     const cancelledOrders = orders.filter((o) => o.status === "cancelled").length;
     const todaySales = orders
@@ -98,6 +110,10 @@ export async function GET() {
       totalOrders,
       totalRevenue,
       pendingOrders,
+      confirmedOrders,
+      shippingOrders,
+      returnOrders,
+      holdOrders,
       completedOrders,
       cancelledOrders,
       todaySales,

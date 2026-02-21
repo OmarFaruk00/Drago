@@ -1,24 +1,38 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Upload } from "lucide-react";
-
-const DEFAULT_CATEGORIES = ["Electronics", "Fashion", "Sports", "Home", "Mobile", "Laptop", "Camera", "Accessories"];
+import { ArrowLeft } from "lucide-react";
 
 export default function AddProductPage() {
   const router = useRouter();
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const fileInputRef = useRef(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "",
     description: "",
     price: "",
+    discountPrice: "",
     stock: "",
-    category: "Electronics",
+    category: "",
     image: "",
+    images: [],
+    weight: "",
+    country: "",
+    freeShipping: true,
+    digitalItem: false,
+    addTax: false,
+    visible: true,
+    metaTitle: "",
+    metaDescription: "",
+    tags: [],
+    tagInput: "",
+    selectedCategories: [],
+    options: [{ name: "Size", values: ["S", "M", "L", "XL"] }],
+    hasMultipleOptions: true,
   });
   const [uploading, setUploading] = useState(false);
 
@@ -27,41 +41,78 @@ export default function AddProductPage() {
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setCategories(data.map((c) => c.name).filter(Boolean));
+          setCategories(data);
+          setForm((f) => ({ ...f, category: f.category || data[0]?.name }));
         }
       })
       .catch(() => {});
   }, []);
 
   async function handleFileUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        credentials: "include",
-        body: fd,
-      });
-      const data = await res.json();
-      if (res.ok && data.url) {
-        setForm((f) => ({ ...f, image: data.url }));
-      } else {
-        setError(data.error || "Upload failed");
+      for (const file of files) {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          credentials: "include",
+          body: fd,
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setForm((f) => ({
+            ...f,
+            images: [...f.images, data.url],
+            image: f.image || data.url,
+          }));
+        }
       }
     } catch (err) {
       setError("Upload failed");
     } finally {
       setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  }
+
+  function addTag() {
+    const tag = form.tagInput.trim();
+    if (tag && !form.tags.includes(tag)) {
+      setForm((f) => ({ ...f, tags: [...f.tags, tag], tagInput: "" }));
+    }
+  }
+
+  function removeTag(tag) {
+    setForm((f) => ({ ...f, tags: f.tags.filter((t) => t !== tag) }));
+  }
+
+  function toggleCategory(cat) {
+    const id = cat.id || cat;
+    const name = cat.name || cat;
+    setForm((f) => {
+      const set = new Set(f.selectedCategories);
+      if (set.has(id)) set.delete(id);
+      else set.add(id);
+      const arr = Array.from(set);
+      const first = categories.find((c) => (c.id || c) === arr[0]);
+      return {
+        ...f,
+        selectedCategories: arr,
+        category: arr.length && first ? first.name : f.category,
+      };
+    });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
+    const cat = form.selectedCategories.length
+      ? categories.find((c) => c.id === form.selectedCategories[0])?.name
+      : form.category || (categories[0]?.name || categories[0]);
     try {
       const res = await fetch("/api/admin/products", {
         method: "POST",
@@ -72,8 +123,8 @@ export default function AddProductPage() {
           description: form.description || "",
           price: parseFloat(form.price) || 0,
           stock: parseInt(form.stock, 10) || 0,
-          category: form.category || categories[0],
-          image: form.image || "https://via.placeholder.com/400",
+          category: cat || "General",
+          image: form.image || form.images[0] || "https://via.placeholder.com/400",
         }),
       });
       const data = await res.json();
@@ -92,58 +143,100 @@ export default function AddProductPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div>
         <Link
           href="/admin/products"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm mb-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Products
+          Back
         </Link>
+        <h1 className="text-2xl font-bold text-gray-900">Add Product</h1>
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-900">Add Product</h1>
+      {error && (
+        <div className="p-4 bg-red-50 text-brand rounded-lg text-sm">{error}</div>
+      )}
 
-      <form onSubmit={handleSubmit} className="max-w-3xl">
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 text-brand rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left: Form fields */}
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Product Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                placeholder="Enter product name"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
-                rows={4}
-                value={form.description}
-                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                placeholder="Product description"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column - Product form */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Single card: Information, Images, Price, Options, Shipping */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-900 mb-4">Information</h2>
+              <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                <input
+                  type="text"
+                  required
+                  value={form.name}
+                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="Summer T-Shirt"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Description</label>
+                <textarea
+                  rows={4}
+                  value={form.description}
+                  onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="Product description"
+                />
+              </div>
+            </div>
+            </div>
+
+            <div className="p-6 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-900 mb-4">Images</h2>
+            <div
+              className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center bg-gray-50/50"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                handleFileUpload({ target: { files: e.dataTransfer.files } });
+              }}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileUpload}
+                disabled={uploading}
+                className="hidden"
+                id="image-upload"
+              />
+              <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-4 py-2 text-brand text-sm font-medium hover:underline"
+                >
+                  Add File
+                </button>
+                <span className="text-sm text-gray-500">Or drag and drop files</span>
+              </label>
+              {form.images.length > 0 && (
+                <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {form.images.map((url, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                      <img src={url} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            </div>
+
+            <div className="p-6 border-b border-gray-100">
+              <h2 className="text-base font-bold text-gray-900 mb-4">Price</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Price</label>
                 <input
                   type="number"
                   step="0.01"
@@ -151,103 +244,292 @@ export default function AddProductPage() {
                   required
                   value={form.price}
                   onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                  placeholder="0.00"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="Enter price"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Discount Price</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={form.discountPrice}
+                  onChange={(e) => setForm((f) => ({ ...f, discountPrice: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="Price at Discount"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
                 <input
                   type="number"
                   min="0"
                   value={form.stock}
                   onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
                   placeholder="0"
                 />
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category *
+              <label className="flex items-center gap-3 cursor-pointer">
+                <span className="text-sm font-medium text-gray-700">Add tax for this product</span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={form.addTax}
+                  onClick={() => setForm((f) => ({ ...f, addTax: !f.addTax }))}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${
+                    form.addTax ? "bg-brand" : "bg-gray-200"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                      form.addTax ? "left-6" : "left-1"
+                    }`}
+                  />
+                </button>
               </label>
-              <select
-                value={form.category}
-                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
             </div>
-          </div>
+            </div>
 
-          {/* Right: Image upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Product Image
-            </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                disabled={uploading}
-                className="hidden"
-                id="image-upload"
-              />
-              <label
-                htmlFor="image-upload"
-                className="cursor-pointer flex flex-col items-center gap-2"
+            <div className="p-6 border-b border-gray-100">
+            <h2 className="text-base font-bold text-gray-900 mb-4">Different Options</h2>
+            <label className="flex items-center gap-3 cursor-pointer mb-4">
+              <span className="text-sm font-medium text-gray-700">This product has multiple options</span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={form.hasMultipleOptions}
+                onClick={() => setForm((f) => ({ ...f, hasMultipleOptions: !f.hasMultipleOptions }))}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  form.hasMultipleOptions ? "bg-brand" : "bg-gray-200"
+                }`}
               >
-                <Upload className="w-10 h-10 text-gray-400" />
-                <span className="text-sm text-gray-500">
-                  {uploading ? "Uploading..." : "Click to upload or drag and drop"}
-                </span>
-                <span className="text-xs text-gray-400">PNG, JPG, WEBP</span>
-              </label>
-              {form.image && (
-                <div className="mt-4">
-                  <img
-                    src={form.image.startsWith("/") ? form.image : form.image}
-                    alt="Preview"
-                    className="mx-auto max-h-40 rounded object-cover"
-                  />
-                  <p className="mt-2 text-xs text-gray-500">Or enter URL below</p>
-                  <input
-                    type="url"
-                    value={form.image}
-                    onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
-                    className="mt-1 w-full px-3 py-1.5 text-sm border rounded"
-                    placeholder="https://..."
-                  />
+                <span
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                    form.hasMultipleOptions ? "left-6" : "left-1"
+                  }`}
+                />
+              </button>
+            </label>
+            {form.hasMultipleOptions && form.options.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-gray-900">Option 1</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-sm focus:ring-2 focus:ring-brand/20">
+                      <option>Size</option>
+                      <option>Color</option>
+                      <option>Material</option>
+                    </select>
+                    <button type="button" className="mt-2 text-sm text-brand font-medium hover:underline">
+                      Add More
+                    </button>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Value</label>
+                    <div className="flex flex-wrap gap-2 px-3 py-2 border border-gray-200 rounded-lg bg-gray-50/50 min-h-[42px]">
+                      {form.options[0].values.map((v) => (
+                        <span
+                          key={v}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-50/80 text-gray-700 rounded-full text-sm border border-sky-100"
+                        >
+                          {v} <button type="button" className="hover:text-brand ml-0.5">×</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-            {!form.image && (
-              <input
-                type="url"
-                value={form.image}
-                onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
-                className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg text-sm"
-                placeholder="Or paste image URL"
-              />
+              </div>
             )}
+            </div>
+
+            <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold text-gray-900">Shipping</h2>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <span className="text-sm font-medium text-gray-700">Free Shipping</span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={form.freeShipping}
+                  onClick={() => setForm((f) => ({ ...f, freeShipping: !f.freeShipping }))}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${
+                    form.freeShipping ? "bg-brand" : "bg-gray-200"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                      form.freeShipping ? "left-6" : "left-1"
+                    }`}
+                  />
+                </button>
+              </label>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Weight</label>
+                <input
+                  type="text"
+                  value={form.weight}
+                  onChange={(e) => setForm((f) => ({ ...f, weight: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="Enter Weight"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                <select
+                  value={form.country}
+                  onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                >
+                  <option value="">Select Country</option>
+                  <option value="BD">Bangladesh</option>
+                  <option value="US">United States</option>
+                </select>
+              </div>
+            </div>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <span className="text-sm font-medium text-gray-700">This is digital item</span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={form.digitalItem}
+                onClick={() => setForm((f) => ({ ...f, digitalItem: !f.digitalItem }))}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  form.digitalItem ? "bg-brand" : "bg-gray-200"
+                }`}
+              >
+                <span
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                    form.digitalItem ? "left-6" : "left-1"
+                  }`}
+                />
+              </button>
+            </label>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8">
+        {/* Right column - Settings sidebar */}
+        <div className="space-y-6">
+          {/* Categories Panel */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 className="text-base font-bold text-gray-900 mb-4">Categories</h2>
+            <div className="space-y-2">
+              {(categories.length ? categories : [{ id: "1", name: "Electronics" }, { id: "2", name: "Fashion" }]).map(
+                (c) => {
+                  const id = c.id || c;
+                  const name = c.name || c;
+                  const checked = form.selectedCategories.includes(id) || (!form.selectedCategories.length && form.category === name);
+                  return (
+                    <label key={id} className="flex items-center gap-2 cursor-pointer" htmlFor={`cat-${id}`}>
+                      <input
+                        type="checkbox"
+                        id={`cat-${id}`}
+                        checked={checked}
+                        onChange={() => toggleCategory(c)}
+                      />
+                      <span className="text-sm text-gray-700">{name}</span>
+                    </label>
+                  );
+                }
+              )}
+            </div>
+            <Link href="/admin/categories/add" className="mt-4 inline-block text-sm font-medium text-brand hover:underline">
+              Create New
+            </Link>
+          </div>
+
+          {/* Tags Panel */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 className="text-base font-bold text-gray-900 mb-4">Tags</h2>
+            <input
+              type="text"
+              value={form.tagInput}
+              onChange={(e) => setForm((f) => ({ ...f, tagInput: e.target.value }))}
+              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand/20 focus:border-brand mb-3"
+              placeholder="Enter tag name"
+            />
+            <div className="flex flex-wrap gap-2">
+              {form.tags.map((t) => (
+                <span
+                  key={t}
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
+                >
+                  {t} <button type="button" onClick={() => removeTag(t)} className="hover:text-brand">×</button>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* SEO Panel */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 className="text-base font-bold text-gray-900 mb-4">SEO Settings</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input
+                  type="text"
+                  value={form.metaTitle}
+                  onChange={(e) => setForm((f) => ({ ...f, metaTitle: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea
+                  rows={3}
+                  value={form.metaDescription}
+                  onChange={(e) => setForm((f) => ({ ...f, metaDescription: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Visibility Panel */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 className="text-base font-bold text-gray-900 mb-4">Category Visibility</h2>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <span className="text-sm font-medium text-gray-700">Visible on site</span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={form.visible}
+                onClick={() => setForm((f) => ({ ...f, visible: !f.visible }))}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  form.visible ? "bg-brand" : "bg-gray-200"
+                }`}
+              >
+                <span
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                    form.visible ? "left-6" : "left-1"
+                  }`}
+                />
+              </button>
+            </label>
+          </div>
+        </div>
+
+        {/* Action Buttons - bottom right of entire content, below both columns */}
+        <div className="lg:col-span-3 flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={() => router.push("/admin/products")}
+            className="px-6 py-2.5 border border-gray-300 rounded-lg text-brand font-medium bg-white hover:bg-gray-50"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
             disabled={loading}
             className="px-6 py-2.5 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark disabled:opacity-50"
           >
-            {loading ? "Saving..." : "Save Product"}
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
       </form>

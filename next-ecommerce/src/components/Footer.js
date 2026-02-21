@@ -42,7 +42,7 @@ export default function Footer() {
                 alt="Drago"
                 width={180}
                 height={180}
-                className="h-20 md:h-24 w-auto brightness-0 invert object-contain p-0 m-0"
+                className="h-24 md:h-28 w-auto brightness-0 invert object-contain p-0 m-0"
               />
             </Link>
             <div className="text-sm text-gray-200 mb-4 space-y-1">

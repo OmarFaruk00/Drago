@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Plus, Search, Pencil, Trash2, FolderTree, Upload } from "lucide-react";
 import CategoriesEmptyState from "@/components/admin/CategoriesEmptyState";
+import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -12,6 +13,7 @@ export default function AdminCategoriesPage() {
   const [search, setSearch] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [addForm, setAddForm] = useState({ name: "", image: "", status: "active" });
   const [addSaving, setAddSaving] = useState(false);
@@ -34,6 +36,7 @@ export default function AdminCategoriesPage() {
       if (res.ok) {
         setCategories((prev) => prev.filter((c) => c.id !== id));
         setConfirmDelete(null);
+        setShowDeleteSuccess(true);
       }
     } catch (e) {
       console.error(e);
@@ -242,6 +245,8 @@ export default function AdminCategoriesPage() {
           </div>
         </div>
       )}
+
+      <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
 
       {/* Delete confirmation modal */}
       {confirmDelete && (

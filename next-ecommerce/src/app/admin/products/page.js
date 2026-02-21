@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import ProductsEmptyState from "@/components/admin/ProductsEmptyState";
+import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function AdminProductsPage() {
@@ -13,6 +14,7 @@ export default function AdminProductsPage() {
   const [page, setPage] = useState(1);
   const [deleting, setDeleting] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const perPage = 10;
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function AdminProductsPage() {
       if (res.ok) {
         setProducts((prev) => prev.filter((p) => p.id !== id));
         setConfirmDelete(null);
+        setShowDeleteSuccess(true);
       }
     } catch (e) {
       console.error(e);
@@ -166,6 +169,8 @@ export default function AdminProductsPage() {
         )}
       </div>
       )}
+
+      <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
 
       {/* Delete confirmation modal */}
       {confirmDelete && (

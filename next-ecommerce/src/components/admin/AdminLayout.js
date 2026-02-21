@@ -8,11 +8,11 @@ export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
-      <AdminSidebar sidebarOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex-1 flex flex-col lg:pl-64">
-        <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+    <div className="flex flex-col min-h-screen">
+      <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
+      <div className="flex flex-1 min-h-0">
+        <AdminSidebar sidebarOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:pl-[calc(16rem+1rem)] lg:pr-8 lg:py-8 overflow-auto">{children}</main>
       </div>
     </div>
   );

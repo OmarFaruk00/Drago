@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, Search, Tag, MoreVertical } from "lucide-react";
+import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 
 const FILTER_TABS = [
   { id: "active", label: "Active" },
@@ -16,6 +17,7 @@ export default function AdminCouponsPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("active");
   const [menuOpen, setMenuOpen] = useState(null);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/coupons", { credentials: "include" })
@@ -139,10 +141,16 @@ export default function AdminCouponsPage() {
                             Edit
                           </Link>
                           <button
-                            onClick={() => {
-                              fetch(`/api/admin/coupons/${c.id}`, { method: "DELETE", credentials: "include" })
-                                .then((r) => r.ok && setCoupons((p) => p.filter((x) => x.id !== c.id)));
+                            onClick={async () => {
+                              const res = await fetch(`/api/admin/coupons/${c.id}`, {
+                                method: "DELETE",
+                                credentials: "include",
+                              });
                               setMenuOpen(null);
+                              if (res.ok) {
+                                setCoupons((p) => p.filter((x) => x.id !== c.id));
+                                setShowDeleteSuccess(true);
+                              }
                             }}
                             className="block w-full text-left px-3 py-2 text-sm text-brand hover:bg-red-50"
                           >
@@ -161,6 +169,8 @@ export default function AdminCouponsPage() {
           <p className="p-8 text-center text-gray-500">No {filter} coupons found.</p>
         )}
       </div>
+
+      <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
     </div>
   );
 }

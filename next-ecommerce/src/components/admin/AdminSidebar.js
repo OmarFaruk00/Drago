@@ -1,34 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  ShoppingCart,
-  Package,
+  Home,
+  ListOrdered,
+  Tag,
   FolderTree,
   Users,
   BarChart3,
-  Tag,
+  Star,
   Inbox,
-  Settings,
+  User,
   X,
 } from "lucide-react";
 
 const menuItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin", label: "Dashboard", icon: Home },
+  { href: "/admin/orders", label: "Orders", icon: ListOrdered, showBadge: true },
+  { href: "/admin/products", label: "Products", icon: Tag },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
-  { href: "/admin/coupons", label: "Coupons", icon: Tag },
+  { href: "/admin/coupons", label: "Coupons", icon: Star },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },
   { href: "/admin/inbox", label: "Inbox", icon: Inbox },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/settings", label: "Personal Settings", icon: User },
 ];
 
 export default function AdminSidebar({ sidebarOpen, onClose }) {
   const pathname = usePathname();
+  const [orderCount, setOrderCount] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/admin/orders", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data) ? data : data?.orders || [];
+        const pending = list.filter((o) => (o.status || "").toLowerCase() === "pending");
+        setOrderCount(pending.length);
+      })
+      .catch(() => {});
+  }, []);
 
   const content = (
     <nav className="flex flex-col gap-0.5 p-3">
@@ -37,17 +50,31 @@ export default function AdminSidebar({ sidebarOpen, onClose }) {
           pathname === item.href ||
           (item.href !== "/admin" && pathname.startsWith(item.href));
         const Icon = item.icon;
+        const showBadge = item.showBadge && orderCount > 0;
         return (
           <Link
             key={item.href}
             href={item.href}
             onClick={onClose}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition ${
-              isActive ? "bg-white/10 text-white" : "text-white/80 hover:bg-white/5 hover:text-white"
+              isActive
+                ? "bg-white text-gray-900 rounded-r-lg"
+                : "text-white hover:bg-white/10"
             }`}
           >
-            <Icon className="w-5 h-5 flex-shrink-0" />
-            {item.label}
+            <Icon
+              className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-gray-900" : "text-white"}`}
+            />
+            <span className="flex-1">{item.label}</span>
+            {showBadge && (
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                  isActive ? "bg-gray-200 text-gray-800" : "bg-gray-800 text-white"
+                }`}
+              >
+                {orderCount}
+              </span>
+            )}
           </Link>
         );
       })}
@@ -56,13 +83,11 @@ export default function AdminSidebar({ sidebarOpen, onClose }) {
 
   return (
     <>
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:flex-shrink-0 lg:fixed lg:inset-y-0 lg:left-0 z-30 bg-brand">
-        <div className="flex items-center justify-between h-16 px-6 border-b border-brand">
-          <Link href="/admin" className="text-white font-bold text-lg">
-            Admin
-          </Link>
-        </div>
-        <div className="flex-1 overflow-y-auto pt-2">{content}</div>
+      <aside
+        className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-16 lg:bottom-0 lg:w-64 z-30 bg-brand overflow-y-auto"
+        style={{ height: "calc(100vh - 4rem)" }}
+      >
+        <div className="flex-1 pt-4 pb-4 min-h-0">{content}</div>
       </aside>
       {sidebarOpen && (
         <div
@@ -72,12 +97,11 @@ export default function AdminSidebar({ sidebarOpen, onClose }) {
         />
       )}
       <div
-        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-brand shadow-xl transform transition-transform duration-200 ${
+        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-brand shadow-xl transform transition-transform duration-200 flex flex-col ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-brand">
-          <span className="text-white font-bold text-lg">Admin</span>
+        <div className="flex items-center justify-end h-14 px-4 border-b border-white/10">
           <button
             onClick={onClose}
             className="p-2 text-white hover:bg-white/10 rounded-lg"
@@ -85,7 +109,7 @@ export default function AdminSidebar({ sidebarOpen, onClose }) {
             <X className="w-5 h-5" />
           </button>
         </div>
-        <div className="pt-2">{content}</div>
+        <div className="flex-1 pt-2 overflow-y-auto">{content}</div>
       </div>
     </>
   );

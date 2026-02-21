@@ -48,7 +48,7 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
     const { status } = body;
-    const valid = ["pending", "processing", "shipped", "delivered", "cancelled"];
+    const valid = ["pending", "confirmed", "processing", "shipping", "shipped", "delivered", "cancelled", "return", "hold"];
     if (status && !valid.includes(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }

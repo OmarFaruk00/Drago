@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
@@ -67,6 +67,7 @@ export default function ProductDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specification");
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
   const addToCart = useStore((s) => s.addToCart);
   const addToWishlist = useStore((s) => s.addToWishlist);
   const removeFromWishlist = useStore((s) => s.removeFromWishlist);
@@ -109,6 +110,16 @@ export default function ProductDetailsPage() {
       { id: product.id, name: product.name, price: variantPrice, image: product.image },
       quantity
     );
+  };
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    const variantPrice = product.storageVariants?.[selectedStorage]?.price ?? product.price;
+    addToCart(
+      { id: product.id, name: product.name, price: variantPrice, image: product.image },
+      quantity
+    );
+    router.push("/checkout");
   };
 
   const currentPrice = product?.storageVariants?.[selectedStorage]?.price ?? product?.price ?? 0;
@@ -308,6 +319,13 @@ export default function ProductDetailsPage() {
                     +
                   </button>
                 </div>
+                <button
+                  onClick={handleBuyNow}
+                  disabled={!product.inStock}
+                  className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+                >
+                  Buy now
+                </button>
                 <button
                   onClick={handleAddToCart}
                   disabled={!product.inStock}
