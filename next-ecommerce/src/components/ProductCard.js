@@ -125,8 +125,8 @@ export default function ProductCard({ product, variant = "default", priority = f
             <span className="text-[10px] text-gray-400 line-through">{formatCurrency(product.originalPrice)}</span>
           )}
         </div>
-        <div className="flex items-center justify-between mt-1">
-          <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between gap-2 mt-1">
+          <div className="flex items-center gap-1.5 flex-wrap min-w-0" onClick={(e) => e.stopPropagation()}>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -150,6 +150,12 @@ export default function ProductCard({ product, variant = "default", priority = f
                 </svg>
               </button>
             ))}
+            <span className="text-[10px] sm:text-xs text-gray-500">
+              ({product.reviewCount ?? 0})
+            </span>
+            <span className="text-[10px] sm:text-xs text-gray-500 shrink-0">
+              Stock: {product.stockQuantity ?? product.stock ?? (product.inStock ? "In stock" : 0)}
+            </span>
           </div>
           <button
             type="button"

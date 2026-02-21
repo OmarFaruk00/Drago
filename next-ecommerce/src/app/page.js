@@ -62,6 +62,11 @@ export default function HomePage() {
     process.env.NEXT_PUBLIC_USE_DUMMY_PRODUCTS === "true";
   const [products, setProducts] = useState(staticProducts);
   const [shuffledProducts, setShuffledProducts] = useState(staticProducts);
+  const [shuffledCategories, setShuffledCategories] = useState(categories);
+
+  useEffect(() => {
+    setShuffledCategories(shuffleArray([...categories]));
+  }, []);
 
   useEffect(() => {
     if (useDummyProducts) return;
@@ -124,7 +129,7 @@ export default function HomePage() {
       {/* Categories - Top Products এর উপরে */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <CategorySection categories={categories} />
+          <CategorySection categories={shuffledCategories} />
         </div>
       </section>
 
