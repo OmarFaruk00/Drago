@@ -7,7 +7,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
-import { accountOrdersList } from "@/lib/data/accountOrders";
 
 const statusColors = {
   delivered: "bg-green-100 text-green-800",
@@ -40,11 +39,11 @@ export default function ProfilePage() {
           pendingCount: statsData.pendingCount ?? 0,
           cancelledCount: statsData.cancelledCount ?? 0,
         });
-        const list = Array.isArray(ordersData) && ordersData.length > 0 ? ordersData : accountOrdersList;
+        const list = Array.isArray(ordersData) ? ordersData : [];
         setRecentOrders(list.slice(0, 6));
       })
       .catch(() => {
-        setRecentOrders(accountOrdersList.slice(0, 6));
+        setRecentOrders([]);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -140,34 +139,39 @@ export default function ProfilePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {recentOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50/50">
-                  <td className="px-6 py-4 font-medium text-gray-900">#{order.id}</td>
-                  <td className="px-6 py-4 text-gray-600">{order.date}</td>
-                  <td className="px-6 py-4 text-gray-900">{order.total}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors[order.status?.toLowerCase()] || "bg-gray-100 text-gray-800"}`}>
-                      {getStatusLabel(order.status)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link href={`/account/orders/${order.fullId || order.id}`} className="text-brand text-sm hover:underline">
-                      View Details
-                    </Link>
+              {recentOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                    No orders yet. Start shopping!
                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentOrders.map((order) => (
+                  <tr key={order.id || order.fullId} className="hover:bg-gray-50/50">
+                    <td className="px-6 py-4 font-medium text-gray-900">#{order.id}</td>
+                    <td className="px-6 py-4 text-gray-600">{order.date}</td>
+                    <td className="px-6 py-4 text-gray-900">{order.total}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors[order.status?.toLowerCase()] || "bg-gray-100 text-gray-800"}`}>
+                        {getStatusLabel(order.status)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Link href={`/account/orders/${order.fullId || order.id}`} className="text-brand text-sm hover:underline">
+                        View Details
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
-        <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500">
-          <span>Showing 1-{recentOrders.length} of 99</span>
-          <div className="flex gap-2">
-            <button className="w-8 h-8 rounded bg-brand text-white text-sm font-medium">1</button>
-            <button className="w-8 h-8 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm">2</button>
-            <button className="w-8 h-8 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm">3</button>
+        {recentOrders.length > 0 && (
+          <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500">
+            <span>Showing 1-{recentOrders.length} of {stats.orders}</span>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

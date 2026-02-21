@@ -7,7 +7,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import OrderHistoryTable from "@/components/account/OrderHistoryTable";
-import { accountOrdersList } from "@/lib/data/accountOrders";
 
 const PAGE_SIZE = 9;
 
@@ -20,10 +19,10 @@ export default function OrdersPage() {
     fetch("/api/dashboard/orders", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
-        const list = Array.isArray(data) && data.length > 0 ? data : accountOrdersList;
+        const list = Array.isArray(data) ? data : [];
         setOrders(list);
       })
-      .catch(() => setOrders(accountOrdersList))
+      .catch(() => setOrders([]))
       .finally(() => setLoading(false));
   }, []);
 

@@ -11,7 +11,6 @@ import Link from "next/link";
 import OrderTrackingStepper from "@/components/account/OrderTrackingStepper";
 import OrderItemsTable from "@/components/account/OrderItemsTable";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
-import { getAccountOrderById } from "@/lib/data/accountOrders";
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -52,7 +51,7 @@ export default function OrderDetailsPage() {
         };
       })
       .then(setOrder)
-      .catch(() => setOrder(getAccountOrderById(orderId)))
+      .catch(() => setOrder(null))
       .finally(() => setLoading(false));
   }, [orderId]);
 
