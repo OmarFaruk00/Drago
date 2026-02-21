@@ -8,19 +8,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
-import { wishlistItems } from "@/lib/data/dashboard";
 
 export default function WishlistPage() {
   const { wishlist, removeFromWishlist, addToCart } = useStore();
   const formatCurrency = useFormatCurrency();
-
-  const items = wishlist.length > 0 ? wishlist : wishlistItems.map((p) => ({ ...p, inStock: p.inStock ?? true }));
-  const isStoreWishlist = wishlist.length > 0;
+  const items = wishlist || [];
 
   return (
     <div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <h2 className="text-lg font-semibold text-gray-900 px-6 py-4 border-b border-gray-100">Wishlist</h2>
+        {items.length === 0 ? (
+          <div className="px-6 py-12 text-center text-gray-500">
+            <p className="mb-4">Your wishlist is empty.</p>
+            <Link href="/products" className="text-brand font-medium hover:underline">
+              Browse products
+            </Link>
+          </div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -63,7 +68,6 @@ export default function WishlistPage() {
                       >
                         Add to Cart
                       </button>
-                      {isStoreWishlist && (
                       <button
                         onClick={() => removeFromWishlist(item.id)}
                         className="p-2 text-gray-400 hover:text-brand"
@@ -73,7 +77,6 @@ export default function WishlistPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                         </svg>
                       </button>
-                      )}
                     </div>
                   </td>
                 </tr>
@@ -81,13 +84,6 @@ export default function WishlistPage() {
             </tbody>
           </table>
         </div>
-        {items.length === 0 && (
-          <div className="px-6 py-12 text-center text-gray-500">
-            <p className="mb-4">Your wishlist is empty.</p>
-            <Link href="/products" className="text-brand font-medium hover:underline">
-              Browse products
-            </Link>
-          </div>
         )}
       </div>
     </div>
