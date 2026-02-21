@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronDown, Search } from "lucide-react";
 import ProductsEmptyState from "@/components/admin/ProductsEmptyState";
 import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
+import ImportSuccessModal from "@/components/admin/ImportSuccessModal";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function AdminProductsPage() {
@@ -13,8 +14,13 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [deleting, setDeleting] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const [showImportSuccess, setShowImportSuccess] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [filterValue, setFilterValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const fileInputRef = useRef(null);
   const perPage = 10;
 
   useEffect(() => {
@@ -25,22 +31,129 @@ export default function AdminProductsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  async function handleDelete(id) {
-    setDeleting(id);
-    try {
-      const res = await fetch(`/api/admin/products/${id}`, {
-        method: "DELETE",
-        credentials: "include",
+  const filteredProducts = useMemo(() => {
+    let list = products;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (p) =>
+          (p.name || "").toLowerCase().includes(q) ||
+          (p.category || "").toLowerCase().includes(q)
+      );
+    }
+    if (filterValue) {
+      list = list.filter((p) => (p.category || "") === filterValue);
+    }
+    return list;
+  }, [products, searchQuery, filterValue]);
+
+  const totalPages = Math.ceil(filteredProducts.length / perPage) || 1;
+  const paginated = filteredProducts.slice((page - 1) * perPage, page * perPage);
+  const categories = useMemo(
+    () => [...new Set(products.map((p) => p.category).filter(Boolean))],
+    [products]
+  );
+
+  const allSelected = paginated.length > 0 && paginated.every((p) => selectedIds.has(p.id));
+  const someSelected = paginated.some((p) => selectedIds.has(p.id));
+
+  function toggleSelectAll() {
+    if (allSelected) {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        paginated.forEach((p) => next.delete(p.id));
+        return next;
       });
-      if (res.ok) {
-        setProducts((prev) => prev.filter((p) => p.id !== id));
-        setConfirmDelete(null);
-        setShowDeleteSuccess(true);
+    } else {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        paginated.forEach((p) => next.add(p.id));
+        return next;
+      });
+    }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.size === 0) return;
+    const ids = [...selectedIds];
+    setDeleting("bulk");
+    try {
+      for (const id of ids) {
+        const res = await fetch(`/api/admin/products/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (res.ok) {
+          setProducts((prev) => prev.filter((p) => p.id !== id));
+        }
       }
+      setSelectedIds(new Set());
+      setShowDeleteSuccess(true);
     } catch (e) {
       console.error(e);
     } finally {
       setDeleting(null);
+    }
+  }
+
+  function handleExport() {
+    const data = filteredProducts.map((p) => ({
+      name: p.name,
+      price: p.price,
+      category: p.category,
+      stock: p.stock ?? p.stockQuantity ?? 0,
+      rating: p.rating ?? 0,
+      reviewCount: p.reviewCount ?? 0,
+    }));
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "products-export.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleImport(e) {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      const items = Array.isArray(data) ? data : Array.isArray(data?.products) ? data.products : [];
+      if (items.length === 0) {
+        alert("No valid products found in file. Use JSON: [{ name, price, ... }] or { products: [...] }");
+        return;
+      }
+      const res = await fetch("/api/admin/products/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ products: items }),
+      });
+      const json = await res.json();
+      if (res.ok && json.imported > 0) {
+        const data = await fetch("/api/admin/products", { credentials: "include" }).then((r) => r.json());
+        setProducts(Array.isArray(data) ? data : []);
+        setShowImportSuccess(true);
+      } else {
+        alert(json.error || "Import failed");
+      }
+    } catch (err) {
+      alert("Invalid JSON file. Use format: [{ name, price, category?, image?, stock? }]");
+    } finally {
+      setImporting(false);
+      e.target.value = "";
     }
   }
 
@@ -52,152 +165,247 @@ export default function AdminProductsPage() {
     );
   }
 
-  const totalPages = Math.ceil(products.length / perPage) || 1;
-  const paginated = products.slice((page - 1) * perPage, page * perPage);
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        {products.length > 0 && (
-          <Link
-            href="/admin/products/add"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-brand text-brand font-medium rounded-lg hover:bg-brand/5 transition"
           >
-            <Plus className="w-4 h-4" />
-            Add Product
-          </Link>
-        )}
+            Export
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".json,application/json"
+            onChange={handleImport}
+            className="hidden"
+            id="import-products"
+          />
+          <label
+            htmlFor="import-products"
+            className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition cursor-pointer ${importing ? "opacity-60 pointer-events-none" : ""}`}
+          >
+            {importing ? "Importing..." : "Import"}
+          </label>
+          {products.length > 0 && (
+            <Link
+              href="/admin/products/add"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
+            >
+              <Plus className="w-4 h-4" />
+              Add Product
+            </Link>
+          )}
+        </div>
       </div>
 
       {products.length === 0 ? (
         <ProductsEmptyState />
       ) : (
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Image
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Name
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Price
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Stock
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Category
-                </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {paginated.map((p) => (
-                <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
-                      <Image
-                        src={p.image || "/logo (1).png"}
-                        alt={p.name}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                        unoptimized={p.image?.startsWith("data:")}
-                      />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-900">{p.name}</td>
-                  <td className="px-4 py-3 text-sm font-medium">
-                    {formatCurrency(p.price)}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {p.stock ?? p.stockQuantity ?? 0}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{p.category}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <Link
-                        href={`/admin/products/${p.id}/edit`}
-                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
-                        title="Edit"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Link>
-                      <button
-                        onClick={() => setConfirmDelete(p.id)}
-                        className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          {/* Filters and search - inside the plate */}
+          <div className="flex flex-col sm:flex-row gap-3 p-4 border-b border-gray-200">
+            <div className="relative flex-1 sm:max-w-[180px]">
+              <select
+                value={filterValue}
+                onChange={(e) => {
+                  setFilterValue(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full pl-3 pr-9 py-2 border border-gray-300 rounded-lg text-sm appearance-none bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand"
+              >
+                <option value="">Filter</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            </div>
+            <div className="relative flex-1 flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                />
+              </div>
+              <button
+                onClick={handleBulkDelete}
+                disabled={deleting === "bulk" || !someSelected}
+                className="p-2 rounded-full bg-gray-100 hover:bg-red-50 text-brand transition disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Delete selected"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left px-4 py-3 w-12">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
+                    />
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                    Product
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                    Inventory
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                    Color
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                    Price
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                    Rating
+                  </th>
+                  <th className="text-right px-4 py-3 w-12" />
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Page {page} of {totalPages}
-            </p>
-            <div className="flex gap-2">
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {paginated.map((p) => {
+                  const stock = p.stock ?? p.stockQuantity ?? 0;
+                  const inStock = p.inStock ?? stock > 0;
+                  const color = p.color || (Array.isArray(p.colors) && p.colors[0]?.name) || "—";
+                  const rating = p.rating ?? 0;
+                  const votes = p.reviewCount ?? 0;
+                  return (
+                    <tr key={p.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(p.id)}
+                          onChange={() => toggleSelect(p.id)}
+                          className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                            <Image
+                              src={p.image || "/logo (1).png"}
+                              alt={p.name}
+                              width={48}
+                              height={48}
+                              className="w-full h-full object-cover"
+                              unoptimized={p.image?.startsWith("data:")}
+                            />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">{p.name}</p>
+                            <p className="text-xs text-gray-500">{p.category}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        {inStock ? (
+                          <span className="text-sm text-gray-700">{stock} in stock</span>
+                        ) : (
+                          <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                            Out of Stock
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{color}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900">
+                        {formatCurrency(p.price)}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-700">
+                        {rating.toFixed(1)} ({votes} Votes)
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Link
+                          href={`/admin/products/${p.id}/edit`}
+                          className="inline-flex p-2 rounded-full bg-gray-100 hover:bg-brand/10 text-gray-600 hover:text-brand transition"
+                          title="Edit"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-gray-200">
+            <div className="flex items-center gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="px-3 py-1 text-sm border rounded disabled:opacity-50"
+                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
               >
-                Previous
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
+              {(() => {
+                const pages = [];
+                if (totalPages <= 7) {
+                  for (let i = 1; i <= totalPages; i++) pages.push(i);
+                } else {
+                  pages.push(1, 2, 3, 4, 5, 6);
+                  pages.push(-1);
+                  pages.push(totalPages);
+                }
+                return pages.map((pn) =>
+                  pn === -1 ? (
+                    <span key="ellipsis" className="px-2 text-gray-400">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={pn}
+                      onClick={() => setPage(pn)}
+                      className={`min-w-[36px] h-9 rounded-lg text-sm font-medium transition ${
+                        pn === page
+                          ? "bg-brand text-white border border-brand"
+                          : "border border-gray-200 hover:bg-gray-50 text-gray-700"
+                      }`}
+                    >
+                      {pn}
+                    </button>
+                  )
+                );
+              })()}
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
-                className="px-3 py-1 text-sm border rounded disabled:opacity-50"
+                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
               >
-                Next
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </button>
             </div>
-          </div>
-        )}
-      </div>
-      )}
-
-      <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
-
-      {/* Delete confirmation modal */}
-      {confirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full mx-4">
-            <h3 className="font-semibold text-gray-900">Delete Product?</h3>
-            <p className="mt-2 text-sm text-gray-500">
-              This action cannot be undone.
-            </p>
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => setConfirmDelete(null)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDelete(confirmDelete)}
-                disabled={deleting === confirmDelete}
-                className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark disabled:opacity-50"
-              >
-                {deleting === confirmDelete ? "Deleting..." : "Delete"}
-              </button>
-            </div>
+            <p className="text-sm text-gray-500">{filteredProducts.length} Results</p>
           </div>
         </div>
       )}
+
+      <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
+      <ImportSuccessModal isOpen={showImportSuccess} onClose={() => setShowImportSuccess(false)} />
     </div>
   );
 }
