@@ -22,9 +22,8 @@ export default function ProductCard({ product, variant = "default", priority = f
   const wishlist = useStore((s) => s.wishlist);
   const isInWishlist = wishlist?.some((w) => w.id === product.id) ?? false;
   const [showActions, setShowActions] = useState(false);
-  const [displayRating, setDisplayRating] = useState(() =>
-    Math.round(Number(product.rating) || 0)
-  );
+  const ratingVal = Math.min(5, Math.max(0, Number(product.rating) || 0));
+  const ratingText = ratingVal % 1 === 0 ? String(Math.round(ratingVal)) : ratingVal.toFixed(1);
 
   const discount = product.originalPrice > product.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -82,30 +81,28 @@ export default function ProductCard({ product, variant = "default", priority = f
             {discount}% OFF
           </span>
         )}
-        {/* Action icons - visible on hover (desktop) or always (mobile) */}
+        {/* Wishlist - top right */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (isInWishlist) removeFromWishlist(product.id);
+            else addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, inStock: product.inStock });
+          }}
+          className="absolute top-1 right-1 w-8 h-8 flex items-center justify-center rounded-full shadow border bg-white/90 text-gray-600 hover:text-brand hover:border-brand/30 transition z-10"
+          title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <svg className="w-4 h-4" fill={isInWishlist ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
+        {/* Action icons - Quick View, visible on hover (desktop) or always (mobile) */}
         <div
           className={`absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 transition-opacity ${
             showActions ? "opacity-100" : "opacity-0 lg:group-hover:opacity-100"
           }`}
         >
-          <button
-            key="Wishlist"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (isInWishlist) removeFromWishlist(product.id);
-              else addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, inStock: product.inStock });
-            }}
-            className={`w-8 h-8 flex items-center justify-center rounded-full shadow border transition ${
-              isInWishlist ? "bg-brand/10 text-brand border-brand/30" : "bg-white border-gray-100 text-gray-600 hover:text-brand hover:border-brand/30"
-            }`}
-            title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-          >
-            <svg className="w-4 h-4" fill={isInWishlist ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </button>
           {iconBtn(() => router.push(`/products/${product.id}`), t("product.quickView"), "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z")}
         </div>
       </div>
@@ -125,30 +122,13 @@ export default function ProductCard({ product, variant = "default", priority = f
           )}
         </div>
         <div className="flex items-center justify-between gap-2 mt-1">
-          <div className="flex items-center gap-1.5 flex-wrap min-w-0" onClick={(e) => e.stopPropagation()}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setDisplayRating((prev) => (prev === star ? Math.max(0, star - 1) : star));
-                }}
-                className="p-0.5 focus:outline-none"
-                aria-label={`Rate ${star} stars`}
-              >
-                <svg
-                  className="w-3.5 h-3.5 sm:w-4 sm:h-4"
-                  fill={star <= displayRating ? "#f59e0b" : "none"}
-                  stroke={star <= displayRating ? "#f59e0b" : "#d1d5db"}
-                  strokeWidth={1.5}
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
-              </button>
-            ))}
+          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+            <span className="flex items-center gap-0.5 text-amber-500">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
+              <span className="text-[10px] sm:text-xs font-medium text-gray-700">{ratingText}/5</span>
+            </span>
             <span className="text-[10px] sm:text-xs text-gray-500">
               ({product.reviewCount ?? 0})
             </span>

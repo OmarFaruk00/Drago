@@ -87,19 +87,21 @@ export default function Navbar() {
               </div>
               <Link
                 href={user ? "/dashboard" : "/login"}
-                className="p-2 text-white hover:bg-brand-dark rounded transition"
+                className="flex items-center gap-1.5 p-2 text-white hover:bg-brand-dark rounded transition"
                 title={user ? t("nav.dashboard") : t("nav.account")}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
+                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{user ? t("nav.dashboard") : t("nav.account")}</span>
               </Link>
               <Link
                 href="/account/wishlist"
-                className="relative p-2 text-white hover:bg-brand-dark rounded transition"
+                className="relative flex items-center gap-1.5 p-2 text-white hover:bg-brand-dark rounded transition"
                 title="Favorite / Wishlist"
               >
-                <Heart className="w-5 h-5" strokeWidth={2} />
+                <Heart className="w-5 h-5 shrink-0" strokeWidth={2} />
+                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Wishlist</span>
                 {wishlistCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 bg-white text-brand text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center min-w-[16px]">
                     {wishlistCount > 99 ? "99+" : wishlistCount}
@@ -108,12 +110,13 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/cart"
-                className="relative p-2 text-white hover:bg-brand-dark rounded transition"
+                className="relative flex items-center gap-1.5 p-2 text-white hover:bg-brand-dark rounded transition"
                 title={t("nav.cart")}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
+                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{t("nav.cart")}</span>
                 {cartCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 bg-white text-brand text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {cartCount}
@@ -122,11 +125,12 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden p-2 text-white hover:bg-brand-dark rounded"
+                className="md:hidden flex items-center gap-1.5 p-2 text-white hover:bg-brand-dark rounded"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {mobileOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
                 </svg>
+                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Menu</span>
               </button>
             </div>
           </div>
