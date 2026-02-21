@@ -16,8 +16,7 @@ Value: drago-store-2024-secret-key-change-this-in-production
 ---
 
 Name: NEXTAUTH_URL
-Value: https://drago.vercel.app
-(Deploy এর পর আপনার actual URL দিয়ে replace করবেন। যেমন: https://your-project.vercel.app)
+Value: https://drago-xi.vercel.app
 
 ---
 
@@ -68,6 +67,4 @@ Minimum দিয়ে চালাতে চাইলে শুধু এ ২�
 ===============================================
 
 1. NEXTAUTH_SECRET = drago-store-2024-secret-key
-2. NEXTAUTH_URL = https://your-project.vercel.app
-
-(Deploy হয়ে গেলে Vercel আপনাকে URL দেবে, সেটা NEXTAUTH_URL এ দিন)
+2. NEXTAUTH_URL = https://drago-xi.vercel.app

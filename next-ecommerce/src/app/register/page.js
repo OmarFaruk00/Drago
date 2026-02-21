@@ -58,7 +58,7 @@ export default function RegisterPage() {
   };
 
   const handleSocialSignIn = (provider) => {
-    signIn(provider, { callbackUrl: "/" });
+    signIn(provider, { callbackUrl: "/", prompt: "select_account" });
   };
 
   return (

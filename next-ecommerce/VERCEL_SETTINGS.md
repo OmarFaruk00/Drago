@@ -18,7 +18,7 @@
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `NEXTAUTH_SECRET` | ✅ হ্যাঁ | Random secret (generate: `openssl rand -base64 32`) |
-| `NEXTAUTH_URL` | ✅ হ্যাঁ | Production URL - Vercel deploy হলে auto-set হবে। Manual দিতে চাইলে: `https://your-app.vercel.app` |
+| `NEXTAUTH_URL` | ✅ হ্যাঁ | `https://drago-xi.vercel.app` |
 | `MONGODB_URI` | ❌ না | MongoDB Atlas connection string। না দিলে dummy data use হবে |
 | `JWT_SECRET` | ❌ না | Admin JWT এর জন্য (default আছে) |
 | `GOOGLE_CLIENT_ID` | ❌ না | Google login এর জন্য |

@@ -1,0 +1,28 @@
+===============================================
+Drago Store - URL Reference (drago-xi.vercel.app)
+===============================================
+
+📍 Production URL: https://drago-xi.vercel.app
+
+===============================================
+1. VERCEL - NEXTAUTH_URL
+===============================================
+https://drago-xi.vercel.app
+
+===============================================
+2. GOOGLE CLOUD CONSOLE - OAuth Client
+===============================================
+
+Authorized JavaScript origins:
+  https://drago-xi.vercel.app
+  http://localhost:3000
+
+Authorized redirect URIs:
+  https://drago-xi.vercel.app/api/auth/callback/google
+  http://localhost:3000/api/auth/callback/google
+
+===============================================
+3. NEXTAUTH Callback (Google)
+===============================================
+Production: https://drago-xi.vercel.app/api/auth/callback/google
+Local:      http://localhost:3000/api/auth/callback/google
