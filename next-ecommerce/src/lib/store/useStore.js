@@ -74,6 +74,9 @@ export const useStore = create(
       setUser: (user) => set({ user }),
       logout: () => set({ user: null }),
     }),
-    { name: "ecommerce-storage" }
+    {
+      name: "ecommerce-storage",
+      partialize: (state) => ({ cart: state.cart, wishlist: state.wishlist }),
+    }
   )
 );

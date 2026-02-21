@@ -106,7 +106,6 @@ export default function ProductCard({ product, variant = "default", priority = f
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </button>
-          {iconBtn(null, "Compare", "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4")}
           {iconBtn(() => router.push(`/products/${product.id}`), t("product.quickView"), "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z")}
         </div>
       </div>
