@@ -40,7 +40,7 @@ export default function CategorySection({ categories }) {
                   sizes="(max-width: 640px) 25vw, 80px"
                 />
               </div>
-              <span className="py-1 text-[10px] font-medium text-gray-900 text-center group-hover:text-brand line-clamp-2 leading-tight">
+              <span className="py-1 text-xs font-medium text-gray-900 text-center group-hover:text-brand line-clamp-2 leading-tight">
                 {cat.name}
               </span>
             </Link>

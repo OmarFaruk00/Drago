@@ -115,7 +115,7 @@ export default function ProductCard({ product, variant = "default", priority = f
       {/* Content - tight padding */}
       <div className="p-2">
         <Link href={`/products/${product.id}`}>
-          <h3 className="text-[11px] font-bold leading-tight text-gray-800 line-clamp-2 min-h-[28px] group-hover:text-brand">
+          <h3 className="text-sm font-bold leading-tight text-gray-800 line-clamp-2 min-h-[32px] group-hover:text-brand">
             {product.name}
           </h3>
         </Link>
