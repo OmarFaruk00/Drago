@@ -34,8 +34,8 @@ export default function Navbar() {
       <div className="bg-brand overflow-visible">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
           <div className="flex items-center justify-between h-14 gap-4 overflow-visible">
-            {/* Logo - max size, overflow-visible so it stands out */}
-            <Link href="/" className="flex-shrink-0 flex items-center h-full p-0 m-0 overflow-visible">
+            {/* Logo - max size, overflow-visible so it stands out; on mobile, shifted right */}
+            <Link href="/" className="flex-shrink-0 flex items-center h-full p-0 m-0 overflow-visible md:ml-0 ml-4">
               <Image
                 src="/logo.png"
                 alt="Drago"
