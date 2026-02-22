@@ -113,8 +113,8 @@ export default function OrderDetailsPage() {
         {/* Table 1: Billing + Shipping | Table 2: Order ID, Payment, Summary - side by side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Billing Address + Shipping Address - one table */}
-          <div className="rounded-lg border border-gray-200 overflow-hidden">
-            <table className="w-full text-xs">
+          <div className="rounded-lg border border-gray-200 overflow-hidden overflow-x-auto">
+            <table className="w-full text-xs min-w-[400px]">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="text-left px-3 py-2 font-semibold text-gray-900">Billing Address</th>
@@ -143,8 +143,8 @@ export default function OrderDetailsPage() {
           </div>
 
           {/* Order ID, Payment Method, Summary - another table */}
-          <div className="rounded-lg border border-gray-200 overflow-hidden">
-            <table className="w-full text-xs">
+          <div className="rounded-lg border border-gray-200 overflow-hidden overflow-x-auto">
+            <table className="w-full text-xs min-w-[280px]">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="text-left px-3 py-2 font-semibold text-gray-900 w-1/2">Order ID</th>

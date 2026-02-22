@@ -253,7 +253,7 @@ export default function AdminProductsPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[640px]">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="text-left px-4 py-3 w-12">

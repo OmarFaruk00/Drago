@@ -130,7 +130,7 @@ export default function FlashSale({ products = [] }) {
                 <span className="text-xs font-normal uppercase tracking-widest text-white/90">
                   {label}
                 </span>
-                <div className="w-14 rounded-lg bg-gray-100 px-4 py-3 text-2xl font-bold text-gray-900 tabular-nums">
+                <div className="w-12 sm:w-14 rounded-lg bg-gray-100 px-2 sm:px-4 py-2 sm:py-3 text-xl sm:text-2xl font-bold text-gray-900 tabular-nums">
                   {String(value).padStart(2, "0")}
                 </div>
               </div>

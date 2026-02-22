@@ -9,7 +9,7 @@ export default function NotFound() {
         className="w-full py-3 flex items-center gap-2 text-sm"
         style={{ backgroundColor: "#404040" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center gap-2 flex-wrap">
           <Link
             href="/"
             className="flex items-center gap-1.5 text-white hover:text-brand transition"

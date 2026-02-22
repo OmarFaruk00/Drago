@@ -124,7 +124,7 @@ export default function AdminOrdersPage() {
       {/* Filters + Table Card - single container */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         {/* Filters Row - inside card, single line */}
-        <div className="flex flex-nowrap items-center gap-3 px-4 py-3 border-b border-gray-100">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 px-4 py-3 border-b border-gray-100">
           <select
             value={orderFilter}
             onChange={(e) => setOrderFilter(e.target.value)}

@@ -137,8 +137,8 @@ export default function AdminOrderDetailPage() {
 
           <div>
             <h3 className="text-sm font-medium text-gray-500 mb-3">Order Items</h3>
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <table className="w-full">
+            <div className="border border-gray-200 rounded-lg overflow-hidden overflow-x-auto">
+              <table className="w-full min-w-[320px]">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="text-left px-4 py-2 text-xs font-medium text-gray-500">

@@ -177,9 +177,9 @@ export default function ProductDetailsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 lg:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-4 sm:p-6 lg:p-8">
             {/* Interactive Image Gallery - constrained size to avoid excessive zoom */}
-            <div className="space-y-4 w-full max-w-[450px]">
+            <div className="space-y-4 w-full max-w-full lg:max-w-[450px]">
               <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-gray-50">
                 <Image
                   src={product.images[selectedImage]}
