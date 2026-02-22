@@ -39,18 +39,18 @@ export default function NotFound() {
       <section className="bg-white py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center text-center">
-            {/* 404 Illustration */}
+            {/* 404 Image - place 404.png or 404.jpg in public folder */}
             <div className="relative w-full max-w-xl mb-8">
               <Image
-                src="/404-illustration.png"
+                src="/404.png"
                 alt="404 - Page not found"
                 width={560}
                 height={400}
                 className="w-full h-auto object-contain"
                 priority
+                unoptimized
               />
             </div>
-
             {/* Heading */}
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Oops! page not found

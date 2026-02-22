@@ -72,6 +72,21 @@ const productSchema = new mongoose.Schema(
       sparse: true,
       trim: true,
     },
+    // Size variants with individual price & stock (e.g. M=580, XL=620)
+    sizeVariants: [
+      {
+        size: { type: String, trim: true },
+        price: { type: Number, min: 0 },
+        stock: { type: Number, min: 0, default: 0 },
+      },
+    ],
+    // Color options for product
+    colors: [
+      {
+        name: { type: String, trim: true },
+        hex: { type: String, trim: true },
+      },
+    ],
   },
   {
     timestamps: true,

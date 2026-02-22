@@ -142,7 +142,7 @@ export default function EditCategoryPage() {
                 <div className="mt-4">
                   <img src={form.image} alt="Preview" className="mx-auto max-h-32 rounded object-cover" />
                   <input
-                    type="url"
+                    type="text"
                     value={form.image}
                     onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
                     className="mt-2 w-full px-3 py-1.5 text-sm border rounded"

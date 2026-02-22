@@ -10,13 +10,14 @@ import { loginUser, registerUser } from "@/lib/services/userService";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { action, email, password, name } = body;
+    const { action, email, phone, password, name } = body;
 
     if (action === "login") {
-      const user = await loginUser(email, password);
+      const identifier = email?.trim?.() || phone?.trim?.();
+      const user = await loginUser(identifier, password);
       if (!user) {
         return NextResponse.json(
-          { error: "Invalid email or password" },
+          { error: "Invalid email/mobile or password" },
           { status: 401 }
         );
       }
@@ -24,10 +25,10 @@ export async function POST(request) {
     }
 
     if (action === "register") {
-      const user = await registerUser({ email, password, name });
+      const user = await registerUser({ email: email?.trim?.(), phone: phone?.trim?.(), password, name });
       if (!user) {
         return NextResponse.json(
-          { error: "Email already registered" },
+          { error: "Email or mobile number already registered" },
           { status: 400 }
         );
       }

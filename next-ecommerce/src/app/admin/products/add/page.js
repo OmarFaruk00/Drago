@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -33,6 +33,8 @@ export default function AddProductPage() {
     selectedCategories: [],
     options: [{ name: "Size", values: ["S", "M", "L", "XL"] }],
     hasMultipleOptions: true,
+    sizeVariants: [], // { size, price, stock }
+    colors: [], // { name, hex }
   });
   const [uploading, setUploading] = useState(false);
 
@@ -76,6 +78,45 @@ export default function AddProductPage() {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  }
+
+  function addSizeVariant() {
+    setForm((f) => ({
+      ...f,
+      sizeVariants: [...f.sizeVariants, { size: "", price: "", stock: "" }],
+    }));
+  }
+  function updateSizeVariant(i, field, val) {
+    setForm((f) => {
+      const arr = [...f.sizeVariants];
+      arr[i] = { ...arr[i], [field]: val };
+      return { ...f, sizeVariants: arr };
+    });
+  }
+  function removeSizeVariant(i) {
+    setForm((f) => ({
+      ...f,
+      sizeVariants: f.sizeVariants.filter((_, idx) => idx !== i),
+    }));
+  }
+  function addColor() {
+    setForm((f) => ({
+      ...f,
+      colors: [...f.colors, { name: "", hex: "#000000" }],
+    }));
+  }
+  function updateColor(i, field, val) {
+    setForm((f) => {
+      const arr = [...f.colors];
+      arr[i] = { ...arr[i], [field]: val };
+      return { ...f, colors: arr };
+    });
+  }
+  function removeColor(i) {
+    setForm((f) => ({
+      ...f,
+      colors: f.colors.filter((_, idx) => idx !== i),
+    }));
   }
 
   function addTag() {
@@ -125,6 +166,16 @@ export default function AddProductPage() {
           stock: parseInt(form.stock, 10) || 0,
           category: cat || "General",
           image: form.image || form.images[0] || "https://via.placeholder.com/400",
+          sizeVariants: form.sizeVariants
+            .filter((v) => v.size && v.price != null)
+            .map((v) => ({
+              size: String(v.size).trim(),
+              price: parseFloat(v.price) || 0,
+              stock: parseInt(v.stock, 10) || 0,
+            })),
+          colors: form.colors
+            .filter((c) => c.name && c.hex)
+            .map((c) => ({ name: String(c.name).trim(), hex: String(c.hex).trim() })),
         }),
       });
       const data = await res.json();
@@ -295,7 +346,7 @@ export default function AddProductPage() {
             <div className="p-6 border-b border-gray-100">
             <h2 className="text-base font-bold text-gray-900 mb-4">Different Options</h2>
             <label className="flex items-center gap-3 cursor-pointer mb-4">
-              <span className="text-sm font-medium text-gray-700">This product has multiple options</span>
+              <span className="text-sm font-medium text-gray-700">This product has multiple options (Size / Color)</span>
               <button
                 type="button"
                 role="switch"
@@ -312,33 +363,125 @@ export default function AddProductPage() {
                 />
               </button>
             </label>
-            {form.hasMultipleOptions && form.options.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold text-gray-900">Option 1</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
-                    <select className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-sm focus:ring-2 focus:ring-brand/20">
-                      <option>Size</option>
-                      <option>Color</option>
-                      <option>Material</option>
-                    </select>
-                    <button type="button" className="mt-2 text-sm text-brand font-medium hover:underline">
-                      Add More
+            {form.hasMultipleOptions && (
+              <div className="space-y-6">
+                {/* Size variants - each size can have different price & stock */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold text-gray-900">Size Options</h3>
+                    <button
+                      type="button"
+                      onClick={addSizeVariant}
+                      className="inline-flex items-center gap-1 text-sm text-brand font-medium hover:underline"
+                    >
+                      <Plus className="w-4 h-4" /> Add Size
                     </button>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Value</label>
-                    <div className="flex flex-wrap gap-2 px-3 py-2 border border-gray-200 rounded-lg bg-gray-50/50 min-h-[42px]">
-                      {form.options[0].values.map((v) => (
-                        <span
-                          key={v}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-50/80 text-gray-700 rounded-full text-sm border border-sky-100"
+                  <p className="text-xs text-gray-500 mb-2">
+                    Add sizes with individual price & stock. E.g. M = 580৳, XL = 620৳
+                  </p>
+                  <div className="space-y-3">
+                    {form.sizeVariants.map((v, i) => (
+                      <div key={i} className="flex flex-wrap items-end gap-2 p-3 border border-gray-200 rounded-lg bg-gray-50/30">
+                        <div className="flex-1 min-w-[80px]">
+                          <label className="block text-xs text-gray-500 mb-0.5">Size</label>
+                          <input
+                            type="text"
+                            value={v.size}
+                            onChange={(e) => updateSizeVariant(i, "size", e.target.value)}
+                            placeholder="S, M, L, XL"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-[80px]">
+                          <label className="block text-xs text-gray-500 mb-0.5">Price (৳)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            value={v.price}
+                            onChange={(e) => updateSizeVariant(i, "price", e.target.value)}
+                            placeholder="580"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                          />
+                        </div>
+                        <div className="w-24">
+                          <label className="block text-xs text-gray-500 mb-0.5">Stock</label>
+                          <input
+                            type="number"
+                            min="0"
+                            value={v.stock}
+                            onChange={(e) => updateSizeVariant(i, "stock", e.target.value)}
+                            placeholder="10"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeSizeVariant(i)}
+                          className="p-2 text-gray-400 hover:text-brand"
                         >
-                          {v} <button type="button" className="hover:text-brand ml-0.5">×</button>
-                        </span>
-                      ))}
-                    </div>
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color options */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold text-gray-900">Color Options</h3>
+                    <button
+                      type="button"
+                      onClick={addColor}
+                      className="inline-flex items-center gap-1 text-sm text-brand font-medium hover:underline"
+                    >
+                      <Plus className="w-4 h-4" /> Add Color
+                    </button>
+                  </div>
+                  <div className="space-y-3">
+                    {form.colors.map((c, i) => (
+                      <div key={i} className="flex items-end gap-2 p-3 border border-gray-200 rounded-lg bg-gray-50/30">
+                        <div className="flex-1 min-w-[100px]">
+                          <label className="block text-xs text-gray-500 mb-0.5">Color Name</label>
+                          <input
+                            type="text"
+                            value={c.name}
+                            onChange={(e) => updateColor(i, "name", e.target.value)}
+                            placeholder="Black, White, Red"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                          />
+                        </div>
+                        <div className="flex items-end gap-2">
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-0.5">Hex</label>
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="color"
+                                value={c.hex || "#000000"}
+                                onChange={(e) => updateColor(i, "hex", e.target.value)}
+                                className="w-10 h-9 p-0.5 border border-gray-200 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={c.hex}
+                                onChange={(e) => updateColor(i, "hex", e.target.value)}
+                                placeholder="#000000"
+                                className="w-24 px-2 py-2 border border-gray-200 rounded-lg text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeColor(i)}
+                          className="p-2 text-gray-400 hover:text-brand"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

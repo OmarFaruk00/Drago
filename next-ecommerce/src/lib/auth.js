@@ -10,15 +10,23 @@ import { loginUser, findOrCreateOAuthUser } from "@/lib/services/userService";
 export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Email",
+      name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "Email or Mobile", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
-        const user = await loginUser(credentials.email, credentials.password);
-        return user ? { id: user.id, email: user.email, name: user.name, image: user.avatar } : null;
+        const identifier = credentials?.email?.trim?.();
+        if (!identifier || !credentials?.password) return null;
+        const user = await loginUser(identifier, credentials.password);
+        return user
+          ? {
+              id: user.id,
+              email: user.email || user.phone || identifier,
+              name: user.name,
+              image: user.avatar,
+            }
+          : null;
       },
     }),
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET

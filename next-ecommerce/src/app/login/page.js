@@ -13,7 +13,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,12 +24,12 @@ function LoginForm() {
     setLoading(true);
     try {
       const res = await signIn("credentials", {
-        email,
+        email: identifier,
         password,
         redirect: false,
       });
       if (res?.error) {
-        setError("Invalid email or password");
+        setError("Invalid email/mobile or password");
         return;
       }
       router.push(callbackUrl);
@@ -57,14 +57,14 @@ function LoginForm() {
               <div className="p-2 bg-red-50 text-brand rounded-lg text-xs">{error}</div>
             )}
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-0.5">Email</label>
+              <label className="block text-xs font-medium text-gray-700 mb-0.5">Email or Mobile Number</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 required
                 className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                placeholder="Enter your email"
+                placeholder="Email or mobile (e.g. 01712345678)"
               />
             </div>
             <div>

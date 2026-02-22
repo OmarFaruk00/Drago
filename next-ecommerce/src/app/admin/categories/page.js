@@ -206,11 +206,11 @@ export default function AdminCategoriesPage() {
                     )}
                   </div>
                   <input
-                    type="url"
+                    type="text"
                     value={addForm.image}
                     onChange={(e) => setAddForm((f) => ({ ...f, image: e.target.value }))}
                     className="mt-1 w-full px-3 py-1.5 text-sm border rounded"
-                    placeholder="Or paste image URL"
+                    placeholder="Or paste image URL (e.g. https://... or /uploads/...)"
                   />
                 </div>
                 <div>

@@ -10,11 +10,16 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: false,
       unique: true,
+      sparse: true,
       lowercase: true,
       trim: true,
-      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
+      default: null,
+      validate: {
+        validator: (v) => !v || /^\S+@\S+\.\S+$/.test(v),
+        message: "Please enter a valid email",
+      },
     },
     password: {
       type: String,
@@ -34,7 +39,7 @@ const userSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: [true, "Name is required"],
+      required: false,
       trim: true,
       maxlength: [100, "Name cannot exceed 100 characters"],
     },
@@ -67,8 +72,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Index for faster lookups
+// Index for faster lookups - email or phone as identifier
 userSchema.index({ email: 1 });
+userSchema.index({ phone: 1 });
 
 // Ensure _id as id for API consistency
 userSchema.virtual("id").get(function () {

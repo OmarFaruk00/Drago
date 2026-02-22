@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Pencil, Trash2, Plus, ChevronDown, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronDown, Search, X } from "lucide-react";
 import ProductsEmptyState from "@/components/admin/ProductsEmptyState";
 import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 import ImportSuccessModal from "@/components/admin/ImportSuccessModal";
@@ -15,6 +15,7 @@ export default function AdminProductsPage() {
   const [page, setPage] = useState(1);
   const [deleting, setDeleting] = useState(null);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showImportSuccess, setShowImportSuccess] = useState(false);
   const [importing, setImporting] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -241,7 +242,7 @@ export default function AdminProductsPage() {
                 />
               </div>
               <button
-                onClick={handleBulkDelete}
+                onClick={() => someSelected && setShowDeleteConfirm(true)}
                 disabled={deleting === "bulk" || !someSelected}
                 className="p-2 rounded-full bg-gray-100 hover:bg-red-50 text-brand transition disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Delete selected"
@@ -406,6 +407,50 @@ export default function AdminProductsPage() {
 
       <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
       <ImportSuccessModal isOpen={showImportSuccess} onClose={() => setShowImportSuccess(false)} />
+
+      {/* Delete Items confirmation modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-gray-900/60"
+            onClick={() => setShowDeleteConfirm(false)}
+            aria-hidden="true"
+          />
+          <div className="relative bg-white rounded-xl shadow-xl max-w-sm w-full overflow-hidden">
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 transition z-10"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" strokeWidth={2} />
+            </button>
+            <div className="pt-10 pb-6 px-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Items</h3>
+              <p className="text-sm text-gray-600 mb-6">
+                Are you sure you want to delete {selectedIds.size} selected item{selectedIds.size !== 1 ? "s" : ""}?
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-4 py-2 text-brand font-medium hover:underline"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    handleBulkDelete();
+                  }}
+                  disabled={deleting === "bulk"}
+                  className="px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition disabled:opacity-50"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

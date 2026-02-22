@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", useMobile: false });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +22,11 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    const identifier = form.useMobile ? form.phone?.trim() : form.email?.trim();
+    if (!identifier) {
+      setError(form.useMobile ? "Please enter mobile number" : "Please enter email");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/users", {
@@ -29,7 +34,8 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "register",
-          email: form.email,
+          email: form.useMobile ? undefined : form.email,
+          phone: form.useMobile ? form.phone : undefined,
           password: form.password,
           name: form.name,
         }),
@@ -40,7 +46,7 @@ export default function RegisterPage() {
         return;
       }
       const signInRes = await signIn("credentials", {
-        email: form.email,
+        email: identifier,
         password: form.password,
         redirect: false,
       });
@@ -94,16 +100,49 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all outline-none placeholder:text-gray-400"
-                placeholder="Enter Email Address"
-              />
+              <div className="flex gap-4 mb-2">
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="useMobile"
+                    checked={!form.useMobile}
+                    onChange={() => setForm((f) => ({ ...f, useMobile: false }))}
+                    className="text-brand"
+                  />
+                  <span className="text-xs font-medium text-gray-700">Email</span>
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="useMobile"
+                    checked={form.useMobile}
+                    onChange={() => setForm((f) => ({ ...f, useMobile: true }))}
+                    className="text-brand"
+                  />
+                  <span className="text-xs font-medium text-gray-700">Mobile</span>
+                </label>
+              </div>
+              {!form.useMobile ? (
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required={!form.useMobile}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all outline-none placeholder:text-gray-400"
+                  placeholder="Enter Email Address"
+                />
+              ) : (
+                <input
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  required={form.useMobile}
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all outline-none placeholder:text-gray-400"
+                  placeholder="e.g. 01712345678 or +8801712345678"
+                />
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>

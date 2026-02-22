@@ -27,7 +27,7 @@ function augmentProduct(p) {
     : [baseImg, baseImg, baseImg, baseImg, baseImg, baseImg];
   const brand = p.brand || (p.category === "Electronics" ? "Samsung" : p.category || "Drago");
   const productCode = p.productCode ?? "1000";
-  const colors = p.colors || [
+  const colors = (p.colors && p.colors.length > 0) ? p.colors : [
     { name: "Pink", hex: "#ec4899" },
     { name: "White", hex: "#f8fafc" },
     { name: "Green", hex: "#86efac" },
@@ -35,8 +35,9 @@ function augmentProduct(p) {
     { name: "Black", hex: "#1f2937" },
     { name: "Purple", hex: "#a78bfa" },
   ];
+  const sizeVariants = (p.sizeVariants && p.sizeVariants.length > 0) ? p.sizeVariants : null;
   const simTypes = p.simTypes || ["Dual", "Single"];
-  const storageVariants = p.storageVariants || [
+  const storageVariants = p.storageVariants || (sizeVariants ? sizeVariants.map((sv) => ({ label: sv.size, price: sv.price })) : null) || [
     { label: "8/128GB", price: p.price },
     { label: "8/256GB", price: Math.round(p.price * 1.15) },
     { label: "8/512GB", price: Math.round(p.price * 1.35) },
@@ -51,7 +52,7 @@ function augmentProduct(p) {
     "Display Type": "Dynamic AMOLED 2X",
     "Display Size": "6.1 Inch",
   };
-  return { ...p, images, brand, productCode, colors, simTypes, storageVariants, specs };
+  return { ...p, images, brand, productCode, colors, sizeVariants, simTypes, storageVariants, specs };
 }
 
 export default function ProductDetailsPage() {
@@ -64,6 +65,7 @@ export default function ProductDetailsPage() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSim, setSelectedSim] = useState("Dual");
   const [selectedStorage, setSelectedStorage] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specification");
   const [loading, setLoading] = useState(true);
@@ -82,6 +84,8 @@ export default function ProductDetailsPage() {
         const aug = augmentProduct(data);
         setProduct(aug);
         setSelectedColor(aug?.colors?.[0] ?? null);
+        setSelectedSize(0);
+        setSelectedStorage(0);
       }
       setLoading(false);
     };
@@ -105,7 +109,7 @@ export default function ProductDetailsPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    const variantPrice = product.storageVariants?.[selectedStorage]?.price ?? product.price;
+    const variantPrice = product.sizeVariants?.[selectedSize]?.price ?? product.storageVariants?.[selectedStorage]?.price ?? product.price;
     addToCart(
       { id: product.id, name: product.name, price: variantPrice, image: product.image },
       quantity
@@ -114,7 +118,7 @@ export default function ProductDetailsPage() {
 
   const handleBuyNow = () => {
     if (!product) return;
-    const variantPrice = product.storageVariants?.[selectedStorage]?.price ?? product.price;
+    const variantPrice = product.sizeVariants?.[selectedSize]?.price ?? product.storageVariants?.[selectedStorage]?.price ?? product.price;
     addToCart(
       { id: product.id, name: product.name, price: variantPrice, image: product.image },
       quantity
@@ -122,7 +126,7 @@ export default function ProductDetailsPage() {
     router.push("/checkout");
   };
 
-  const currentPrice = product?.storageVariants?.[selectedStorage]?.price ?? product?.price ?? 0;
+  const currentPrice = product?.sizeVariants?.[selectedSize]?.price ?? product?.storageVariants?.[selectedStorage]?.price ?? product?.price ?? 0;
   const regularPrice = product?.originalPrice ?? product?.price ?? 0;
 
   if (loading) {
@@ -241,6 +245,28 @@ export default function ProductDetailsPage() {
 
               {/* Selection Controls */}
               <div className="mt-6 space-y-4">
+                {product.sizeVariants && product.sizeVariants.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-700 mb-2">Size:</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {product.sizeVariants.map((sv, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setSelectedSize(i)}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                            selectedSize === i
+                              ? "bg-brand text-white"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          {sv.size} - {formatCurrency(sv.price)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {product.colors && product.colors.length > 0 && (
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-2">Color:</p>
                   <div className="flex gap-2 flex-wrap">
@@ -260,6 +286,8 @@ export default function ProductDetailsPage() {
                     ))}
                   </div>
                 </div>
+                )}
+                {!product.sizeVariants?.length && (
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-2">Sim:</p>
                   <div className="flex gap-2">
@@ -279,6 +307,8 @@ export default function ProductDetailsPage() {
                     ))}
                   </div>
                 </div>
+                )}
+                {!product.sizeVariants?.length && product.storageVariants && product.storageVariants.length > 0 && (
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-2">Storage:</p>
                   <div className="flex gap-2 flex-wrap">
@@ -298,6 +328,7 @@ export default function ProductDetailsPage() {
                     ))}
                   </div>
                 </div>
+                )}
               </div>
 
               {/* Actions */}

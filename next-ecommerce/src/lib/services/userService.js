@@ -11,16 +11,16 @@ import connectDB from "@/lib/db/mongodb";
 import { mockUsers } from "@/lib/data/users";
 
 /**
- * Login user by email and password
- * @param {string} email
+ * Login user by email or mobile and password
+ * @param {string} identifier - email or mobile number
  * @param {string} password (plain - in production compare with bcrypt hash)
  * @returns {Promise<Object|null>} User without password, or null
  */
-export async function loginUser(email, password) {
+export async function loginUser(identifier, password) {
   if (!USE_MONGODB) {
-    return loginUserFromDummy(email, password);
+    return loginUserFromDummy(identifier, password);
   }
-  return loginUserFromMongo(email, password);
+  return loginUserFromMongo(identifier, password);
 }
 
 /**
@@ -36,32 +36,59 @@ export async function registerUser(data) {
 }
 
 // --- Dummy implementation ---
-function loginUserFromDummy(email, password) {
-  const user = mockUsers.find((u) => u.email === email && u.password === password);
+function loginUserFromDummy(identifier, password) {
+  const isEmail = identifier && identifier.includes("@");
+  const user = mockUsers.find((u) => {
+    let matchId = false;
+    if (isEmail) {
+      matchId = u.email === identifier;
+    } else {
+      const norm = normalizePhone(identifier);
+      matchId = (u.phone && normalizePhone(u.phone) === norm) || u.email === identifier;
+    }
+    return matchId && u.password === password;
+  });
   return user ? toSafeUser(user) : null;
 }
 
+function normalizePhone(phone) {
+  if (!phone || typeof phone !== "string") return phone;
+  return phone.replace(/\D/g, "").replace(/^(\+88|88)?0?/, "0") || phone;
+}
+
 function registerUserFromDummy(data) {
-  const { email, password, name } = data;
-  if (mockUsers.find((u) => u.email === email)) return null;
+  const { email, phone, password, name } = data;
+  const hasEmail = email && email.trim();
+  const hasPhone = phone && normalizePhone(phone);
+  if (!hasEmail && !hasPhone) return null;
+  if (hasEmail && mockUsers.find((u) => u.email === email.trim().toLowerCase())) return null;
+  if (hasPhone) {
+    const p = normalizePhone(phone);
+    if (mockUsers.find((u) => (u.phone && normalizePhone(u.phone)) === p)) return null;
+  }
   const newUser = {
     id: `u${mockUsers.length + 1}`,
-    email,
+    email: hasEmail ? email.trim().toLowerCase() : null,
+    phone: hasPhone ? normalizePhone(phone) : null,
     name: name || "User",
     role: "user",
+    password,
     createdAt: new Date().toISOString().split("T")[0],
   };
-  return toSafeUser({ ...newUser, password });
+  mockUsers.push(newUser);
+  return toSafeUser(newUser);
 }
 
 // --- MongoDB implementation ---
-async function loginUserFromMongo(email, password) {
+async function loginUserFromMongo(identifier, password) {
   const conn = await connectDB();
-  if (!conn) return loginUserFromDummy(email, password);
+  if (!conn) return loginUserFromDummy(identifier, password);
 
   const User = (await import("@/lib/models/User")).default;
   const bcrypt = (await import("bcryptjs")).default;
-  const user = await User.findOne({ email }).select("+password").lean();
+  const isEmail = identifier && identifier.includes("@");
+  const query = isEmail ? { email: identifier } : { phone: normalizePhone(identifier) };
+  const user = await User.findOne(query).select("+password").lean();
   if (!user || !user.password) return null;
 
   const match = await bcrypt.compare(password, user.password);
@@ -76,14 +103,27 @@ async function registerUserFromMongo(data) {
 
   const User = (await import("@/lib/models/User")).default;
   const bcrypt = (await import("bcryptjs")).default;
-  const exists = await User.findOne({ email: data.email }).lean();
-  if (exists) return null;
+  const { email, phone, password, name } = data;
+  const hasEmail = email && email.trim();
+  const hasPhone = phone && normalizePhone(phone);
+  if (!hasEmail && !hasPhone) return null;
 
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  if (hasEmail) {
+    const exists = await User.findOne({ email: email.trim().toLowerCase() }).lean();
+    if (exists) return null;
+  }
+  if (hasPhone) {
+    const p = normalizePhone(phone);
+    const exists = await User.findOne({ phone: p }).lean();
+    if (exists) return null;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.create({
-    email: data.email,
+    email: hasEmail ? email.trim().toLowerCase() : null,
+    phone: hasPhone ? normalizePhone(phone) : null,
     password: hashedPassword,
-    name: data.name || "User",
+    name: (name || "User").trim() || "User",
     role: "user",
     provider: "credentials",
   });

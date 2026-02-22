@@ -148,22 +148,22 @@ export default function AddCategoryPage() {
                     className="mx-auto max-h-32 rounded object-cover"
                   />
                   <input
-                    type="url"
+                    type="text"
                     value={form.image}
                     onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
                     className="mt-2 w-full px-3 py-1.5 text-sm border rounded"
-                    placeholder="Or paste image URL"
+                    placeholder="Or paste image URL (https://... or /uploads/...)"
                   />
                 </div>
               )}
             </div>
             {!form.image && (
               <input
-                type="url"
+                type="text"
                 value={form.image}
                 onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
                 className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg text-sm"
-                placeholder="Or paste image URL"
+                placeholder="Or paste image URL (https://... or /uploads/...)"
               />
             )}
           </div>
