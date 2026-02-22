@@ -5,14 +5,23 @@
  */
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import ProductGrid from "@/components/ProductGrid";
 import ProductCard from "@/components/ProductCard";
 import { ArrowLeft } from "lucide-react";
+import { useFlashSaleCountdown } from "@/lib/utils/useFlashSaleCountdown";
 
 export default function FlashSalePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const timeLeft = useFlashSaleCountdown();
+
+  const countdownItems = [
+    { label: "Day", value: timeLeft.days },
+    { label: "Min", value: timeLeft.min },
+    { label: "Hour", value: timeLeft.hrs },
+    { label: "Sec", value: timeLeft.sec },
+  ];
 
   useEffect(() => {
     fetch("/api/products")
@@ -47,10 +56,27 @@ export default function FlashSalePage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Flash Sale</h1>
-          <p className="text-gray-600 mb-6">
-            Limited time offers – grab the best deals before they&apos;re gone!
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Flash Sale</h1>
+              <p className="text-gray-600">
+                Limited time offers – grab the best deals before they&apos;re gone!
+              </p>
+            </div>
+            {/* Same countdown timer as home page */}
+            <div className="flex items-center gap-4">
+              {countdownItems.map(({ label, value }) => (
+                <div key={label} className="flex flex-col items-center text-center gap-1">
+                  <span className="text-xs font-normal uppercase tracking-widest text-gray-500">
+                    {label}
+                  </span>
+                  <div className="w-12 sm:w-14 rounded-lg bg-gray-900 px-2 sm:px-4 py-2 sm:py-3 text-xl sm:text-2xl font-bold text-white tabular-nums">
+                    {String(value).padStart(2, "0")}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">

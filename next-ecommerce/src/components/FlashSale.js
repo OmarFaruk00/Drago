@@ -9,14 +9,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
+import { useFlashSaleCountdown } from "@/lib/utils/useFlashSaleCountdown";
 
 export default function FlashSale({ products = [] }) {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 2,
-    hrs: 6,
-    min: 1,
-    sec: 29,
-  });
+  const timeLeft = useFlashSaleCountdown();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const SLIDE_SIZE = 4;
@@ -62,29 +58,6 @@ export default function FlashSale({ products = [] }) {
     }
     return chunks;
   }, [preparedProducts]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { days, hrs, min, sec } = prev;
-        if (sec > 0) sec--;
-        else {
-          sec = 59;
-          if (min > 0) min--;
-          else {
-            min = 59;
-            if (hrs > 0) hrs--;
-            else {
-              hrs = 23;
-              if (days > 0) days--;
-            }
-          }
-        }
-        return { days, hrs, min, sec };
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     if (!slides.length) return;
