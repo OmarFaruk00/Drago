@@ -6,17 +6,26 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, Search, Heart } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
+
+const SUGGESTIONS_LIMIT = 6;
 
 export default function Navbar() {
   const { t, locale, setLocale } = useLanguage();
+  const formatCurrency = useFormatCurrency();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchDesktopRef = useRef(null);
+  const searchMobileRef = useRef(null);
   const { cart, wishlist, user, logout } = useStore();
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
   const wishlistCount = wishlist?.length ?? 0;
@@ -24,8 +33,49 @@ export default function Navbar() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      setShowSuggestions(false);
       window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;
     }
+  };
+
+  // Debounced product search for suggestions
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setSuggestionsLoading(true);
+      try {
+        const res = await fetch(`/api/products?search=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        const list = Array.isArray(data) ? data.slice(0, SUGGESTIONS_LIMIT) : [];
+        setSuggestions(list);
+        setShowSuggestions(list.length > 0);
+      } catch {
+        setSuggestions([]);
+      } finally {
+        setSuggestionsLoading(false);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Click outside to close suggestions
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      const inDesktop = searchDesktopRef.current?.contains(e.target);
+      const inMobile = searchMobileRef.current?.contains(e.target);
+      if (!inDesktop && !inMobile) setShowSuggestions(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const hideSuggestions = () => {
+    setShowSuggestions(false);
   };
 
   return (
@@ -47,18 +97,19 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* Search - Input + dark button, single rounded unit, transparent input with border */}
-            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-1 lg:mx-3">
-              <div className="relative w-full flex rounded-md overflow-hidden border border-white/40 bg-white/10">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none">
+            {/* Search - Input + dark button, with product suggestions */}
+            <form ref={searchDesktopRef} onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-1 lg:mx-3 relative">
+              <div className="relative w-full flex rounded-md overflow-visible border border-gray-200 bg-white">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                   <Search className="w-4 h-4" />
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
                   placeholder={t("nav.searchProducts")}
-                  className="flex-1 pl-10 pr-4 py-2 bg-transparent border-0 text-white placeholder-gray-300 focus:ring-0 focus:outline-none text-sm"
+                  className="flex-1 pl-10 pr-4 py-2 bg-white border-0 text-gray-900 placeholder-gray-500 focus:ring-0 focus:outline-none text-sm rounded-l-md"
                 />
                 <button
                   type="submit"
@@ -67,6 +118,42 @@ export default function Navbar() {
                   {t("nav.search")}
                 </button>
               </div>
+              {/* Suggestions dropdown */}
+              {showSuggestions && (searchQuery.trim().length >= 2) && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                  {suggestionsLoading ? (
+                    <div className="px-4 py-6 text-center text-gray-500 text-sm">Searching...</div>
+                  ) : suggestions.length > 0 ? (
+                    <ul className="max-h-72 overflow-y-auto">
+                      {suggestions.map((p) => (
+                        <li key={p.id}>
+                          <Link
+                            href={`/products/${p.id}`}
+                            onClick={hideSuggestions}
+                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                          >
+                            <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                              <Image
+                                src={p.image || "/logo.png"}
+                                alt={p.name}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">{p.name}</p>
+                              <p className="text-xs text-brand font-semibold">{formatCurrency(p.price)}</p>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="px-4 py-4 text-sm text-gray-500">No products found</p>
+                  )}
+                </div>
+              )}
             </form>
 
             {/* Right: Lang switcher, User & Cart */}
@@ -135,19 +222,57 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile search */}
-          <form onSubmit={handleSearch} className="md:hidden pb-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t("nav.searchProducts")}
-                className="w-full pl-10 pr-4 py-2 bg-white rounded text-gray-900 placeholder-gray-500"
-              />
-            </div>
-          </form>
+          {/* Mobile search - with suggestions */}
+          <div ref={searchMobileRef} className="md:hidden pb-3 relative">
+            <form onSubmit={handleSearch}>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                  placeholder={t("nav.searchProducts")}
+                  className="w-full pl-10 pr-4 py-2 bg-white rounded text-gray-900 placeholder-gray-500"
+                />
+              </div>
+            </form>
+            {showSuggestions && (searchQuery.trim().length >= 2) && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+                {suggestionsLoading ? (
+                  <div className="px-4 py-6 text-center text-gray-500 text-sm">Searching...</div>
+                ) : suggestions.length > 0 ? (
+                  <ul className="max-h-56 overflow-y-auto">
+                    {suggestions.map((p) => (
+                      <li key={p.id}>
+                        <Link
+                          href={`/products/${p.id}`}
+                          onClick={() => { hideSuggestions(); setMobileOpen(false); }}
+                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                        >
+                          <div className="w-10 h-10 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                            <Image
+                              src={p.image || "/logo.png"}
+                              alt={p.name}
+                              width={40}
+                              height={40}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{p.name}</p>
+                            <p className="text-xs text-brand font-semibold">{formatCurrency(p.price)}</p>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="px-4 py-4 text-sm text-gray-500">No products found</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
