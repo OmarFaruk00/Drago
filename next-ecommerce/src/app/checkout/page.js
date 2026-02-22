@@ -2,11 +2,13 @@
 
 /**
  * Checkout Page - Places order to database
+ * Fetches delivery charges and COD fee from MongoDB (admin settings)
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
+import { filterCities, filterThanas } from "@/lib/data/bangladeshLocations";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trackLead, trackPurchase } from "@/lib/tracking/client";
@@ -18,16 +20,49 @@ export default function CheckoutPage() {
   const [placed, setPlaced] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [deliverySettings, setDeliverySettings] = useState({
+    deliveryInsideDhaka: 60,
+    deliveryOutsideDhaka: 120,
+    codPercentage: 1,
+  });
   const [form, setForm] = useState({
     fullName: user?.name || "",
     email: user?.email || "",
+    phone: user?.phone || "",
     address: "",
+    addressNote: "",
     city: "",
-    zip: "",
+    thana: "",
     country: "Bangladesh",
   });
+  const [citySuggestions, setCitySuggestions] = useState([]);
+  const [thanaSuggestions, setThanaSuggestions] = useState([]);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [showThanaDropdown, setShowThanaDropdown] = useState(false);
+  const cityRef = useRef(null);
+  const thanaRef = useRef(null);
+
+  useEffect(() => {
+    fetch("/api/settings/delivery")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.error) {
+          setDeliverySettings({
+            deliveryInsideDhaka: data.deliveryInsideDhaka ?? 60,
+            deliveryOutsideDhaka: data.deliveryOutsideDhaka ?? 120,
+            codPercentage: data.codPercentage ?? 1,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const isInsideDhaka = (form.city || "").toLowerCase().includes("dhaka");
+  const deliveryCharge = isInsideDhaka ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
+  const codFee = paymentMethod === "cod" ? Math.round((subtotal * deliverySettings.codPercentage) / 100) : 0;
+  const total = subtotal + deliveryCharge + codFee;
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   useEffect(() => {
     if (cart.length === 0 || placed) return;
@@ -40,7 +75,27 @@ export default function CheckoutPage() {
 
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const next = { ...form, [name]: value };
+    if (name === "city") next.thana = "";
+    setForm(next);
+  };
+
+  useEffect(() => {
+    if (showCityDropdown) setCitySuggestions(filterCities(form.city));
+  }, [form.city, showCityDropdown]);
+
+  useEffect(() => {
+    if (showThanaDropdown && form.city) setThanaSuggestions(filterThanas(form.city, form.thana));
+  }, [form.city, form.thana, showThanaDropdown]);
+
+  const selectCity = (c) => {
+    setForm({ ...form, city: c, thana: "" });
+    setShowCityDropdown(false);
+  };
+  const selectThana = (t) => {
+    setForm({ ...form, thana: t });
+    setShowThanaDropdown(false);
   };
 
   const handlePlaceOrder = async (e) => {
@@ -57,16 +112,17 @@ export default function CheckoutPage() {
         image: i.image,
         quantity: i.quantity,
       }));
-      const shippingAddress = [form.address, form.city, form.zip, form.country].filter(Boolean).join(", ");
+      const shippingAddress = [form.address, form.addressNote, form.thana, form.city, form.country].filter(Boolean).join(", ");
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           customerName: form.fullName,
-          customerEmail: form.email,
+          customerEmail: form.email || "",
+          customerPhone: form.phone,
           items,
-          total: subtotal,
+          total,
           shippingAddress,
         }),
       });
@@ -76,7 +132,7 @@ export default function CheckoutPage() {
         return;
       }
       trackPurchase({
-        value: subtotal,
+        value: total,
         currency: "BDT",
         content_ids: cartSnapshot.map((item) => item.id),
         contents: cartSnapshot.map((item) => ({
@@ -145,8 +201,16 @@ export default function CheckoutPage() {
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="Email (optional)"
               value={form.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Mobile Number *"
+              value={form.phone}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
@@ -160,25 +224,68 @@ export default function CheckoutPage() {
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
             />
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="city"
-                placeholder="City"
-                value={form.city}
+            <div className="relative">
+              <textarea
+                name="addressNote"
+                placeholder="Full address details (optional)"
+                value={form.addressNote}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                rows={3}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand resize-none"
               />
-              <input
-                type="text"
-                name="zip"
-                placeholder="ZIP Code"
-                value={form.zip}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="City"
+                  value={form.city}
+                  onChange={handleChange}
+                  onFocus={() => setShowCityDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowCityDropdown(false), 200)}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                />
+                {showCityDropdown && citySuggestions.length > 0 && (
+                  <ul ref={cityRef} className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                    {citySuggestions.map((c) => (
+                      <li
+                        key={c}
+                        onClick={() => selectCity(c)}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                      >
+                        {c}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="thana"
+                  placeholder="Thana"
+                  value={form.thana}
+                  onChange={handleChange}
+                  onFocus={() => form.city && setShowThanaDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowThanaDropdown(false), 200)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                />
+                {showThanaDropdown && thanaSuggestions.length > 0 && (
+                  <ul ref={thanaRef} className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                    {thanaSuggestions.map((t) => (
+                      <li
+                        key={t}
+                        onClick={() => selectThana(t)}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                      >
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
             <input
               type="text"
@@ -189,6 +296,31 @@ export default function CheckoutPage() {
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    checked={paymentMethod === "cod"}
+                    onChange={() => setPaymentMethod("cod")}
+                    className="text-brand"
+                  />
+                  <span>Cash on Delivery (COD)</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    checked={paymentMethod === "online"}
+                    onChange={() => setPaymentMethod("online")}
+                    className="text-brand"
+                  />
+                  <span>Online Payment</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -206,10 +338,24 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex justify-between font-bold text-gray-900 text-lg">
-                <span>{t("cart.total")}</span>
+            <div className="border-t border-gray-200 pt-4 space-y-2">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Subtotal</span>
                 <span>{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Delivery ({form.city ? (form.city.toLowerCase().includes("dhaka") ? "Inside Dhaka" : "Outside Dhaka") : "—"})</span>
+                <span>{formatCurrency(deliveryCharge)}</span>
+              </div>
+              {paymentMethod === "cod" && (
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>COD Fee ({deliverySettings.codPercentage}%)</span>
+                  <span>{formatCurrency(codFee)}</span>
+                </div>
+              )}
+              <div className="flex justify-between font-bold text-gray-900 text-lg pt-2">
+                <span>{t("cart.total")}</span>
+                <span>{formatCurrency(total)}</span>
               </div>
             </div>
             {error && <p className="text-sm text-brand mb-4">{error}</p>}

@@ -34,6 +34,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
+import DashboardDetailModal from "@/components/admin/DashboardDetailModal";
 
 const statusColors = {
   pending: "bg-amber-100 text-amber-800",
@@ -53,8 +54,10 @@ export default function AdminDashboardPage() {
   const [trends, setTrends] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCard, setSelectedCard] = useState(null);
 
-  useEffect(() => {
+  function refreshData(showLoader = true) {
+    if (showLoader) setLoading(true);
     Promise.all([
       fetch("/api/admin/stats", { credentials: "include" }).then((r) => r.json()),
       fetch("/api/admin/trends", { credentials: "include" }).then((r) => r.json()),
@@ -66,7 +69,16 @@ export default function AdminDashboardPage() {
         setOrders(Array.isArray(o) ? o : o.orders || []);
       })
       .catch(console.error)
-      .finally(() => setLoading(false));
+      .finally(() => showLoader && setLoading(false));
+  }
+
+  useEffect(() => {
+    refreshData(true);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => refreshData(false), 30000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -79,6 +91,7 @@ export default function AdminDashboardPage() {
 
   const cards = [
     {
+      key: "totalOrders",
       label: "Total Orders",
       value: stats?.totalOrders ?? 0,
       icon: ShoppingCart,
@@ -86,6 +99,7 @@ export default function AdminDashboardPage() {
       bg: "bg-blue-50",
     },
     {
+      key: "totalProducts",
       label: "Total Products",
       value: stats?.totalProducts ?? 0,
       icon: Package,
@@ -93,6 +107,7 @@ export default function AdminDashboardPage() {
       bg: "bg-green-50",
     },
     {
+      key: "totalCustomers",
       label: "Total Customers",
       value: stats?.totalUsers ?? 0,
       icon: Users,
@@ -100,6 +115,7 @@ export default function AdminDashboardPage() {
       bg: "bg-purple-50",
     },
     {
+      key: "totalRevenue",
       label: "Total Revenue",
       value: formatCurrency(stats?.totalRevenue ?? 0),
       icon: DollarSign,
@@ -107,6 +123,7 @@ export default function AdminDashboardPage() {
       bg: "bg-red-50",
     },
     {
+      key: "pendingOrders",
       label: "Pending Orders",
       value: stats?.pendingOrders ?? 0,
       icon: Clock,
@@ -115,6 +132,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctPending ?? 0,
     },
     {
+      key: "confirmedOrders",
       label: "Confirm Order",
       value: stats?.confirmedOrders ?? 0,
       icon: CheckCircle,
@@ -122,6 +140,7 @@ export default function AdminDashboardPage() {
       bg: "bg-blue-50",
     },
     {
+      key: "shippingOrders",
       label: "Shipping Order",
       value: stats?.shippingOrders ?? 0,
       icon: Truck,
@@ -129,6 +148,7 @@ export default function AdminDashboardPage() {
       bg: "bg-cyan-50",
     },
     {
+      key: "cancelledOrders",
       label: "Cancel Order",
       value: stats?.cancelledOrders ?? 0,
       icon: XCircle,
@@ -137,6 +157,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctCancelled ?? 0,
     },
     {
+      key: "returnOrders",
       label: "Return Order",
       value: stats?.returnOrders ?? 0,
       icon: RotateCcw,
@@ -144,6 +165,7 @@ export default function AdminDashboardPage() {
       bg: "bg-orange-50",
     },
     {
+      key: "holdOrders",
       label: "Hold Order",
       value: stats?.holdOrders ?? 0,
       icon: PauseCircle,
@@ -151,6 +173,7 @@ export default function AdminDashboardPage() {
       bg: "bg-gray-50",
     },
     {
+      key: "completedOrders",
       label: "Delivery Order",
       value: stats?.completedOrders ?? 0,
       icon: Truck,
@@ -159,6 +182,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctCompleted ?? 0,
     },
     {
+      key: "todaySales",
       label: "Today Sales",
       value: formatCurrency(stats?.todaySales ?? 0),
       icon: Calendar,
@@ -167,6 +191,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctTodaySales ?? 0,
     },
     {
+      key: "monthlySales",
       label: "Monthly Sales",
       value: formatCurrency(stats?.monthlySales ?? 0),
       icon: CalendarDays,
@@ -175,6 +200,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctMonthlySales ?? 0,
     },
     {
+      key: "totalVisitors",
       label: "Total Visitors",
       value: (stats?.totalVisitors ?? 0).toLocaleString(),
       icon: Eye,
@@ -183,6 +209,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctTotalVisitors ?? 0,
     },
     {
+      key: "newVisitorsToday",
       label: "New Visitors Today",
       value: stats?.newVisitorsToday ?? 0,
       icon: UserPlus,
@@ -191,6 +218,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctNewVisitors ?? 0,
     },
     {
+      key: "conversionRate",
       label: "Conversion Rate",
       value: `${stats?.conversionRate ?? 0}%`,
       icon: Percent,
@@ -199,6 +227,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctConversion ?? 0,
     },
     {
+      key: "averageOrderValue",
       label: "Average Order Value",
       value: formatCurrency(stats?.averageOrderValue ?? 0),
       icon: Banknote,
@@ -207,6 +236,7 @@ export default function AdminDashboardPage() {
       pctChange: stats?.pctAOV ?? 0,
     },
     {
+      key: "activeUsers",
       label: "Active Users",
       value: stats?.activeUsers ?? 0,
       icon: UserCheck,
@@ -229,6 +259,7 @@ export default function AdminDashboardPage() {
           return (
             <div
               key={card.label}
+              onClick={() => setSelectedCard(card.key)}
               className="rounded-lg border border-gray-200 p-3 shadow-sm backdrop-blur-sm bg-white/80 cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg hover:bg-white"
             >
               <div className="flex items-center justify-between gap-2">
@@ -249,6 +280,13 @@ export default function AdminDashboardPage() {
           );
         })}
       </div>
+
+      {selectedCard && (
+        <DashboardDetailModal
+          cardKey={selectedCard}
+          onClose={() => setSelectedCard(null)}
+        />
+      )}
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

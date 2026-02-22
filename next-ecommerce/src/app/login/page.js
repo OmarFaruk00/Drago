@@ -5,6 +5,7 @@
  */
 
 import { useState, Suspense } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,6 +16,7 @@ function LoginForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +51,7 @@ function LoginForm() {
     <div className="min-h-[100vh] flex items-start justify-center pt-4 sm:pt-6 px-4 pb-4">
       <div className="w-full max-w-sm">
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-4 sm:p-5">
-          <h1 className="text-xl font-bold text-gray-900 mb-0.5">Sign In</h1>
+          <h1 className="text-xl font-bold text-gray-900 mb-0.5">Log In</h1>
           <p className="text-gray-600 text-sm mb-4">Welcome back to Drago Store</p>
 
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -64,19 +66,29 @@ function LoginForm() {
                 onChange={(e) => setIdentifier(e.target.value)}
                 required
                 className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                placeholder="Email or mobile (e.g. 01712345678)"
+                placeholder="Email or mobile (e.g. 01***)"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-0.5">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-1.5 pr-10 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
               <div className="flex justify-end mt-1">
                 <Link href="/forgot-password" className="text-xs text-brand hover:underline">
                   Forgot password?
@@ -88,7 +100,7 @@ function LoginForm() {
               disabled={loading}
               className="w-full py-2 bg-brand text-white text-sm font-semibold rounded-lg hover:bg-brand disabled:opacity-50 transition"
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? "Logging in..." : "Log In"}
             </button>
           </form>
           <p className="mt-3 text-center text-gray-600 text-xs">

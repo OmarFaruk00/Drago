@@ -40,11 +40,11 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { customerName, customerEmail, items, total, shippingAddress } = body;
+    const { customerName, customerEmail, customerPhone, items, total, shippingAddress } = body;
 
-    if (!customerName || !customerEmail || !items?.length || total == null) {
+    if (!customerName || !customerPhone || !items?.length || total == null) {
       return NextResponse.json(
-        { error: "Customer name, email, and items are required" },
+        { error: "Customer name, phone, and items are required" },
         { status: 400 }
       );
     }
@@ -64,7 +64,8 @@ export async function POST(request) {
 
       const order = await Order.create({
         customerName,
-        customerEmail,
+        customerEmail: customerEmail || "",
+        customerPhone: customerPhone || "",
         userId: userId || undefined,
         items: orderItems,
         total: Number(total),
