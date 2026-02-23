@@ -27,6 +27,11 @@ const adminSchema = new mongoose.Schema(
     },
     phone: { type: String, default: "" },
     avatar: { type: String, default: "" },
+    role: {
+      type: String,
+      enum: ["super_admin", "manager"],
+      default: "manager",
+    },
     timezone: { type: String, default: "GMT+06:00" },
     language: { type: String, default: "en" },
     notificationPreferences: {

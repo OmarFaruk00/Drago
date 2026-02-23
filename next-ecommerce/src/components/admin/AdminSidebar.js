@@ -14,6 +14,8 @@ import {
   Inbox,
   User,
   Truck,
+  Image,
+  FileText,
   X,
 } from "lucide-react";
 
@@ -22,6 +24,8 @@ const menuItems = [
   { href: "/admin/orders", label: "Orders", icon: ListOrdered, showBadge: true },
   { href: "/admin/products", label: "Products", icon: Tag },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
+  { href: "/admin/banners", label: "Banners", icon: Image },
+  { href: "/admin/footer", label: "Footer", icon: FileText },
   { href: "/admin/coupons", label: "Coupons", icon: Star },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },
