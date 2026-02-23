@@ -14,6 +14,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Prevent scroll anchoring from jumping to footer on certain viewport sizes */
+html {
+  overflow-anchor: none;
+}
+
 /* Line clamp utility for product names */
 @layer utilities {
   .line-clamp-2 {

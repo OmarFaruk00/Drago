@@ -7,7 +7,7 @@ export const translations = {
   en: {
     // Nav
     "nav.home": "Home",
-    "nav.products": "All Products",
+    "nav.products": "All Categories",
     "nav.about": "About Us",
     "nav.blog": "Blog",
     "nav.contact": "Contact Us",
@@ -102,7 +102,7 @@ export const translations = {
   },
   bn: {
     "nav.home": "হোম",
-    "nav.products": "সব পণ্য",
+    "nav.products": "সব ক্যাটাগরি",
     "nav.about": "আমাদের সম্পর্কে",
     "nav.blog": "ব্লগ",
     "nav.contact": "যোগাযোগ",

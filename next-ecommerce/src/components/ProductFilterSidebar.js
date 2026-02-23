@@ -62,6 +62,14 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
 
   const sidebarContent = (
     <div className="space-y-6">
+      {/* All Products - link to products page (clears filters) */}
+      <Link
+        href="/products"
+        onClick={() => onClose?.()}
+        className="block py-2 text-sm font-medium text-brand hover:text-brand-dark"
+      >
+        All Products
+      </Link>
       {/* All Categories - Hierarchical */}
       <div>
         <h4 className="text-sm font-semibold text-gray-900 mb-3">All Categories</h4>

@@ -76,6 +76,13 @@ export default function ProductDetailsPage() {
   const wishlist = useStore((s) => s.wishlist);
   const isInWishlist = product && wishlist?.some((w) => w.id === product.id);
 
+  // Scroll to top on load to prevent footer jump on certain viewport sizes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
+  }, [params.id]);
+
   useEffect(() => {
     const fetchProduct = async () => {
       const res = await fetch(`/api/products/${params.id}`);
@@ -131,19 +138,23 @@ export default function ProductDetailsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="h-96 bg-gray-200 rounded-xl animate-pulse" />
+      <div className="bg-white min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="h-96 bg-gray-200 rounded-xl animate-pulse" />
+        </div>
       </div>
     );
   }
 
   if (!product) {
     return (
+      <div className="bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Product not found</h1>
         <Link href="/products" className="text-brand hover:underline mt-4 inline-block">
           Back to products
         </Link>
+      </div>
       </div>
     );
   }
