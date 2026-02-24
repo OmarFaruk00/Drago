@@ -15,7 +15,7 @@ export const translations = {
     "nav.dashboard": "Dashboard",
     "nav.account": "Account",
     "nav.search": "Search",
-    "nav.searchProducts": "Search Products",
+    "nav.searchProducts": "Drago",
     "nav.login": "Login",
     "nav.signUp": "Sign Up",
 
@@ -35,6 +35,8 @@ export const translations = {
     "product.addToCart": "Add to Cart",
     "product.quickView": "Quick View",
     "product.outOfStock": "Out of Stock",
+    "product.flashSaleLabel": "This is a Flash Sale product",
+    "product.flashSaleBadge": "Flash Sale",
 
     // Cart & Checkout
     "cart.title": "Shopping Cart",
@@ -110,7 +112,7 @@ export const translations = {
     "nav.dashboard": "ড্যাশবোর্ড",
     "nav.account": "অ্যাকাউন্ট",
     "nav.search": "অনুসন্ধান",
-    "nav.searchProducts": "পণ্য খুঁজুন",
+    "nav.searchProducts": "ড্রাগো",
     "nav.login": "লগইন",
     "nav.signUp": "নিবন্ধন",
 
@@ -128,6 +130,8 @@ export const translations = {
     "product.addToCart": "কার্টে যোগ করুন",
     "product.quickView": "দ্রুত দেখুন",
     "product.outOfStock": "স্টকে নেই",
+    "product.flashSaleLabel": "এটি একটি ফ্ল্যাশ সেল প্রোডাক্ট",
+    "product.flashSaleBadge": "ফ্ল্যাশ সেল",
 
     "cart.title": "শপিং কার্ট",
     "cart.empty": "আপনার কার্ট খালি",

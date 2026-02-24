@@ -5,17 +5,22 @@
  * tabs (Specification, Description, Warranty), Related Products, dynamic breadcrumb
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
+import { useFlashSaleCountdown } from "@/lib/utils/useFlashSaleCountdown";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Maximize2,
   ShoppingCart,
   MessageCircle,
   Heart,
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 // Augment product with gallery images, variants (colors, sim, storage)
@@ -55,8 +60,31 @@ function augmentProduct(p) {
   return { ...p, images, brand, productCode, colors, sizeVariants, simTypes, storageVariants, specs };
 }
 
+function FlashSaleTimer() {
+  const timeLeft = useFlashSaleCountdown();
+  const items = [
+    { label: "Day", value: timeLeft.days },
+    { label: "Hour", value: timeLeft.hrs },
+    { label: "Min", value: timeLeft.min },
+    { label: "Sec", value: timeLeft.sec },
+  ];
+  return (
+    <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+      {items.map(({ label, value }) => (
+        <div key={label} className="flex flex-col items-center">
+          <span className="text-[10px] uppercase tracking-wider text-gray-600">{label}</span>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-900 flex items-center justify-center text-white text-sm sm:text-base font-bold tabular-nums">
+            {String(value).padStart(2, "0")}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function ProductDetailsPage() {
   const formatCurrency = useFormatCurrency();
+  const { t } = useLanguage();
   const params = useParams();
   const pathname = usePathname();
   const [product, setProduct] = useState(null);
@@ -69,6 +97,9 @@ export default function ProductDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specification");
   const [loading, setLoading] = useState(true);
+  const [zoomLightboxOpen, setZoomLightboxOpen] = useState(false);
+  const [zoomLens, setZoomLens] = useState({ show: false, x: 0, y: 0 });
+  const imageContainerRef = useRef(null);
   const router = useRouter();
   const addToCart = useStore((s) => s.addToCart);
   const addToWishlist = useStore((s) => s.addToWishlist);
@@ -135,6 +166,7 @@ export default function ProductDetailsPage() {
 
   const currentPrice = product?.sizeVariants?.[selectedSize]?.price ?? product?.storageVariants?.[selectedStorage]?.price ?? product?.price ?? 0;
   const regularPrice = product?.originalPrice ?? product?.price ?? 0;
+  const isFlashSale = product && product.originalPrice != null && product.originalPrice > product.price;
 
   if (loading) {
     return (
@@ -189,21 +221,53 @@ export default function ProductDetailsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-4 sm:p-6 lg:p-8">
-            {/* Interactive Image Gallery - constrained size to avoid excessive zoom */}
+            {/* Interactive Image Gallery - hover zoom + lightbox for all angles */}
             <div className="space-y-4 w-full max-w-full lg:max-w-[450px]">
-              <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-gray-50">
+              <div
+                ref={imageContainerRef}
+                className="relative aspect-square w-full rounded-lg overflow-hidden bg-gray-50 cursor-zoom-in"
+                onMouseMove={(e) => {
+                  if (!imageContainerRef.current) return;
+                  const rect = imageContainerRef.current.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    setZoomLens({ show: true, x: e.clientX, y: e.clientY, localX: x, localY: y, rectWidth: rect.width, rectHeight: rect.height });
+                  }
+                }}
+                onMouseLeave={() => setZoomLens((p) => ({ ...p, show: false }))}
+                onClick={() => setZoomLightboxOpen(true)}
+              >
                 <Image
                   src={product.images[selectedImage]}
                   alt={product.name}
                   fill
-                  className="object-contain object-center"
+                  className="object-contain object-center select-none pointer-events-none"
                   priority
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 450px"
+                  draggable={false}
                 />
+                {/* Hover zoom lens - desktop: shows 2x zoom near cursor */}
+                {zoomLens.show && zoomLens.rectWidth && (
+                  <div
+                    className="hidden md:block absolute w-32 h-32 rounded-full border-2 border-white shadow-xl bg-gray-100 pointer-events-none"
+                    style={{
+                      left: Math.max(0, Math.min(zoomLens.rectWidth - 128, zoomLens.localX - 64)),
+                      top: Math.max(0, Math.min(zoomLens.rectHeight - 128, zoomLens.localY - 64)),
+                      backgroundImage: `url(${product.images[selectedImage]})`,
+                      backgroundSize: `${zoomLens.rectWidth * 2}px ${zoomLens.rectHeight * 2}px`,
+                      backgroundPosition: `${-((zoomLens.localX / zoomLens.rectWidth) * zoomLens.rectWidth * 2) + 64}px ${-((zoomLens.localY / zoomLens.rectHeight) * zoomLens.rectHeight * 2) + 64}px`,
+                    }}
+                  />
+                )}
                 <button
                   type="button"
-                  className="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center rounded-lg bg-white/90 shadow border border-gray-200 text-gray-600 hover:bg-white transition"
+                  className="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center rounded-lg bg-white/90 shadow border border-gray-200 text-gray-600 hover:bg-white transition pointer-events-auto"
                   aria-label="Zoom"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomLightboxOpen(true);
+                  }}
                 >
                   <Maximize2 className="w-5 h-5" />
                 </button>
@@ -228,6 +292,19 @@ export default function ProductDetailsPage() {
 
             {/* Product Identity & Pricing */}
             <div>
+              {isFlashSale && (
+                <div className="mb-4 p-3 rounded-lg bg-brand/10 border border-brand flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <span className="inline-block px-3 py-1 rounded-full bg-brand text-white text-sm font-semibold mb-2">
+                      {t("product.flashSaleBadge")}
+                    </span>
+                    <p className="text-gray-700 text-sm font-medium">
+                      {t("product.flashSaleLabel")}
+                    </p>
+                  </div>
+                  <FlashSaleTimer />
+                </div>
+              )}
               <p className="text-brand font-semibold">{product.brand}</p>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">
                 {product.name}
@@ -364,14 +441,14 @@ export default function ProductDetailsPage() {
                 <button
                   onClick={handleBuyNow}
                   disabled={!product.inStock}
-                  className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+                  className="flex items-center justify-center gap-2 min-w-[180px] sm:min-w-[220px] px-8 py-3.5 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition"
                 >
                   Buy now
                 </button>
                 <button
                   onClick={handleAddToCart}
                   disabled={!product.inStock}
-                  className="flex items-center gap-2 px-6 py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+                  className="flex items-center justify-center gap-2 min-w-[180px] sm:min-w-[220px] px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   Add to cart
@@ -443,6 +520,11 @@ export default function ProductDetailsPage() {
               )}
               {activeTab === "description" && (
                 <div className="prose prose-sm max-w-none text-gray-700">
+                  {isFlashSale && (
+                    <p className="rounded-lg bg-brand/10 border border-brand p-3 text-brand font-medium mb-4">
+                      {t("product.flashSaleLabel")}
+                    </p>
+                  )}
                   <p>{product.description}</p>
                   {product.category === "Electronics" && (
                     <>
@@ -530,6 +612,71 @@ export default function ProductDetailsPage() {
           </section>
         )}
       </div>
+
+      {/* Zoom Lightbox - view image large + all angles */}
+      {zoomLightboxOpen && product?.images?.length > 0 && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center p-4"
+          onClick={() => setZoomLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image zoom"
+        >
+          <button
+            type="button"
+            onClick={() => setZoomLightboxOpen(false)}
+            className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition z-10"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="relative w-full max-w-4xl flex-1 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => setSelectedImage((prev) => (prev <= 0 ? product.images.length - 1 : prev - 1))}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-8 h-8" />
+            </button>
+            <div className="relative w-full h-full min-h-[50vh] max-h-[85vh] flex items-center justify-center">
+              <Image
+                src={product.images[selectedImage]}
+                alt={`${product.name} - view ${selectedImage + 1}`}
+                fill
+                className="object-contain"
+                sizes="100vw"
+                unoptimized={product.images[selectedImage]?.startsWith("data:")}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setSelectedImage((prev) => (prev >= product.images.length - 1 ? 0 : prev + 1))}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition z-10"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-8 h-8" />
+            </button>
+          </div>
+          <p className="text-white/80 text-sm mt-2">
+            {selectedImage + 1} / {product.images.length}
+          </p>
+          <div className="flex gap-2 mt-4 overflow-x-auto max-w-full pb-2">
+            {product.images.map((img, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSelectedImage(i)}
+                className={`relative flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${
+                  selectedImage === i ? "border-white ring-2 ring-white/50" : "border-white/30 hover:border-white/60"
+                }`}
+              >
+                <Image src={img} alt="" fill className="object-cover" sizes="56px" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -40,7 +40,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { customerName, customerEmail, customerPhone, items, total, shippingAddress } = body;
+    const { customerName, customerEmail, customerPhone, items, total, shippingAddress, couponCode } = body;
 
     if (!customerName || !customerPhone || !items?.length || total == null) {
       return NextResponse.json(
@@ -54,6 +54,31 @@ export async function POST(request) {
 
     if (USE_MONGODB) {
       await connectDB();
+      const Order = (await import("@/lib/models/Order")).default;
+      const Coupon = (await import("@/lib/models/Coupon")).default;
+
+      if (couponCode) {
+        const code = String(couponCode).trim().toUpperCase();
+        const coupon = await Coupon.findOne({ code }).lean();
+        const email = (customerEmail || "").trim().toLowerCase();
+        if (!coupon) {
+          return NextResponse.json({ error: "Invalid coupon code" }, { status: 400 });
+        }
+        const now = new Date();
+        if (now < new Date(coupon.startDate)) {
+          return NextResponse.json({ error: "Coupon is not yet active" }, { status: 400 });
+        }
+        if (now > new Date(coupon.endDate)) {
+          return NextResponse.json({ error: "Coupon has expired" }, { status: 400 });
+        }
+        if (coupon.totalUsageLimit != null && (coupon.usageCount || 0) >= coupon.totalUsageLimit) {
+          return NextResponse.json({ error: "Coupon usage limit reached" }, { status: 400 });
+        }
+        if (coupon.allowedForCustomerEmail && email !== (coupon.allowedForCustomerEmail || "").toLowerCase()) {
+          return NextResponse.json({ error: "This coupon is not valid for your email" }, { status: 400 });
+        }
+      }
+
       const orderItems = items.map((i) => ({
         productId: i.id || i.productId,
         name: i.name,
@@ -71,7 +96,15 @@ export async function POST(request) {
         total: Number(total),
         status: "pending",
         shippingAddress: shippingAddress || "",
+        couponCode: couponCode ? String(couponCode).trim().toUpperCase() : undefined,
       });
+
+      if (couponCode) {
+        await Coupon.updateOne(
+          { code: String(couponCode).trim().toUpperCase() },
+          { $inc: { usageCount: 1 } }
+        );
+      }
 
       const o = order.toObject();
       return NextResponse.json({

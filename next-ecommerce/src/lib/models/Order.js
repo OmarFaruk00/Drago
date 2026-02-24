@@ -26,6 +26,7 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
     shippingAddress: { type: String, default: "" },
+    couponCode: { type: String, default: null },
   },
   { timestamps: true }
 );

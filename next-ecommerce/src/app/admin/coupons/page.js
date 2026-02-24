@@ -100,7 +100,12 @@ export default function AdminCouponsPage() {
                       <div className="w-8 h-8 rounded bg-red-100 flex items-center justify-center shrink-0">
                         <Tag className="w-4 h-4 text-brand" />
                       </div>
-                      <span className="font-medium text-gray-900">{c.name || c.code}</span>
+                      <div>
+                        <span className="font-medium text-gray-900">{c.name || c.code}</span>
+                        {c.allowedForCustomerEmail && (
+                          <p className="text-xs text-gray-500 mt-0.5">For: {c.allowedForCustomerEmail}</p>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-600">

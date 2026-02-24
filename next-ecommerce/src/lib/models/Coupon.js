@@ -19,6 +19,8 @@ const couponSchema = new mongoose.Schema(
     totalUsageLimit: { type: Number, default: null },
     usagePerCustomer: { type: Number, default: null },
     usageCount: { type: Number, default: 0 },
+    /** If set, only this customer (by email) can use the coupon. Use with totalUsageLimit=1 for one-time use. */
+    allowedForCustomerEmail: { type: String, default: null, lowercase: true, trim: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
   },

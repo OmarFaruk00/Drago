@@ -25,6 +25,8 @@ export default function CreateCouponPage() {
     description: "",
     totalUsageLimit: "",
     usagePerCustomer: "",
+    forSpecificCustomer: false,
+    allowedForCustomerEmail: "",
     startDate: "",
     endDate: "",
   });
@@ -43,6 +45,9 @@ export default function CreateCouponPage() {
     if (!form.endDate) e.endDate = "End date is required";
     if (form.startDate && form.endDate && new Date(form.endDate) <= new Date(form.startDate)) {
       e.endDate = "End date must be after start date";
+    }
+    if (form.forSpecificCustomer && !form.allowedForCustomerEmail?.trim()) {
+      e.allowedForCustomerEmail = "Customer email is required for customer-specific coupon";
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -64,8 +69,9 @@ export default function CreateCouponPage() {
           discountValue: form.type === "free_shipping" ? 0 : Number(form.discountValue),
           discountUnit: form.type === "percentage" ? "percent" : "amount",
           description: form.description?.trim() || "",
-          totalUsageLimit: form.totalUsageLimit ? Number(form.totalUsageLimit) : null,
-          usagePerCustomer: form.usagePerCustomer ? Number(form.usagePerCustomer) : null,
+          totalUsageLimit: form.forSpecificCustomer ? 1 : (form.totalUsageLimit ? Number(form.totalUsageLimit) : null),
+          usagePerCustomer: form.forSpecificCustomer ? 1 : (form.usagePerCustomer ? Number(form.usagePerCustomer) : null),
+          allowedForCustomerEmail: form.forSpecificCustomer && form.allowedForCustomerEmail?.trim() ? form.allowedForCustomerEmail.trim().toLowerCase() : null,
           startDate: form.startDate,
           endDate: form.endDate,
         }),
@@ -219,26 +225,62 @@ export default function CreateCouponPage() {
           {/* Usage Limits */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Usage Limits</h3>
+            <div className="mb-4 p-4 rounded-xl border-2 border-gray-200 bg-gray-50">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.forSpecificCustomer}
+                  onChange={(e) => setForm((f) => ({
+                    ...f,
+                    forSpecificCustomer: e.target.checked,
+                    totalUsageLimit: e.target.checked ? "1" : f.totalUsageLimit,
+                    usagePerCustomer: e.target.checked ? "1" : f.usagePerCustomer,
+                    allowedForCustomerEmail: e.target.checked ? f.allowedForCustomerEmail : "",
+                  }))}
+                  className="rounded border-gray-300 text-brand"
+                />
+                <span className="font-medium text-gray-900">কাস্টমার স্পেসিফিক কুপন (শুধুমাত্র এই ইমেইল একবার ব্যবহার করতে পারবে)</span>
+              </label>
+              <p className="mt-1 text-sm text-gray-600">চেক করলে এই কোড শুধু নিচের ইমেইল একবারই ব্যবহার করতে পারবে। অন্যজন ব্যবহার করতে পারবে না।</p>
+              {form.forSpecificCustomer && (
+                <div className="mt-3">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Customer Email *</label>
+                  <input
+                    type="email"
+                    value={form.allowedForCustomerEmail}
+                    onChange={(e) => setForm((f) => ({ ...f, allowedForCustomerEmail: e.target.value }))}
+                    className={`w-full max-w-md px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand ${
+                      errors.allowedForCustomerEmail ? "border-red-500" : "border-gray-300"
+                    }`}
+                    placeholder="customer@example.com"
+                  />
+                  {errors.allowedForCustomerEmail && <p className="mt-1 text-sm text-red-600">{errors.allowedForCustomerEmail}</p>}
+                </div>
+              )}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Total usage limit</label>
                 <input
                   type="number"
                   min="0"
-                  value={form.totalUsageLimit}
+                  value={form.forSpecificCustomer ? "1" : form.totalUsageLimit}
                   onChange={(e) => setForm((f) => ({ ...f, totalUsageLimit: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                  disabled={form.forSpecificCustomer}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand disabled:bg-gray-100"
                   placeholder="Leave empty for unlimited"
                 />
+                {form.forSpecificCustomer && <p className="mt-1 text-xs text-gray-500">Customer-specific coupons are one-time use only.</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Limit per customer</label>
                 <input
                   type="number"
                   min="0"
-                  value={form.usagePerCustomer}
+                  value={form.forSpecificCustomer ? "1" : form.usagePerCustomer}
                   onChange={(e) => setForm((f) => ({ ...f, usagePerCustomer: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                  disabled={form.forSpecificCustomer}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand disabled:bg-gray-100"
                   placeholder="Leave empty for unlimited"
                 />
               </div>

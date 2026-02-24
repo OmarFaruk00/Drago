@@ -40,6 +40,10 @@ export default function CheckoutPage() {
   const [thanaSuggestions, setThanaSuggestions] = useState([]);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [showThanaDropdown, setShowThanaDropdown] = useState(false);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
   const cityRef = useRef(null);
   const thanaRef = useRef(null);
 
@@ -60,9 +64,11 @@ export default function CheckoutPage() {
 
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const isInsideDhaka = (form.city || "").toLowerCase().includes("dhaka");
-  const deliveryCharge = isInsideDhaka ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
+  const deliveryChargeBase = isInsideDhaka ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
+  const deliveryCharge = appliedCoupon?.freeShipping ? 0 : deliveryChargeBase;
   const codFee = paymentMethod === "cod" ? Math.round((subtotal * deliverySettings.codPercentage) / 100) : 0;
-  const total = subtotal + deliveryCharge + codFee;
+  const discountAmount = appliedCoupon?.discount ?? 0;
+  const total = Math.max(0, subtotal - discountAmount + deliveryCharge + codFee);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   useEffect(() => {
     if (cart.length === 0 || placed) return;
@@ -98,6 +104,51 @@ export default function CheckoutPage() {
     setShowThanaDropdown(false);
   };
 
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim();
+    if (!code) {
+      setCouponError("Enter a coupon code");
+      return;
+    }
+    setCouponError("");
+    setCouponLoading(true);
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          customerEmail: form.email || "",
+          subtotal,
+        }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setAppliedCoupon({
+          code: code.toUpperCase(),
+          name: data.name,
+          discount: data.discount ?? 0,
+          freeShipping: data.freeShipping ?? false,
+        });
+        setCouponError("");
+      } else {
+        setAppliedCoupon(null);
+        setCouponError(data.message || "Invalid coupon");
+      }
+    } catch {
+      setCouponError("Could not validate coupon");
+      setAppliedCoupon(null);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponError("");
+  };
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     setError("");
@@ -124,6 +175,7 @@ export default function CheckoutPage() {
           items,
           total,
           shippingAddress,
+          couponCode: appliedCoupon?.code || undefined,
         }),
       });
       const data = await res.json();
@@ -343,8 +395,14 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
+              {appliedCoupon && appliedCoupon.discount > 0 && (
+                <div className="flex justify-between text-sm text-green-600">
+                  <span>Discount ({appliedCoupon.name})</span>
+                  <span>-{formatCurrency(appliedCoupon.discount)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm text-gray-600">
-                <span>Delivery ({form.city ? (form.city.toLowerCase().includes("dhaka") ? "Inside Dhaka" : "Outside Dhaka") : "—"})</span>
+                <span>Delivery ({form.city ? (form.city.toLowerCase().includes("dhaka") ? "Inside Dhaka" : "Outside Dhaka") : "—"}){appliedCoupon?.freeShipping && " (Free)"}</span>
                 <span>{formatCurrency(deliveryCharge)}</span>
               </div>
               {paymentMethod === "cod" && (
@@ -357,6 +415,34 @@ export default function CheckoutPage() {
                 <span>{t("cart.total")}</span>
                 <span>{formatCurrency(total)}</span>
               </div>
+            </div>
+            {/* Coupon */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between gap-2 p-2 bg-green-50 rounded-lg">
+                  <span className="text-sm text-green-800 font-medium">{appliedCoupon.name} applied</span>
+                  <button type="button" onClick={handleRemoveCoupon} className="text-sm text-green-700 hover:underline">Remove</button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponInput}
+                    onChange={(e) => { setCouponInput(e.target.value.toUpperCase()); setCouponError(""); }}
+                    placeholder="Coupon code"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading}
+                    className="px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 disabled:opacity-50"
+                  >
+                    {couponLoading ? "..." : "Apply"}
+                  </button>
+                </div>
+              )}
+              {couponError && <p className="mt-1 text-sm text-red-600">{couponError}</p>}
             </div>
             {error && <p className="text-sm text-brand mb-4">{error}</p>}
             <button

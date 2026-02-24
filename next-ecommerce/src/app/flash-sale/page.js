@@ -18,8 +18,8 @@ export default function FlashSalePage() {
 
   const countdownItems = [
     { label: "Day", value: timeLeft.days },
-    { label: "Min", value: timeLeft.min },
     { label: "Hour", value: timeLeft.hrs },
+    { label: "Min", value: timeLeft.min },
     { label: "Sec", value: timeLeft.sec },
   ];
 

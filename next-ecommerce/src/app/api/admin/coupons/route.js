@@ -58,6 +58,7 @@ export async function POST(request) {
       description,
       totalUsageLimit,
       usagePerCustomer,
+      allowedForCustomerEmail,
       startDate,
       endDate,
     } = body;
@@ -87,6 +88,7 @@ export async function POST(request) {
       description: description?.trim() || "",
       totalUsageLimit: totalUsageLimit != null ? Number(totalUsageLimit) : null,
       usagePerCustomer: usagePerCustomer != null ? Number(usagePerCustomer) : null,
+      allowedForCustomerEmail: allowedForCustomerEmail ? String(allowedForCustomerEmail).trim().toLowerCase() : null,
       startDate: start,
       endDate: end,
     };
