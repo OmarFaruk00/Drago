@@ -115,7 +115,10 @@ export async function POST(request) {
       });
     }
 
-    return NextResponse.json({ id: "mock1", status: "pending" });
+    return NextResponse.json(
+      { error: "Order placement requires database. Please set MONGODB_URI." },
+      { status: 503 }
+    );
   } catch (err) {
     console.error("Orders POST:", err);
     return NextResponse.json({ error: "Failed to create order" }, { status: 500 });

@@ -1,51 +1,5 @@
 /**
- * Mock coupons when MongoDB is not connected
+ * Coupon data when MongoDB is not connected. Empty in production.
  */
 
-export const mockCoupons = [
-  {
-    id: "cp1",
-    name: "SUMMER20",
-    code: "SUMMER20",
-    type: "percentage",
-    discountValue: 20,
-    discountUnit: "percent",
-    description: "Summer sale discount",
-    totalUsageLimit: 100,
-    usagePerCustomer: 1,
-    usageCount: 45,
-    startDate: "2024-04-01",
-    endDate: "2024-08-31",
-    status: "active",
-  },
-  {
-    id: "cp2",
-    name: "FREESHIP",
-    code: "FREESHIP",
-    type: "free_shipping",
-    discountValue: 0,
-    discountUnit: "amount",
-    description: "Free shipping on orders over 500 tk",
-    totalUsageLimit: 500,
-    usagePerCustomer: 5,
-    usageCount: 120,
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    status: "active",
-  },
-  {
-    id: "cp3",
-    name: "WELCOME10",
-    code: "WELCOME10",
-    type: "fixed",
-    discountValue: 10,
-    discountUnit: "amount",
-    description: "New customer discount",
-    totalUsageLimit: 200,
-    usagePerCustomer: 1,
-    usageCount: 200,
-    startDate: "2024-01-01",
-    endDate: "2024-03-31",
-    status: "expired",
-  },
-];
+export const mockCoupons = [];

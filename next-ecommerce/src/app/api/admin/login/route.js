@@ -8,35 +8,31 @@ export const dynamic = "force-dynamic";
 import connectDB from "@/lib/db/mongodb";
 import Admin from "@/lib/models/Admin";
 import { signToken } from "@/lib/adminJwt";
-import { mockUsers } from "@/lib/data/users";
 
 const USE_MONGODB = !!process.env.MONGODB_URI;
 
 export async function POST(request) {
   try {
+    if (!USE_MONGODB) {
+      return NextResponse.json(
+        { error: "Admin login requires database. Set MONGODB_URI." },
+        { status: 503 }
+      );
+    }
     const { email, password } = await request.json();
     if (!email || !password) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
 
     let admin = null;
-
-    if (USE_MONGODB) {
-      try {
-        const conn = await connectDB();
-        if (conn) {
-          admin = await Admin.findOne({ email: email.toLowerCase().trim() }).select("+password");
-          if (admin && !(await admin.comparePassword(password))) admin = null;
-        }
-      } catch (dbErr) {
-        console.error("Admin login DB error:", dbErr?.message || dbErr);
+    try {
+      const conn = await connectDB();
+      if (conn) {
+        admin = await Admin.findOne({ email: email.toLowerCase().trim() }).select("+password");
+        if (admin && !(await admin.comparePassword(password))) admin = null;
       }
-    }
-    if (!admin) {
-      const mockAdmin = mockUsers.find(
-        (u) => u.email.toLowerCase() === email.toLowerCase().trim() && u.password === password && u.role === "admin"
-      );
-      if (mockAdmin) admin = { id: mockAdmin.id, email: mockAdmin.email, name: mockAdmin.name };
+    } catch (dbErr) {
+      console.error("Admin login DB error:", dbErr?.message || dbErr);
     }
 
     if (!admin) {

@@ -33,26 +33,30 @@ async function seed() {
     await mongoose.connect(MONGODB_URI);
     console.log("Connected to MongoDB");
 
-    const email = "admin@store.com";
-    const password = "password123";
-    const hash = await bcrypt.hash(password, 10);
+    const email = (process.env.ADMIN_EMAIL || "admin@store.com").trim().toLowerCase();
+    const password = process.env.ADMIN_PASSWORD || "password123";
+    const name = process.env.ADMIN_NAME || "Admin User";
+    if (password.length < 6) {
+      console.error("ADMIN_PASSWORD must be at least 6 characters");
+      process.exit(1);
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const existing = await Admin.findOne({ email }).select("+password");
     if (existing) {
-      await Admin.updateOne(
-        { email },
-        { $set: { password: hash, name: "Admin User" } }
-      );
+      existing.password = hashedPassword;
+      existing.name = name;
+      await existing.save();
       console.log("Updated existing admin:", email);
     } else {
       await Admin.create({
         email,
-        password, // plain - pre-save will hash it
-        name: "Admin User",
+        password: hashedPassword,
+        name,
       });
       console.log("Created admin:", email);
     }
-    console.log("Password: password123");
+    console.log("Login at /admin with the email and password you set.");
   } catch (err) {
     console.error("Seed error:", err.message);
   } finally {

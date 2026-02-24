@@ -11,25 +11,13 @@
 import { useState } from "react";
 import { Search, Paperclip, Smile, Send } from "lucide-react";
 
-const MOCK_CONVERSATIONS = [
-  { id: "1", name: "Nick Robinson", lastMessage: "When will my order arrive?", lastTime: "3 min ago", hasUnread: false },
-  { id: "2", name: "Ananna", lastMessage: "I need help with a return", lastTime: "12 min ago", hasUnread: true },
-  { id: "3", name: "Mahmud", lastMessage: "Thanks for the quick delivery!", lastTime: "1 hour ago", hasUnread: false },
-];
-
-const MOCK_MESSAGES = [
-  { id: "m1", sender: "customer", content: "Hi, I have a question about my order", time: "2 hours ago" },
-  { id: "m2", sender: "admin", content: "Hello! How can I help you today?", time: "2 hours ago" },
-  { id: "m3", sender: "customer", content: "When will my order #12345 be delivered?", time: "1 hour ago" },
-  { id: "m4", sender: "admin", content: "Your order is out for delivery and should arrive by tomorrow.", time: "45 min ago" },
-  { id: "m5", sender: "customer", content: "Great, thank you!", time: "30 min ago" },
-  { id: "m6", sender: "admin", content: "You're welcome! Let us know if you need anything else.", time: "3 min ago" },
-];
+const CONVERSATIONS = [];
+const INITIAL_MESSAGES = [];
 
 export default function AdminInboxPage() {
-  const [selected, setSelected] = useState(MOCK_CONVERSATIONS[0]);
+  const [selected, setSelected] = useState(CONVERSATIONS[0] ?? null);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState(MOCK_MESSAGES);
+  const [messages, setMessages] = useState(INITIAL_MESSAGES);
 
   function handleSend(e) {
     e.preventDefault();
@@ -56,7 +44,10 @@ export default function AdminInboxPage() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {MOCK_CONVERSATIONS.map((c) => (
+          {CONVERSATIONS.length === 0 && (
+            <div className="p-4 text-center text-gray-500 text-sm">No conversations yet</div>
+          )}
+          {CONVERSATIONS.map((c) => (
             <button
               key={c.id}
               onClick={() => setSelected(c)}
@@ -84,6 +75,9 @@ export default function AdminInboxPage() {
 
       {/* Right - Chat panel */}
       <div className="flex-1 flex flex-col min-w-0 bg-white">
+        {!selected && (
+          <div className="flex-1 flex items-center justify-center text-gray-500">Select a conversation or wait for new messages</div>
+        )}
         {selected && (
           <>
             <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">

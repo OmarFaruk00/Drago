@@ -1,7 +1,7 @@
 /**
- * Seed Coupons for MongoDB
+ * Seed Coupons - MongoDB এ কুপন ঢুকাতে
  * Run: npm run seed:coupons
- * Loads MONGODB_URI from .env.local
+ * .env.local এ MONGODB_URI থাকতে হবে
  */
 
 import { config } from "dotenv";
@@ -15,6 +15,13 @@ import mongoose from "mongoose";
 import { mockCoupons } from "../src/lib/data/coupons.js";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/drago-store";
+
+const now = new Date();
+const nextYear = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+const sampleCoupons = [
+  { name: "WELCOME10", code: "WELCOME10", type: "fixed", discountValue: 10, discountUnit: "amount", description: "New customer 10 tk off", totalUsageLimit: 100, usagePerCustomer: 1, usageCount: 0, startDate: now, endDate: nextYear },
+  { name: "FREESHIP", code: "FREESHIP", type: "free_shipping", discountValue: 0, discountUnit: "amount", description: "Free delivery", totalUsageLimit: 500, usagePerCustomer: 5, usageCount: 0, startDate: now, endDate: nextYear },
+];
 
 const couponSchema = new mongoose.Schema(
   {
@@ -40,10 +47,11 @@ async function seed() {
     await mongoose.connect(MONGODB_URI);
     console.log("Connected to MongoDB");
 
-    const data = mockCoupons.map(({ id, status, ...c }) => ({
+    const raw = mockCoupons.length > 0 ? mockCoupons : sampleCoupons;
+    const data = raw.map(({ id, status, ...c }) => ({
       ...c,
-      startDate: new Date(c.startDate),
-      endDate: new Date(c.endDate),
+      startDate: c.startDate instanceof Date ? c.startDate : new Date(c.startDate),
+      endDate: c.endDate instanceof Date ? c.endDate : new Date(c.endDate),
     }));
     await Coupon.deleteMany({});
     await Coupon.insertMany(data);

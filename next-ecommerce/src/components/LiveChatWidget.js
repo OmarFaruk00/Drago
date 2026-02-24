@@ -52,16 +52,16 @@ export default function LiveChatWidget() {
         <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg ring-2 ring-brand/20 hover:scale-105 hover:shadow-xl hover:ring-brand/40 transition-all duration-200"
+        className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg ring-2 ring-brand/20 hover:scale-105 hover:shadow-xl hover:ring-brand/40 transition-all duration-200"
         aria-label="Open live chat"
       >
         {!imgError ? (
           <Image
             src={CHAT_ICON_SRC}
             alt="Drago Live Chat"
-            width={64}
-            height={64}
-            className="h-12 w-12 object-contain rounded-full"
+            width={80}
+            height={80}
+            className="h-16 w-16 object-contain rounded-full"
             onError={() => setImgError(true)}
           />
         ) : (

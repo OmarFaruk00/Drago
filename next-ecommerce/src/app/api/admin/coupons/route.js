@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Coupon from "@/lib/models/Coupon";
 import { requireAdmin } from "@/lib/adminAuth";
-import { mockCoupons } from "@/lib/data/coupons";
 import { USE_MONGODB } from "@/lib/config";
 
 function getStatus(coupon) {
@@ -22,20 +21,17 @@ export async function GET(request) {
   const auth = await requireAdmin();
   if (auth.error) return auth.error;
 
+  if (!USE_MONGODB) return NextResponse.json([]);
+
   try {
-    if (USE_MONGODB) {
-      await connectDB();
-      const list = await Coupon.find().sort({ createdAt: -1 }).lean();
-      return NextResponse.json(
-        list.map((c) => {
-          const doc = { ...c, id: c._id?.toString(), _id: undefined, __v: undefined };
-          doc.status = getStatus(doc);
-          return doc;
-        })
-      );
-    }
+    await connectDB();
+    const list = await Coupon.find().sort({ createdAt: -1 }).lean();
     return NextResponse.json(
-      mockCoupons.map((c) => ({ ...c, status: getStatus(c) }))
+      list.map((c) => {
+        const doc = { ...c, id: c._id?.toString(), _id: undefined, __v: undefined };
+        doc.status = getStatus(doc);
+        return doc;
+      })
     );
   } catch (err) {
     console.error("Coupons GET:", err);
@@ -93,36 +89,26 @@ export async function POST(request) {
       endDate: end,
     };
 
-    if (USE_MONGODB) {
-      await connectDB();
-      const exists = await Coupon.findOne({ code: payload.code });
-      if (exists) {
-        return NextResponse.json({ error: "Coupon code already exists" }, { status: 400 });
-      }
-      const coupon = await Coupon.create(payload);
-      const doc = coupon.toObject();
-      return NextResponse.json({
-        ...doc,
-        id: doc._id?.toString(),
-        _id: undefined,
-        __v: undefined,
-        status: getStatus(doc),
-      });
+    if (!USE_MONGODB) {
+      return NextResponse.json(
+        { error: "Database required to manage coupons." },
+        { status: 503 }
+      );
     }
-
-    if (mockCoupons.some((c) => c.code === payload.code)) {
+    await connectDB();
+    const exists = await Coupon.findOne({ code: payload.code });
+    if (exists) {
       return NextResponse.json({ error: "Coupon code already exists" }, { status: 400 });
     }
-    const newC = {
-      id: `cp${Date.now()}`,
-      ...payload,
-      usageCount: 0,
-      startDate: payload.startDate.toISOString().split("T")[0],
-      endDate: payload.endDate.toISOString().split("T")[0],
-      status: getStatus(payload),
-    };
-    mockCoupons.push(newC);
-    return NextResponse.json(newC);
+    const coupon = await Coupon.create(payload);
+    const doc = coupon.toObject();
+    return NextResponse.json({
+      ...doc,
+      id: doc._id?.toString(),
+      _id: undefined,
+      __v: undefined,
+      status: getStatus(doc),
+    });
   } catch (err) {
     console.error("Coupons POST:", err);
     return NextResponse.json({ error: "Failed to create coupon" }, { status: 500 });

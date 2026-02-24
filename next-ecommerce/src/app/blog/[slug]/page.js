@@ -20,13 +20,20 @@ export default function BlogDetailsPage() {
 
   useEffect(() => {
     const found = blogPosts.find((p) => p.slug === params.slug);
-    setPost(found || blogPosts[0]);
+    setPost(found ?? null);
   }, [params.slug]);
 
-  if (!post)
+  if (post === undefined)
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
         Loading...
+      </div>
+    );
+  if (!post)
+    return (
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
+        <p className="text-gray-600">Post not found.</p>
+        <Link href="/blog" className="mt-2 inline-block text-brand hover:underline">← Back to Blog</Link>
       </div>
     );
 

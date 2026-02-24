@@ -7,7 +7,6 @@ import mongoose from "mongoose";
 import connectDB from "@/lib/db/mongodb";
 import Coupon from "@/lib/models/Coupon";
 import { requireAdmin } from "@/lib/adminAuth";
-import { mockCoupons } from "@/lib/data/coupons";
 import { USE_MONGODB } from "@/lib/config";
 
 function getStatus(coupon) {
@@ -24,18 +23,14 @@ export async function GET(request, { params }) {
   if (auth.error) return auth.error;
 
   const id = params.id;
+  if (!USE_MONGODB) return NextResponse.json({ error: "Not found" }, { status: 404 });
   try {
-    if (USE_MONGODB) {
-      await connectDB();
-      const coupon = await Coupon.findById(id).lean();
-      if (!coupon) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
-      const doc = { ...coupon, id: coupon._id?.toString(), _id: undefined, __v: undefined };
-      doc.status = getStatus(doc);
-      return NextResponse.json(doc);
-    }
-    const c = mockCoupons.find((x) => x.id === id);
-    if (!c) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
-    return NextResponse.json({ ...c, status: getStatus(c) });
+    await connectDB();
+    const coupon = await Coupon.findById(id).lean();
+    if (!coupon) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
+    const doc = { ...coupon, id: coupon._id?.toString(), _id: undefined, __v: undefined };
+    doc.status = getStatus(doc);
+    return NextResponse.json(doc);
   } catch (err) {
     console.error("Coupon GET:", err);
     return NextResponse.json({ error: "Failed to fetch coupon" }, { status: 500 });
@@ -50,23 +45,19 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
 
-    if (USE_MONGODB) {
-      await connectDB();
-      const update = { ...body };
-      delete update._id;
-      delete update.id;
-      delete update.usageCount;
-      const coupon = await Coupon.findByIdAndUpdate(id, update, { new: true }).lean();
-      if (!coupon) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
-      const doc = { ...coupon, id: coupon._id?.toString(), _id: undefined, __v: undefined };
-      doc.status = getStatus(doc);
-      return NextResponse.json(doc);
+    if (!USE_MONGODB) {
+      return NextResponse.json({ error: "Database required." }, { status: 503 });
     }
-
-    const idx = mockCoupons.findIndex((c) => c.id === id);
-    if (idx < 0) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
-    Object.assign(mockCoupons[idx], body);
-    return NextResponse.json({ ...mockCoupons[idx], status: getStatus(mockCoupons[idx]) });
+    await connectDB();
+    const update = { ...body };
+    delete update._id;
+    delete update.id;
+    delete update.usageCount;
+    const coupon = await Coupon.findByIdAndUpdate(id, update, { new: true }).lean();
+    if (!coupon) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
+    const doc = { ...coupon, id: coupon._id?.toString(), _id: undefined, __v: undefined };
+    doc.status = getStatus(doc);
+    return NextResponse.json(doc);
   } catch (err) {
     console.error("Coupon PUT:", err);
     return NextResponse.json({ error: "Failed to update coupon" }, { status: 500 });
@@ -79,19 +70,15 @@ export async function DELETE(request, { params }) {
 
   const id = params.id;
   try {
-    if (USE_MONGODB) {
-      await connectDB();
-      if (!mongoose.Types.ObjectId.isValid(id)) {
-        return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-      }
-      const coupon = await Coupon.findByIdAndDelete(id);
-      if (!coupon) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
-      return NextResponse.json({ success: true });
+    if (!USE_MONGODB) {
+      return NextResponse.json({ error: "Database required." }, { status: 503 });
     }
-
-    const idx = mockCoupons.findIndex((c) => c.id === id);
-    if (idx < 0) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
-    mockCoupons.splice(idx, 1);
+    await connectDB();
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+    const coupon = await Coupon.findByIdAndDelete(id);
+    if (!coupon) return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Coupon DELETE:", err);

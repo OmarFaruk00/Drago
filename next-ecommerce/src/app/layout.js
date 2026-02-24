@@ -1,14 +1,13 @@
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import StoreShell from "@/components/StoreShell";
 import Providers from "@/components/Providers";
 import FacebookPixelProvider from "@/components/tracking/FacebookPixelProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const geistSans = Inter({
+  subsets: ["latin"],
   variable: "--font-geist-sans",
-  weight: "100 900",
 });
 
 const fbPixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;

@@ -19,6 +19,9 @@ export default function WishlistPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{t("dashboard.wishlist")}</h1>
+      {wishlistItems.length === 0 ? (
+        <p className="text-gray-500">No items in wishlist yet.</p>
+      ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {wishlistItems.map((product) => (
           <div
@@ -43,6 +46,7 @@ export default function WishlistPage() {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

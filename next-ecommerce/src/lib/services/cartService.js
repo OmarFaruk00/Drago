@@ -18,9 +18,7 @@ import connectDB from "@/lib/db/mongodb";
  * @returns {Promise<Object>} { items, subtotal }
  */
 export async function getCart(options = {}) {
-  if (!USE_MONGODB) {
-    return getCartFromDummy(options);
-  }
+  if (!USE_MONGODB) return { items: [], subtotal: 0 };
   return getCartFromMongo(options);
 }
 
@@ -30,9 +28,7 @@ export async function getCart(options = {}) {
  * @param {Object} item - { productId, name, price, image, quantity }
  */
 export async function addToCart(options, item) {
-  if (!USE_MONGODB) {
-    return addToCartFromDummy(options, item);
-  }
+  if (!USE_MONGODB) return { success: true, items: [], subtotal: 0 };
   return addToCartFromMongo(options, item);
 }
 
@@ -40,9 +36,7 @@ export async function addToCart(options, item) {
  * Remove item from cart
  */
 export async function removeFromCart(options, productId) {
-  if (!USE_MONGODB) {
-    return removeFromCartFromDummy(options, productId);
-  }
+  if (!USE_MONGODB) return { success: true };
   return removeFromCartFromMongo(options, productId);
 }
 
@@ -56,23 +50,10 @@ export async function clearCart(options) {
   return clearCartFromMongo(options);
 }
 
-// --- Dummy: Cart is client-side only, return empty ---
-function getCartFromDummy() {
-  return { items: [], subtotal: 0, message: "Cart stored client-side (Zustand)" };
-}
-
-function addToCartFromDummy() {
-  return { success: true, message: "Use client store" };
-}
-
-function removeFromCartFromDummy() {
-  return { success: true };
-}
-
 // --- MongoDB implementation ---
 async function getCartFromMongo(options) {
   const conn = await connectDB();
-  if (!conn) return getCartFromDummy();
+  if (!conn) return { items: [], subtotal: 0 };
 
   const Cart = (await import("@/lib/models/Cart")).default;
   const mongoose = await import("mongoose");
@@ -80,7 +61,7 @@ async function getCartFromMongo(options) {
   const query = {};
   if (options.userId) query.userId = new mongoose.Types.ObjectId(options.userId);
   else if (options.sessionId) query.sessionId = options.sessionId;
-  else return getCartFromDummy();
+  else return { items: [], subtotal: 0 };
 
   let cart = await Cart.findOne(query).populate("items.product", "name price image").lean();
   if (!cart) {
@@ -101,7 +82,7 @@ async function getCartFromMongo(options) {
 
 async function addToCartFromMongo(options, item) {
   const conn = await connectDB();
-  if (!conn) return addToCartFromDummy(options, item);
+  if (!conn) return { success: true, items: [], subtotal: 0 };
 
   const Cart = (await import("@/lib/models/Cart")).default;
   const mongoose = await import("mongoose");

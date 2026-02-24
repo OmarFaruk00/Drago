@@ -38,7 +38,11 @@ export default function ShopPage() {
         </button>
       </div>
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        {shopProducts.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">No products yet. Add products from admin or connect your store.</div>
+        ) : (
         <DashboardTable columns={columns} rows={shopProducts} />
+        )}
       </div>
     </div>
   );
