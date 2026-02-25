@@ -63,6 +63,10 @@ export default function HomePage() {
   const [products, setProducts] = useState(staticProducts);
   const [shuffledProducts, setShuffledProducts] = useState(staticProducts);
   const [shuffledCategories, setShuffledCategories] = useState(categories);
+  const [sectionProducts, setSectionProducts] = useState({
+    topProducts: [],
+    exploreProducts: [],
+  });
 
   useEffect(() => {
     setShuffledCategories(shuffleArray([...categories]));
@@ -94,13 +98,32 @@ export default function HomePage() {
   }, [useDummyProducts]);
 
   useEffect(() => {
+    if (useDummyProducts) return;
+    let isActive = true;
+    fetch("/api/home/sections")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isActive || !data) return;
+        if (Array.isArray(data.topProducts) && Array.isArray(data.exploreProducts)) {
+          setSectionProducts({
+            topProducts: data.topProducts,
+            exploreProducts: data.exploreProducts,
+          });
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isActive = false;
+    };
+  }, [useDummyProducts]);
+
+  useEffect(() => {
     if (products.length) {
       setShuffledProducts(shuffleArray(products));
     }
   }, [products]);
 
   const productPool = shuffledProducts.length ? shuffledProducts : products;
-
   const buildSegment = (start, count) => {
     if (!productPool.length) return [];
     const segment = [];
@@ -111,8 +134,15 @@ export default function HomePage() {
     return segment;
   };
 
-  const topProductsSegment = buildSegment(0, 12);
-  const exploreProductsSegment = buildSegment(12, 12);
+  const useSectionData =
+    !useDummyProducts &&
+    (sectionProducts.topProducts.length > 0 || sectionProducts.exploreProducts.length > 0);
+  const topProductsSegment = useSectionData
+    ? sectionProducts.topProducts
+    : buildSegment(0, 12);
+  const exploreProductsSegment = useSectionData
+    ? sectionProducts.exploreProducts
+    : buildSegment(12, 12);
 
   const topRowOne = topProductsSegment.slice(0, 6);
   const topRowTwo = topProductsSegment.slice(6, 12);

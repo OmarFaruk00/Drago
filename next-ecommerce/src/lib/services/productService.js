@@ -76,3 +76,19 @@ function toApiProduct(doc) {
     __v: undefined,
   };
 }
+
+/** Get products by IDs, returned in the same order as idList (missing IDs skipped). */
+export async function getProductsByIds(idList) {
+  if (!USE_MONGODB || !Array.isArray(idList) || idList.length === 0) return [];
+  const conn = await connectDB();
+  if (!conn) return [];
+
+  const mongoose = await import("mongoose");
+  const Product = (await import("@/lib/models/Product")).default;
+  const validIds = idList.filter((id) => mongoose.Types.ObjectId.isValid(id));
+  if (validIds.length === 0) return [];
+
+  const docs = await Product.find({ _id: { $in: validIds } }).lean();
+  const byId = Object.fromEntries(docs.map((d) => [d._id.toString(), d]));
+  return validIds.map((id) => byId[id]).filter(Boolean).map(toApiProduct).map(normalizeProduct);
+}
