@@ -82,7 +82,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 overflow-visible">
       {/* Top bar - Red background, white elements */}
       <div className="bg-brand overflow-visible">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
           <div className="flex items-center justify-between h-14 gap-4 overflow-visible">
             {/* Logo - max size, overflow-visible so it stands out; on mobile, shifted right */}
             <Link href="/" className="flex-shrink-0 flex items-center h-full p-0 m-0 overflow-visible md:ml-0 ml-4">
@@ -276,42 +276,42 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Secondary nav - White bg, dark text */}
-      <div className="hidden md:block bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-4 py-2 items-center">
-            <Link href="/" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.home")}</Link>
-            <Link href="/products" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.products")}</Link>
-            <Link href="/about" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.about")}</Link>
-            <Link href="/blog" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.blog")}</Link>
-            <Link href="/contact" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.contact")}</Link>
+      {/* Secondary nav - White bg, dark text. Home same hover as others. */}
+      <div className="nav-secondary-bar hidden md:block bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-8 py-2.5 items-center">
+            <Link href="/" className="nav-link text-sm font-medium"><span>{t("nav.home")}</span></Link>
+            <Link href="/products" className="nav-link text-sm font-medium"><span>{t("nav.products")}</span></Link>
+            <Link href="/about" className="nav-link text-sm font-medium"><span>{t("nav.about")}</span></Link>
+            <Link href="/blog" className="nav-link text-sm font-medium"><span>{t("nav.blog")}</span></Link>
+            <Link href="/contact" className="nav-link text-sm font-medium"><span>{t("nav.contact")}</span></Link>
             {!user && (
               <>
-                <Link href="/login" className="text-gray-700 hover:text-brand text-sm font-medium transition">{t("nav.login")}</Link>
-                <Link href="/register" className="px-3 py-1.5 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark transition">{t("nav.signUp")}</Link>
+                <Link href="/login" className="nav-link text-sm font-medium"><span>{t("nav.login")}</span></Link>
+                <Link href="/register" className="px-3 py-1.5 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark transition-colors duration-200">{t("nav.signUp")}</Link>
               </>
             )}
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - same hover color for all links */}
       {mobileOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 shadow-lg">
           <div className="px-4 py-3 flex flex-col gap-1">
-            <Link href="/" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.home")}</Link>
-            <Link href="/products" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.products")}</Link>
-            <Link href="/about" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.about")}</Link>
-            <Link href="/blog" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.blog")}</Link>
-            <Link href="/contact" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.contact")}</Link>
+            <Link href="/" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.home")}</Link>
+            <Link href="/products" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.products")}</Link>
+            <Link href="/about" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.about")}</Link>
+            <Link href="/blog" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.blog")}</Link>
+            <Link href="/contact" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.contact")}</Link>
             {!user && (
               <>
-                <Link href="/login" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.login")}</Link>
-                <Link href="/register" onClick={() => setMobileOpen(false)} className="py-2 text-brand font-medium">{t("nav.signUp")}</Link>
+                <Link href="/login" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.login")}</Link>
+                <Link href="/register" onClick={() => setMobileOpen(false)} className="py-2 text-brand font-medium hover:text-brand-dark transition-colors">{t("nav.signUp")}</Link>
               </>
             )}
-            <Link href="/account/wishlist" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">Favorite ({wishlistCount})</Link>
-            <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700">{t("nav.cart")} ({cartCount})</Link>
+            <Link href="/account/wishlist" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">Favorite ({wishlistCount})</Link>
+            <Link href="/cart" onClick={() => setMobileOpen(false)} className="py-2 text-gray-700 hover:text-brand transition-colors">{t("nav.cart")} ({cartCount})</Link>
           </div>
         </div>
       )}

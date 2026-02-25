@@ -19,6 +19,28 @@ html {
   overflow-anchor: none;
 }
 
+/* Navbar secondary links: default gray, hover red, hand cursor */
+.nav-secondary-bar a.nav-link {
+  cursor: pointer;
+  color: #374151 !important; /* gray-700 */
+  transition: color 0.2s ease;
+}
+.nav-secondary-bar a.nav-link:hover,
+.nav-secondary-bar a.nav-link:focus,
+.nav-secondary-bar a[href="/"]:hover,
+.nav-secondary-bar a[href="/"]:focus {
+  color: #FF1A0A !important; /* brand red */
+}
+/* Force Home (and all nav links) hover - override any active/current styles */
+nav .nav-secondary-bar .nav-link:hover {
+  color: #FF1A0A !important;
+}
+/* Hover on link: color both anchor and inner span (fixes Home when on current page) */
+.nav-secondary-bar a.nav-link:hover,
+.nav-secondary-bar a.nav-link:hover span {
+  color: #FF1A0A !important;
+}
+
 /* Line clamp utility for product names */
 @layer utilities {
   .line-clamp-2 {
