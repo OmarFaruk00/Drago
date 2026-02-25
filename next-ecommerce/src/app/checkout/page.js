@@ -21,6 +21,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [deliveryArea, setDeliveryArea] = useState("inside"); // "inside" | "outside" - Inside Dhaka / Outside Dhaka
   const [deliverySettings, setDeliverySettings] = useState({
     deliveryInsideDhaka: 60,
     deliveryOutsideDhaka: 120,
@@ -31,9 +32,9 @@ export default function CheckoutPage() {
     email: user?.email || "",
     phone: user?.phone || "",
     address: "",
-    addressNote: "",
     city: "",
     thana: "",
+    addressNote: "",
     country: "Bangladesh",
   });
   const [citySuggestions, setCitySuggestions] = useState([]);
@@ -63,8 +64,7 @@ export default function CheckoutPage() {
   }, []);
 
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const isInsideDhaka = (form.city || "").toLowerCase().includes("dhaka");
-  const deliveryChargeBase = isInsideDhaka ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
+  const deliveryChargeBase = deliveryArea === "inside" ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
   const deliveryCharge = appliedCoupon?.freeShipping ? 0 : deliveryChargeBase;
   const codFee = paymentMethod === "cod" ? Math.round((subtotal * deliverySettings.codPercentage) / 100) : 0;
   const discountAmount = appliedCoupon?.discount ?? 0;
@@ -237,119 +237,138 @@ export default function CheckoutPage() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{t("checkout.title")}</h1>
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Shipping form */}
+        {/* Shipping form - সিরিয়াল: 1.Full name 2.Mobile 3.Address 4.City 5.Thana(Optional) 6.Note 7.Inside/Outside Dhaka 8.Payment */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-semibold text-gray-900 mb-4">Shipping Information</h2>
           <div className="space-y-4">
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              value={form.fullName}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email (optional)"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Mobile Number *"
-              value={form.phone}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-            />
-            <input
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={form.address}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-            />
+            {/* 1. Full name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Full Name"
+                value={form.fullName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+              />
+            </div>
+            {/* 2. Mobile Number */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number *</label>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="01XXXXXXXXX"
+                value={form.phone}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+              />
+            </div>
+            <input type="hidden" name="email" value={form.email} />
+            {/* 3. Address */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+              <input
+                type="text"
+                name="address"
+                placeholder="House / Road / Area"
+                value={form.address}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+              />
+            </div>
+            {/* 4. City */}
             <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+              <input
+                type="text"
+                name="city"
+                placeholder="City"
+                value={form.city}
+                onChange={handleChange}
+                onFocus={() => setShowCityDropdown(true)}
+                onBlur={() => setTimeout(() => setShowCityDropdown(false), 200)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+              />
+              {showCityDropdown && citySuggestions.length > 0 && (
+                <ul ref={cityRef} className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {citySuggestions.map((c) => (
+                    <li key={c} onClick={() => selectCity(c)} className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* 5. Thana (Optional) */}
+            <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Thana (Optional)</label>
+              <input
+                type="text"
+                name="thana"
+                placeholder="Thana"
+                value={form.thana}
+                onChange={handleChange}
+                onFocus={() => form.city && setShowThanaDropdown(true)}
+                onBlur={() => setTimeout(() => setShowThanaDropdown(false), 200)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+              />
+              {showThanaDropdown && thanaSuggestions.length > 0 && (
+                <ul ref={thanaRef} className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {thanaSuggestions.map((t) => (
+                    <li key={t} onClick={() => selectThana(t)} className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* 6. Note */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
               <textarea
                 name="addressNote"
-                placeholder="Full address details (optional)"
+                placeholder="Additional note for delivery (e.g. landmark, floor)"
                 value={form.addressNote}
                 onChange={handleChange}
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand resize-none"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  value={form.city}
-                  onChange={handleChange}
-                  onFocus={() => setShowCityDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowCityDropdown(false), 200)}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                />
-                {showCityDropdown && citySuggestions.length > 0 && (
-                  <ul ref={cityRef} className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                    {citySuggestions.map((c) => (
-                      <li
-                        key={c}
-                        onClick={() => selectCity(c)}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                      >
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="thana"
-                  placeholder="Thana"
-                  value={form.thana}
-                  onChange={handleChange}
-                  onFocus={() => form.city && setShowThanaDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowThanaDropdown(false), 200)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-                />
-                {showThanaDropdown && thanaSuggestions.length > 0 && (
-                  <ul ref={thanaRef} className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                    {thanaSuggestions.map((t) => (
-                      <li
-                        key={t}
-                        onClick={() => selectThana(t)}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                      >
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            {/* 7. Inside Dhaka / Outside Dhaka */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Area *</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="deliveryArea"
+                    checked={deliveryArea === "inside"}
+                    onChange={() => setDeliveryArea("inside")}
+                    className="text-brand"
+                  />
+                  <span>Inside Dhaka</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="deliveryArea"
+                    checked={deliveryArea === "outside"}
+                    onChange={() => setDeliveryArea("outside")}
+                    className="text-brand"
+                  />
+                  <span>Outside Dhaka</span>
+                </label>
               </div>
             </div>
-            <input
-              type="text"
-              name="country"
-              placeholder="Country"
-              value={form.country}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
-            />
+            {/* 8. Payment Method */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method *</label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -402,7 +421,7 @@ export default function CheckoutPage() {
                 </div>
               )}
               <div className="flex justify-between text-sm text-gray-600">
-                <span>Delivery ({form.city ? (form.city.toLowerCase().includes("dhaka") ? "Inside Dhaka" : "Outside Dhaka") : "—"}){appliedCoupon?.freeShipping && " (Free)"}</span>
+                <span>Delivery ({deliveryArea === "inside" ? "Inside Dhaka" : "Outside Dhaka"}){appliedCoupon?.freeShipping && " (Free)"}</span>
                 <span>{formatCurrency(deliveryCharge)}</span>
               </div>
               {paymentMethod === "cod" && (
