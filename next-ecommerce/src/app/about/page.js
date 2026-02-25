@@ -1,148 +1,123 @@
 "use client";
 
 /**
- * About Page - Our Mission, Why Choose Us, Terms, Contact Info, Team
- * Design: Sections with heading, text, image alternation
+ * About Page - Content from API (admin-editable)
  */
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function AboutPage() {
-  const team = [
-    { name: "Jenny Wilson", role: "CEO", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" },
-    { name: "David Cooper", role: "CTO", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
-    { name: "Jessica Miller", role: "Head of Sales", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" },
-  ];
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/pages/about")
+      .then((r) => r.json())
+      .then(setData)
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="py-8 flex items-center justify-center min-h-[300px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand" />
+      </div>
+    );
+  }
+
+  const d = data || {};
+  const team = Array.isArray(d.team) ? d.team : [];
+  const whyChooseItems = Array.isArray(d.whyChooseItems) ? d.whyChooseItems : [];
 
   return (
     <div className="py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
         <section className="space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Our Mission & Vision</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{d.missionTitle || "Our Mission & Vision"}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
-              <p className="text-gray-600 mb-4">
-                At Drago, our mission is to provide high-quality electronics and products to customers across Bangladesh
-                at competitive prices. We believe in making premium products accessible to everyone.
-              </p>
-              <p className="text-gray-600">
-                Our vision is to become the most trusted e-commerce platform in the region, known for exceptional
-                customer service, genuine products, and seamless shopping experience.
-              </p>
+              <p className="text-gray-600 mb-4">{d.missionText || ""}</p>
+              <p className="text-gray-600">{d.visionText || ""}</p>
             </div>
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
-              <Image
-                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=450&fit=crop"
-                alt="Mission"
-                fill
-                className="object-cover"
-              />
-            </div>
+            {d.missionImage && (
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+                <Image src={d.missionImage} alt="Mission" fill className="object-cover" />
+              </div>
+            )}
           </div>
         </section>
 
         <section className="space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Why Choose Us</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{d.whyChooseTitle || "Why Choose Us"}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 order-2 lg:order-1">
-              <Image
-                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=450&fit=crop"
-                alt="Why Choose Us"
-                fill
-                className="object-cover"
-              />
-            </div>
+            {d.whyChooseImage && (
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 order-2 lg:order-1">
+                <Image src={d.whyChooseImage} alt="Why Choose Us" fill className="object-cover" />
+              </div>
+            )}
             <div className="order-1 lg:order-2">
               <ul className="space-y-4 text-gray-600">
-                <li className="flex gap-3">
-                  <span className="text-brand font-bold">•</span>
-                  <span>100% genuine products with warranty</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-brand font-bold">•</span>
-                  <span>Fast delivery across Bangladesh</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-brand font-bold">•</span>
-                  <span>24/7 customer support</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-brand font-bold">•</span>
-                  <span>Easy returns and refunds</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-brand font-bold">•</span>
-                  <span>Secure payment options</span>
-                </li>
+                {whyChooseItems.map((item, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="text-brand font-bold">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </section>
 
         <section className="space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Terms & Conditions</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{d.termsTitle || "Terms & Conditions"}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
-              <p className="text-gray-600 mb-4">
-                By using our website, you agree to our terms of service. All products are subject to availability.
-                We reserve the right to modify prices and policies without prior notice.
-              </p>
-              <p className="text-gray-600">
-                Please read our full terms and conditions, privacy policy, and refund policy before making a purchase.
-              </p>
+              <p className="text-gray-600 whitespace-pre-wrap">{d.termsText || ""}</p>
             </div>
-            <div className="relative aspect-square max-w-xs rounded-xl overflow-hidden bg-gray-100">
-              <Image
-                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=400&fit=crop"
-                alt="Terms"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Contact Information</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <p className="text-gray-600 mb-4">123 Main Street, Dhaka, Bangladesh</p>
-              <p className="text-gray-600 mb-4">Phone: +880 1XXX-XXXXXX</p>
-              <p className="text-gray-600 mb-4">Email: support@drago.com</p>
-            </div>
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
-              <Image
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=450&fit=crop"
-                alt="Contact"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
-            Our Awesome Team
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            {team.map((member) => (
-              <div key={member.name} className="text-center">
-                <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-100 mb-4">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    width={128}
-                    height={128}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                <p className="text-gray-500 text-sm">{member.role}</p>
+            {d.termsImage && (
+              <div className="relative aspect-square max-w-xs rounded-xl overflow-hidden bg-gray-100">
+                <Image src={d.termsImage} alt="Terms" fill className="object-cover" />
               </div>
-            ))}
+            )}
           </div>
         </section>
+
+        <section className="space-y-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{d.contactTitle || "Contact Information"}</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <p className="text-gray-600 mb-4">{d.contactAddress}</p>
+              <p className="text-gray-600 mb-4">Phone: {d.contactPhone}</p>
+              <p className="text-gray-600 mb-4">Email: {d.contactEmail}</p>
+            </div>
+            {d.contactImage && (
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+                <Image src={d.contactImage} alt="Contact" fill className="object-cover" />
+              </div>
+            )}
+          </div>
+        </section>
+
+        {team.length > 0 && (
+          <section className="space-y-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">{d.teamTitle || "Our Team"}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+              {team.map((member, i) => (
+                <div key={i} className="text-center">
+                  {member.image && (
+                    <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-100 mb-4">
+                      <Image src={member.image} alt={member.name || ""} width={128} height={128} className="object-cover w-full h-full" />
+                    </div>
+                  )}
+                  <h3 className="font-semibold text-gray-900">{member.name}</h3>
+                  <p className="text-gray-500 text-sm">{member.role}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

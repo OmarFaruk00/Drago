@@ -1,57 +1,28 @@
 "use client";
 
 /**
- * BlogSidebar - Top Categories, Popular Tags, Recent Posts, Ad banner
+ * BlogSidebar - Recent Posts (from API), optional categories/tags, Ad banner
  */
 
 import Link from "next/link";
 import Image from "next/image";
-import { topCategories, popularTags, blogPosts } from "@/lib/data/blog";
 
-export default function BlogSidebar({ recentPosts = blogPosts }) {
+export default function BlogSidebar({ recentPosts = [] }) {
   return (
     <aside className="space-y-8">
-      {/* Top Categories */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">Top Categories</h3>
-        <ul className="space-y-1">
-          {topCategories.map((c) => (
-            <li key={c.name}>
-              <Link href={`/products?category=${c.name}`} className="text-gray-600 hover:text-brand text-sm">
-                {c.name} ({c.count})
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Popular Tags */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-3">Popular Tag</h3>
-        <div className="flex flex-wrap gap-2">
-          {popularTags.map((tag, i) => (
-            <Link
-              key={tag}
-              href={`/blog?tag=${tag}`}
-              className={`px-3 py-1 text-xs rounded border transition ${
-                i < 2 ? "border-brand bg-red-50 text-brand" : "border-gray-200 text-gray-600 hover:border-red-300"
-              }`}
-            >
-              {tag}
-            </Link>
-          ))}
-        </div>
-      </div>
-
       {/* Recent Posts */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-3">Recent Posts</h3>
         <ul className="space-y-3">
-          {recentPosts.slice(0, 3).map((p) => (
-            <li key={p.id}>
+          {recentPosts.slice(0, 5).map((p) => (
+            <li key={p.id || p.slug}>
               <Link href={`/blog/${p.slug}`} className="flex gap-3 group">
                 <div className="relative w-16 h-16 flex-shrink-0 rounded overflow-hidden bg-gray-100">
-                  <Image src={p.image} alt="" fill className="object-cover group-hover:scale-105" sizes="64px" />
+                  {p.image ? (
+                    <Image src={p.image} alt="" fill className="object-cover group-hover:scale-105" sizes="64px" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">—</div>
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm text-gray-800 line-clamp-2 group-hover:text-brand">{p.title}</p>
@@ -61,6 +32,7 @@ export default function BlogSidebar({ recentPosts = blogPosts }) {
             </li>
           ))}
         </ul>
+        {recentPosts.length === 0 && <p className="text-sm text-gray-500">No posts yet.</p>}
       </div>
 
       {/* Ad Banner */}

@@ -6,9 +6,8 @@
 
 import Image from "next/image";
 import CommentForm from "./CommentForm";
-import { comments } from "@/lib/data/blog";
 
-export default function CommentSection({ postComments = comments }) {
+export default function CommentSection({ postComments = [] }) {
   return (
     <section className="mt-12 pt-8 border-t border-gray-200">
       <CommentForm />

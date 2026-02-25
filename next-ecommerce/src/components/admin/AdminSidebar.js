@@ -18,6 +18,9 @@ import {
   FileText,
   LayoutGrid,
   X,
+  BookOpen,
+  Mail,
+  PenSquare,
 } from "lucide-react";
 
 const menuItems = [
@@ -27,6 +30,9 @@ const menuItems = [
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/banners", label: "Banners", icon: Image },
   { href: "/admin/home-sections", label: "Home Sections", icon: LayoutGrid },
+  { href: "/admin/about", label: "About Us", icon: BookOpen },
+  { href: "/admin/contact", label: "Contact Us", icon: Mail },
+  { href: "/admin/blog", label: "Blog", icon: PenSquare },
   { href: "/admin/footer", label: "Footer", icon: FileText },
   { href: "/admin/coupons", label: "Coupons", icon: Star },
   { href: "/admin/customers", label: "Customers", icon: Users },
