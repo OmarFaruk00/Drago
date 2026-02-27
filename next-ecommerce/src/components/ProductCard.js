@@ -116,7 +116,7 @@ export default function ProductCard({ product, variant = "default", priority = f
           </h3>
         </Link>
         <div className="mt-1 flex items-baseline gap-1 flex-wrap">
-          <span className="text-sm font-bold text-brand">{formatCurrency(product.price)}</span>
+          <span className="text-base font-bold text-brand">{formatCurrency(product.price)}</span>
           {product.originalPrice > product.price && (
             <span className="text-[10px] text-gray-400 line-through">{formatCurrency(product.originalPrice)}</span>
           )}
@@ -132,8 +132,8 @@ export default function ProductCard({ product, variant = "default", priority = f
             <span className="text-[10px] sm:text-xs text-gray-500">
               ({product.reviewCount ?? 0})
             </span>
-            <span className="text-[10px] sm:text-xs text-gray-500 shrink-0">
-              Stock: {product.stockQuantity ?? product.stock ?? (product.inStock ? "In stock" : 0)}
+            <span className={`text-[10px] sm:text-xs shrink-0 font-medium ${product.inStock ? "text-green-600" : "text-gray-500"}`}>
+              {product.inStock ? "Stock in" : "Stock out"}
             </span>
           </div>
           <button

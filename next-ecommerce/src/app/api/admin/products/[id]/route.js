@@ -67,6 +67,8 @@ export async function PUT(request, { params }) {
         update.stockQuantity = body.stock;
         update.inStock = body.stock > 0;
       }
+      if (body.specifications != null) update.specifications = typeof body.specifications === "object" ? body.specifications : {};
+      if (body.warranty != null) update.warranty = typeof body.warranty === "string" ? body.warranty : "";
       const product = await Product.findByIdAndUpdate(id, update, { new: true }).lean();
       if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json({
@@ -90,6 +92,8 @@ export async function PUT(request, { params }) {
     if (body.category != null) p.category = body.category;
     if (body.image != null) p.image = body.image;
     if (body.description != null) p.description = body.description;
+    if (body.specifications != null) p.specifications = typeof body.specifications === "object" ? body.specifications : {};
+    if (body.warranty != null) p.warranty = typeof body.warranty === "string" ? body.warranty : "";
     return NextResponse.json({ ...p, stock: p.stockQuantity ?? (p.inStock ? 99 : 0) });
   } catch (err) {
     console.error("Admin product PUT:", err);

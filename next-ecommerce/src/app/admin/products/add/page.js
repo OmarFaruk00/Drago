@@ -35,6 +35,8 @@ export default function AddProductPage() {
     hasMultipleOptions: true,
     sizeVariants: [], // { size, price, stock }
     colors: [], // { name, hex }
+    specifications: [], // { key, value }
+    warranty: "",
   });
   const [uploading, setUploading] = useState(false);
 
@@ -118,6 +120,19 @@ export default function AddProductPage() {
       colors: f.colors.filter((_, idx) => idx !== i),
     }));
   }
+  function addSpecification() {
+    setForm((f) => ({ ...f, specifications: [...f.specifications, { key: "", value: "" }] }));
+  }
+  function updateSpecification(i, field, val) {
+    setForm((f) => {
+      const arr = [...(f.specifications || [])];
+      arr[i] = { ...arr[i], [field]: val };
+      return { ...f, specifications: arr };
+    });
+  }
+  function removeSpecification(i) {
+    setForm((f) => ({ ...f, specifications: (f.specifications || []).filter((_, idx) => idx !== i) }));
+  }
 
   function addTag() {
     const tag = form.tagInput.trim();
@@ -176,6 +191,10 @@ export default function AddProductPage() {
           colors: form.colors
             .filter((c) => c.name && c.hex)
             .map((c) => ({ name: String(c.name).trim(), hex: String(c.hex).trim() })),
+          specifications: (form.specifications || [])
+            .filter((s) => s.key && s.value)
+            .reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
+          warranty: String(form.warranty || "").trim(),
         }),
       });
       const data = await res.json();
@@ -486,6 +505,63 @@ export default function AddProductPage() {
                 </div>
               </div>
             )}
+            </div>
+
+            {/* Specification & Warranty - Add and modify anytime */}
+            <div id="specification-warranty" className="p-6 border-b border-gray-100 bg-gray-50/50 rounded-lg">
+              <h2 className="text-base font-bold text-gray-900 mb-1">Specification & Warranty</h2>
+              <p className="text-sm text-gray-500 mb-4">Add specifications (key-value) and warranty text. You can modify these later from the product edit page.</p>
+              <div className="space-y-6">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold text-gray-900">Specification</h3>
+                    <button
+                      type="button"
+                      onClick={addSpecification}
+                      className="inline-flex items-center gap-1 text-sm text-brand font-medium hover:underline"
+                    >
+                      <Plus className="w-4 h-4" /> Add Specification
+                    </button>
+                  </div>
+                  <div className="space-y-3">
+                    {(form.specifications || []).map((s, i) => (
+                      <div key={i} className="flex gap-2 items-end">
+                        <input
+                          type="text"
+                          value={s.key}
+                          onChange={(e) => updateSpecification(i, "key", e.target.value)}
+                          placeholder="Key (e.g. Display Size)"
+                          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                        />
+                        <input
+                          type="text"
+                          value={s.value}
+                          onChange={(e) => updateSpecification(i, "value", e.target.value)}
+                          placeholder="Value (e.g. 6.1 Inch)"
+                          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeSpecification(i)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900 mb-3">Warranty</h3>
+                  <textarea
+                    rows={3}
+                    value={form.warranty}
+                    onChange={(e) => setForm((f) => ({ ...f, warranty: e.target.value }))}
+                    placeholder="e.g. 1 year manufacturer warranty"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="p-6">

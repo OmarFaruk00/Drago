@@ -30,7 +30,7 @@ const paymentColors = {
   Pending: "bg-gray-100 text-gray-600",
 };
 
-const STATUS_OPTIONS = ["pending", "confirmed", "processing", "shipping", "shipped", "delivered", "cancelled", "return", "hold"];
+const STATUS_OPTIONS = ["pending", "confirmed", "processing", "shipping", "delivered", "cancelled", "return", "hold"];
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);

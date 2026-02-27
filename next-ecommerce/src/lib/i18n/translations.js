@@ -34,7 +34,8 @@ export const translations = {
     // Product
     "product.addToCart": "Add to Cart",
     "product.quickView": "Quick View",
-    "product.outOfStock": "Out of Stock",
+    "product.outOfStock": "Stock out",
+    "product.stockIn": "Stock in",
     "product.flashSaleLabel": "This is a Flash Sale product",
     "product.flashSaleBadge": "Flash Sale",
 
@@ -129,7 +130,8 @@ export const translations = {
 
     "product.addToCart": "কার্টে যোগ করুন",
     "product.quickView": "দ্রুত দেখুন",
-    "product.outOfStock": "স্টকে নেই",
+    "product.outOfStock": "স্টক আউট",
+    "product.stockIn": "স্টক ইন",
     "product.flashSaleLabel": "এটি একটি ফ্ল্যাশ সেল প্রোডাক্ট",
     "product.flashSaleBadge": "ফ্ল্যাশ সেল",
 

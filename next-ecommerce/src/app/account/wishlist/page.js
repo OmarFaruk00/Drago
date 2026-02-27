@@ -56,7 +56,7 @@ export default function WishlistPage() {
                         item.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {item.inStock ? "In stock" : "Out of stock"}
+                      {item.inStock ? "Stock in" : "Stock out"}
                     </span>
                   </td>
                   <td className="px-6 py-4">

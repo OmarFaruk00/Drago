@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Pencil, Trash2, Plus, ChevronDown, Search, X } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronDown, Search, X, FileText } from "lucide-react";
 import ProductsEmptyState from "@/components/admin/ProductsEmptyState";
 import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 import ImportSuccessModal from "@/components/admin/ImportSuccessModal";
@@ -319,10 +319,12 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-4 py-3">
                         {inStock ? (
-                          <span className="text-sm text-gray-700">{stock} in stock</span>
+                          <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Stock in ({stock})
+                          </span>
                         ) : (
                           <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                            Out of Stock
+                            Stock out
                           </span>
                         )}
                       </td>
@@ -335,8 +337,15 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-4 py-3 text-right">
                         <Link
-                          href={`/admin/products/${p.id}/edit`}
+                          href={`/admin/products/${p.id}/edit#specification-warranty`}
                           className="inline-flex p-2 rounded-full bg-gray-100 hover:bg-brand/10 text-gray-600 hover:text-brand transition"
+                          title="Specification & Warranty"
+                        >
+                          <FileText className="w-4 h-4" />
+                        </Link>
+                        <Link
+                          href={`/admin/products/${p.id}/edit`}
+                          className="inline-flex p-2 rounded-full bg-gray-100 hover:bg-brand/10 text-gray-600 hover:text-brand transition ml-1"
                           title="Edit"
                         >
                           <Pencil className="w-4 h-4" />

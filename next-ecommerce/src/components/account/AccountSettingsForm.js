@@ -7,6 +7,14 @@
 
 import { useState, useEffect } from "react";
 import ProfileAvatarCard from "./ProfileAvatarCard";
+import { cities } from "@/lib/data/bangladeshLocations";
+
+const COUNTRIES = [
+  { value: "BD", label: "Bangladesh" },
+  { value: "US", label: "United States" },
+  { value: "UK", label: "United Kingdom" },
+  { value: "IN", label: "India" },
+];
 
 function getInitialForm(user) {
   const parts = (user?.name || "").trim().split(/\s+/);
@@ -18,7 +26,7 @@ function getInitialForm(user) {
     email: user?.email ?? "",
     phone: user?.phone ?? "",
     streetAddress: user?.streetAddress ?? "",
-    country: user?.country ?? "",
+    country: user?.country ?? "BD",
     state: user?.state ?? "",
     city: user?.city ?? "",
     zipCode: user?.zipCode ?? "",
@@ -119,26 +127,28 @@ export default function AccountSettingsForm({ user }) {
                 onChange={(e) => setForm({ ...form, country: e.target.value })}
                 className={inputClass}
               >
-                <option value="">Select</option>
-                <option value="BD">Bangladesh</option>
-                <option value="US">United States</option>
-                <option value="UK">United Kingdom</option>
-                <option value="IN">India</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
               </select>
+              <p className="mt-1 text-xs text-gray-500">Default: Bangladesh. You can change if needed.</p>
             </div>
             <div>
-              <label className={labelClass}>State</label>
-              <select
+              <label className={labelClass}>State / District (Bangladesh 64 districts)</label>
+              <input
+                type="text"
+                list="bd-states-datalist"
                 value={form.state}
                 onChange={(e) => setForm({ ...form, state: e.target.value })}
+                placeholder="Type or select district..."
                 className={inputClass}
-              >
-                <option value="">Select</option>
-                <option value="Dhaka">Dhaka</option>
-                <option value="Chittagong">Chittagong</option>
-                <option value="CA">California</option>
-                <option value="NY">New York</option>
-              </select>
+                autoComplete="off"
+              />
+              <datalist id="bd-states-datalist">
+                {cities.map((district) => (
+                  <option key={district} value={district} />
+                ))}
+              </datalist>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

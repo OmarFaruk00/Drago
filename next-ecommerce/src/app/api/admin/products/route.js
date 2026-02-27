@@ -45,7 +45,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { name, price, image, category, stock, description, sizeVariants, colors } = body;
+    const { name, price, image, category, stock, description, sizeVariants, colors, specifications, warranty } = body;
     if (!name || price == null) {
       return NextResponse.json(
         { error: "Name and price are required" },
@@ -65,6 +65,8 @@ export async function POST(request) {
         description: description || "",
         sizeVariants: Array.isArray(sizeVariants) ? sizeVariants : [],
         colors: Array.isArray(colors) ? colors : [],
+        specifications: specifications && typeof specifications === "object" ? specifications : {},
+        warranty: typeof warranty === "string" ? warranty : "",
       });
       const p = product.toObject();
       return NextResponse.json({
@@ -90,6 +92,8 @@ export async function POST(request) {
       description: description || "",
       sizeVariants: Array.isArray(sizeVariants) ? sizeVariants : [],
       colors: Array.isArray(colors) ? colors : [],
+      specifications: specifications && typeof specifications === "object" ? specifications : {},
+      warranty: typeof warranty === "string" ? warranty : "",
     };
     products.push(newProduct);
     return NextResponse.json(newProduct);

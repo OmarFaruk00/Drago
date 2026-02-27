@@ -87,6 +87,10 @@ const productSchema = new mongoose.Schema(
         hex: { type: String, trim: true },
       },
     ],
+    // Specification key-value pairs (e.g. { "Display": "6.1 Inch", "RAM": "8GB" })
+    specifications: { type: mongoose.Schema.Types.Mixed, default: {} },
+    // Warranty text (e.g. "1 year manufacturer warranty")
+    warranty: { type: String, default: "" },
   },
   {
     timestamps: true,

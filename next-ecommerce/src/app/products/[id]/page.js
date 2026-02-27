@@ -315,22 +315,13 @@ export default function ProductDetailsPage() {
                 <span className="text-xl font-bold text-gray-900">{formatCurrency(currentPrice)}</span>
               </div>
               <div className="flex flex-wrap gap-2 mt-3">
-                <span className="inline-flex items-center px-3 py-1 rounded bg-gray-100 text-sm">
-                  Status: <span className="text-green-600 font-medium ml-1">In Stock</span>
+                <span className={`inline-flex items-center px-3 py-1 rounded text-sm font-medium ${product.inStock ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}`}>
+                  Status: {product.inStock ? "Stock in" : "Stock out"}
                 </span>
                 <span className="inline-flex items-center px-3 py-1 rounded bg-gray-100 text-sm text-gray-700">
                   Product Code: {product.productCode}
                 </span>
               </div>
-              <div className="flex gap-4 mt-4 text-sm text-gray-600">
-                <Link href="#" className="flex items-center gap-1 hover:text-brand">
-                  EMI Available View Plans
-                </Link>
-                <Link href="#" className="flex items-center gap-1 hover:text-brand">
-                  Exchange View Plans
-                </Link>
-              </div>
-
               {/* Selection Controls */}
               <div className="mt-6 space-y-4">
                 {product.sizeVariants && product.sizeVariants.length > 0 && (
@@ -592,7 +583,7 @@ export default function ProductDetailsPage() {
                     <h3 className="font-bold text-gray-900 text-sm line-clamp-2 group-hover:text-brand">
                       {p.name}
                     </h3>
-                    <p className="text-brand font-semibold mt-1">{formatCurrency(p.price)}</p>
+                    <p className="text-base text-brand font-semibold mt-1">{formatCurrency(p.price)}</p>
                     <div className="flex items-center gap-0.5 mt-1">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <span

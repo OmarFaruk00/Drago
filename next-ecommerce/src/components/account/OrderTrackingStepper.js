@@ -9,7 +9,7 @@
 const STEPS = [
   { key: "order_received", label: "Order Received" },
   { key: "processing", label: "Processing" },
-  { key: "shipped", label: "Shipped" },
+  { key: "shipped", label: "Shipping" },
   { key: "delivered", label: "Delivered" },
 ];
 

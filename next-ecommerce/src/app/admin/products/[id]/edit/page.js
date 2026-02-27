@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Upload } from "lucide-react";
 
 const DEFAULT_CATEGORIES = ["Electronics", "Fashion", "Sports", "Home", "Mobile", "Laptop", "Camera", "Accessories"];
 
@@ -20,9 +20,12 @@ export default function EditProductPage() {
     stock: "",
     category: "Electronics",
     image: "",
+    specifications: [],
+    warranty: "",
   });
   const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const specsSectionRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/admin/categories", { credentials: "include" })
@@ -40,6 +43,10 @@ export default function EditProductPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.error) throw new Error(data.error);
+        const specs = data.specifications && typeof data.specifications === "object";
+        const specsArr = specs
+          ? Object.entries(data.specifications).map(([key, value]) => ({ key, value: String(value) }))
+          : [];
         setForm({
           name: data.name || "",
           description: data.description || "",
@@ -47,11 +54,19 @@ export default function EditProductPage() {
           stock: data.stock ?? data.stockQuantity ?? "",
           category: data.category || "Electronics",
           image: data.image || "",
+          specifications: specsArr,
+          warranty: data.warranty || "",
         });
       })
       .catch(() => setForm(null))
       .finally(() => setLoading(false));
   }, [params.id]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#specification-warranty" && specsSectionRef.current) {
+      specsSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [loading]);
 
   async function handleFileUpload(e) {
     const file = e.target.files?.[0];
@@ -94,6 +109,8 @@ export default function EditProductPage() {
           stock: parseInt(form.stock, 10) ?? 0,
           category: form.category,
           image: form.image || "https://via.placeholder.com/400",
+          specifications: (form.specifications || []).filter((s) => s.key && s.value).reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
+          warranty: String(form.warranty || "").trim(),
         }),
       });
       const data = await res.json();
@@ -254,6 +271,52 @@ export default function EditProductPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        <div id="specification-warranty" ref={specsSectionRef} className="mt-8 space-y-6 scroll-mt-24 p-6 bg-gray-50/50 rounded-lg border border-gray-100">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Specification & Warranty</h2>
+            <p className="text-sm text-gray-500 mb-4">Add or modify specifications (key-value) and warranty. Changes will appear on the product page.</p>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm text-gray-600">Add key-value pairs for product specs</span>
+              <button type="button" onClick={addSpecification} className="inline-flex items-center gap-1 text-sm text-red-600 font-medium hover:underline">
+                <Plus className="w-4 h-4" /> Add
+              </button>
+            </div>
+            <div className="space-y-3">
+              {(form.specifications || []).map((s, i) => (
+                <div key={i} className="flex gap-2 items-end">
+                  <input
+                    type="text"
+                    value={s.key}
+                    onChange={(e) => updateSpecification(i, "key", e.target.value)}
+                    placeholder="Key (e.g. Display Size)"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                  <input
+                    type="text"
+                    value={s.value}
+                    onChange={(e) => updateSpecification(i, "value", e.target.value)}
+                    placeholder="Value (e.g. 6.1 Inch)"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                  <button type="button" onClick={() => removeSpecification(i)} className="p-2 text-red-500 hover:bg-red-50 rounded">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Warranty</label>
+            <textarea
+              rows={3}
+              value={form.warranty}
+              onChange={(e) => setForm((f) => ({ ...f, warranty: e.target.value }))}
+              placeholder="e.g. 1 year manufacturer warranty"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            />
           </div>
         </div>
 
