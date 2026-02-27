@@ -10,12 +10,24 @@ const linkSchema = new mongoose.Schema({
 }, { _id: false });
 
 const socialLinkSchema = new mongoose.Schema({
-  platform: { type: String, required: true }, // facebook, youtube, instagram, tiktok
+  platform: { type: String, required: true },
   url: { type: String, required: true },
+}, { _id: false });
+
+const instagramItemSchema = new mongoose.Schema({
+  image: { type: String, default: "" },
+  link: { type: String, default: "" },
+}, { _id: false });
+
+const helpSupportItemSchema = new mongoose.Schema({
+  label: { type: String, default: "" },
+  value: { type: String, default: "" },
 }, { _id: false });
 
 const footerSettingsSchema = new mongoose.Schema(
   {
+    logoUrl: { type: String, default: "" },
+    copyrightText: { type: String, default: "" },
     aboutTitle: { type: String, default: "About Drago" },
     aboutText: { type: String, default: "" },
     phone: { type: String, default: "" },
@@ -25,6 +37,8 @@ const footerSettingsSchema = new mongoose.Schema(
     accountLinks: [linkSchema],
     policyLinks: [linkSchema],
     socialLinks: [socialLinkSchema],
+    helpSupportItems: [helpSupportItemSchema],
+    instagramItems: [instagramItemSchema],
   },
   { timestamps: true }
 );

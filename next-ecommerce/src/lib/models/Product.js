@@ -41,6 +41,11 @@ const productSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    subCategory: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     rating: {
       type: Number,
       default: 0,

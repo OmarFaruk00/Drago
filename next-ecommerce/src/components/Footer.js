@@ -13,7 +13,16 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useStore } from "@/lib/store/useStore";
 import AuthLink from "./account/AuthLink";
 
-const INSTAGRAM_GRID_IMAGES = [
+const DEFAULT_POLICY_LINKS = [
+  { label: "Delivery Policy", href: "/policy/delivery" },
+  { label: "Return Policy", href: "/policy/return" },
+  { label: "Refund Policy", href: "/policy/refund" },
+  { label: "Cancellation Policy", href: "/policy/cancellation" },
+  { label: "Privacy Policy", href: "/policy/privacy" },
+  { label: "Warranty Policy", href: "/policy/warranty" },
+];
+
+const DEFAULT_INSTAGRAM_IMAGES = [
   "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&q=60",
   "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=200&q=60",
   "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?auto=format&fit=crop&w=200&q=60",
@@ -44,12 +53,31 @@ export default function Footer() {
       .catch(() => {});
   }, []);
 
+  const logoUrl = footer?.logoUrl || "/logo.png";
+  const copyrightText = footer?.copyrightText || `drago © ${new Date().getFullYear()}. All Rights Reserved`;
   const phone = footer?.phone || DEFAULT_PHONE;
   const email = footer?.email || DEFAULT_EMAIL;
   const address = footer?.address || DEFAULT_ADDRESS;
   const aboutTitle = footer?.aboutTitle || "About Drago";
   const aboutText = footer?.aboutText || "Drago is a trusted online shop in Bangladesh. Where you will find all the products of fashion, electronics, and other daily life only at Drago.";
   const socialLinks = Array.isArray(footer?.socialLinks) ? footer.socialLinks : [];
+  const aboutLinks = Array.isArray(footer?.aboutLinks) && footer.aboutLinks.length > 0 ? footer.aboutLinks : [
+    { label: "Our Mission & Vision", href: "/about" },
+    { label: "Why Choose Us", href: "/about" },
+    { label: "Terms & Condition", href: "/terms" },
+    { label: "Blog", href: "/blog" },
+    { label: "Faqs", href: "/faq" },
+  ];
+  const accountLinks = Array.isArray(footer?.accountLinks) && footer.accountLinks.length > 0 ? footer.accountLinks : [
+    { label: "My Account", href: "/account" },
+    { label: "Cart", href: "/account/cart" },
+    { label: "Shop", href: "/products" },
+    { label: "Product", href: "/products" },
+    { label: "Wishlist", href: "/account/wishlist" },
+  ];
+  const policyLinks = Array.isArray(footer?.policyLinks) && footer.policyLinks.length > 0 ? footer.policyLinks : DEFAULT_POLICY_LINKS;
+  const helpSupportItems = Array.isArray(footer?.helpSupportItems) ? footer.helpSupportItems : [];
+  const instagramItems = Array.isArray(footer?.instagramItems) && footer.instagramItems.length > 0 ? footer.instagramItems : DEFAULT_INSTAGRAM_IMAGES.map((url) => ({ image: url, link: "#" }));
 
   return (
     <footer className="bg-black text-gray-300 mt-auto">
@@ -59,11 +87,12 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="block mb-3 p-0 m-0">
               <Image
-                src="/logo.png"
+                src={logoUrl}
                 alt="Drago"
                 width={180}
                 height={180}
                 className="h-24 md:h-28 w-auto brightness-0 invert object-contain p-0 m-0"
+                unoptimized={logoUrl.startsWith("http")}
               />
             </Link>
             <div className="text-sm text-gray-200 mb-4 space-y-1">
@@ -80,26 +109,26 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">About Us</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-red-400 transition">Our Mission &amp; Vision</Link></li>
-              <li><Link href="/about" className="hover:text-red-400 transition">Why Choose Us</Link></li>
-              <li><Link href="/terms" className="hover:text-red-400 transition">Terms &amp; Condition</Link></li>
-              <li><Link href="/blog" className="hover:text-red-400 transition">Blog</Link></li>
-              <li><Link href="/faq" className="hover:text-red-400 transition">Faqs</Link></li>
+              {aboutLinks.map((item, i) => (
+                <li key={i}>
+                  <Link href={item.href || "#"} className="hover:text-red-400 transition">{item.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Account - Cart, Shop, Product, Wishlist: logged in → page, else → register */}
+          {/* Account */}
           <div>
             <h4 className="text-white font-semibold mb-4">Account</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/account" className="hover:text-red-400 transition">My Account</Link></li>
               {!user && (
                 <li><Link href="/login" className="hover:text-red-400 transition">Login/Register</Link></li>
               )}
-              <li><AuthLink href="/account/cart" className="hover:text-red-400 transition">Cart</AuthLink></li>
-              <li><AuthLink href="/products" className="hover:text-red-400 transition">Shop</AuthLink></li>
-              <li><AuthLink href="/products" className="hover:text-red-400 transition">Product</AuthLink></li>
-              <li><AuthLink href="/account/wishlist" className="hover:text-red-400 transition">Wishlist</AuthLink></li>
+              {accountLinks.map((item, i) => (
+                <li key={i}>
+                  <Link href={item.href || "#"} className="hover:text-red-400 transition">{item.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -107,12 +136,11 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Privacy &amp; Policy</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/policy/delivery" className="hover:text-red-400 transition">Delivery Policy</Link></li>
-              <li><Link href="/policy/return" className="hover:text-red-400 transition">Return Policy</Link></li>
-              <li><Link href="/policy/refund" className="hover:text-red-400 transition">Refund Policy</Link></li>
-              <li><Link href="/policy/cancellation" className="hover:text-red-400 transition">Cancellation Policy</Link></li>
-              <li><Link href="/policy/privacy" className="hover:text-red-400 transition">Privacy Policy</Link></li>
-              <li><Link href="/policy/warranty" className="hover:text-red-400 transition">Warranty Policy</Link></li>
+              {policyLinks.map((item, i) => (
+                <li key={i}>
+                  <Link href={item.href || "#"} className="hover:text-red-400 transition">{item.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -123,24 +151,36 @@ export default function Footer() {
               {address && <li>{address}</li>}
               {phone && <li><a href={`tel:${phone.replace(/\s/g, "")}`} className="font-semibold hover:text-red-400 transition">{phone}</a></li>}
               {email && <li><a href={`mailto:${email}`} className="font-semibold hover:text-red-400 transition">{email}</a></li>}
+              {helpSupportItems.map((item, i) => (
+                <li key={i}>
+                  {item.label && <span>{item.label}: </span>}
+                  {item.value}
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Instagram - 2x2 grid, right of Help & Support */}
+          {/* Instagram - images + links from admin */}
           <div>
             <h4 className="text-white font-semibold mb-4">Instagram</h4>
             <div className="grid grid-cols-2 gap-2 w-full max-w-[180px]">
-              {INSTAGRAM_GRID_IMAGES.map((url, i) => (
-                <div key={i} className="aspect-square relative rounded overflow-hidden">
-                  <Image
-                    src={url}
-                    alt={`Instagram ${i + 1}`}
-                    fill
-                    sizes="90px"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
+              {instagramItems.map((item, i) => {
+                const imgUrl = typeof item === "string" ? item : item?.image;
+                const linkUrl = typeof item === "string" ? "#" : (item?.link || "#");
+                if (!imgUrl) return null;
+                const box = (
+                  <div key={i} className="aspect-square relative rounded overflow-hidden">
+                    <Image src={imgUrl} alt={`Instagram ${i + 1}`} fill sizes="90px" className="object-cover" />
+                  </div>
+                );
+                return linkUrl && linkUrl !== "#" ? (
+                  <a key={i} href={linkUrl} target="_blank" rel="noopener noreferrer" className="block aspect-square relative rounded overflow-hidden">
+                    <Image src={imgUrl} alt={`Instagram ${i + 1}`} fill sizes="90px" className="object-cover" />
+                  </a>
+                ) : (
+                  box
+                );
+              })}
             </div>
           </div>
         </div>
@@ -193,7 +233,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-gray-800 mt-4 pt-4 text-center text-sm text-gray-500">
-          drago © {new Date().getFullYear()}. All Rights Reserved
+          {copyrightText}
         </div>
       </div>
     </footer>

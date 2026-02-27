@@ -67,7 +67,10 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (session.user) session.user.id = token.id;
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.image = token.picture ?? session.user.image;
+      }
       return session;
     },
   },

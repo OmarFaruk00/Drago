@@ -37,7 +37,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { name, image, status } = body;
+    const { name, image, status, parentId } = body;
     if (!name || !name.trim()) {
       return NextResponse.json(
         { error: "Category name is required" },
@@ -61,6 +61,7 @@ export async function POST(request) {
       slug,
       image: image || "",
       status: status || "active",
+      parentId: parentId || null,
     });
     const c = category.toObject();
     return NextResponse.json({

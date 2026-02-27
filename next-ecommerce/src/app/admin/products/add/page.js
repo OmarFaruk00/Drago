@@ -11,6 +11,7 @@ export default function AddProductPage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [subCategories, setSubCategories] = useState([]);
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -18,6 +19,7 @@ export default function AddProductPage() {
     discountPrice: "",
     stock: "",
     category: "",
+    subCategory: "",
     image: "",
     images: [],
     weight: "",
@@ -46,11 +48,25 @@ export default function AddProductPage() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setCategories(data);
-          setForm((f) => ({ ...f, category: f.category || data[0]?.name }));
+          setForm((f) => ({ ...f, category: f.category || data.find((c) => !c.parentId)?.name || data[0]?.name }));
         }
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const mainCat = categories.find((c) => (c.name || c) === form.category);
+    const mainId = mainCat?.id || mainCat?._id;
+    if (mainId) {
+      const subs = categories.filter((c) => {
+        const pid = c.parentId || c.parent;
+        return pid && (String(pid) === String(mainId) || pid === mainId);
+      });
+      setSubCategories(subs);
+    } else {
+      setSubCategories([]);
+    }
+  }, [form.category, categories]);
 
   async function handleFileUpload(e) {
     const files = e.target.files ? Array.from(e.target.files) : [];
@@ -166,9 +182,7 @@ export default function AddProductPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const cat = form.selectedCategories.length
-      ? categories.find((c) => c.id === form.selectedCategories[0])?.name
-      : form.category || (categories[0]?.name || categories[0]);
+    const cat = form.category || (categories.find((c) => !c.parentId && !c.parent)?.name || categories[0]?.name || "General");
     try {
       const res = await fetch("/api/admin/products", {
         method: "POST",
@@ -177,10 +191,13 @@ export default function AddProductPage() {
         body: JSON.stringify({
           name: form.name,
           description: form.description || "",
-          price: parseFloat(form.price) || 0,
+          price: form.discountPrice ? parseFloat(form.discountPrice) || 0 : parseFloat(form.price) || 0,
+          originalPrice: form.discountPrice ? parseFloat(form.price) || null : null,
+          images: form.images?.length ? form.images : [form.image || form.images?.[0] || "https://via.placeholder.com/400"],
+          image: form.image || form.images?.[0] || "https://via.placeholder.com/400",
+          subCategory: form.subCategory || "",
           stock: parseInt(form.stock, 10) || 0,
           category: cat || "General",
-          image: form.image || form.images[0] || "https://via.placeholder.com/400",
           sizeVariants: form.sizeVariants
             .filter((v) => v.size && v.price != null)
             .map((v) => ({
@@ -637,24 +654,35 @@ export default function AddProductPage() {
           {/* Categories Panel */}
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
             <h2 className="text-base font-bold text-gray-900 mb-4">Categories</h2>
-            <div className="space-y-2">
-              {(categories.length ? categories : [{ id: "1", name: "Electronics" }, { id: "2", name: "Fashion" }]).map(
-                (c) => {
-                  const id = c.id || c;
-                  const name = c.name || c;
-                  const checked = form.selectedCategories.includes(id) || (!form.selectedCategories.length && form.category === name);
-                  return (
-                    <label key={id} className="flex items-center gap-2 cursor-pointer" htmlFor={`cat-${id}`}>
-                      <input
-                        type="checkbox"
-                        id={`cat-${id}`}
-                        checked={checked}
-                        onChange={() => toggleCategory(c)}
-                      />
-                      <span className="text-sm text-gray-700">{name}</span>
-                    </label>
-                  );
-                }
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Main Category</label>
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm((f) => ({ ...f, category: e.target.value, subCategory: "" }))}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                >
+                  {(categories.length ? categories.filter((c) => !c.parentId && !c.parent) : [{ id: "1", name: "Electronics" }, { id: "2", name: "Fashion" }]).map((c) => {
+                    const id = c.id || c;
+                    const name = c.name || c;
+                    return <option key={id} value={name}>{name}</option>;
+                  })}
+                </select>
+              </div>
+              {subCategories.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Sub Category</label>
+                  <select
+                    value={form.subCategory}
+                    onChange={(e) => setForm((f) => ({ ...f, subCategory: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  >
+                    <option value="">Select sub-category (optional)</option>
+                    {subCategories.map((s) => (
+                      <option key={s.id || s.name} value={s.name || s}>{s.name || s}</option>
+                    ))}
+                  </select>
+                </div>
               )}
             </div>
             <Link href="/admin/categories/add" className="mt-4 inline-block text-sm font-medium text-brand hover:underline">

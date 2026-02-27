@@ -1,11 +1,12 @@
 "use client";
 
 /**
- * My Profile - 4 stat cards + Recent Order History (real-time from API)
+ * My Profile - User avatar/icon, 4 stat cards + Recent Order History (real-time from API)
  */
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { User } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 
 const statusColors = {
@@ -30,6 +31,7 @@ const fetchOrders = () =>
   fetch("/api/dashboard/orders", { credentials: "include" }).then((r) => r.json());
 
 export default function ProfilePage() {
+  const user = useStore((s) => s.user);
   const cart = useStore((s) => s.cart);
   const [stats, setStats] = useState({ orders: 0, pendingCount: 0, cancelledCount: 0 });
   const [recentOrders, setRecentOrders] = useState([]);
@@ -81,6 +83,21 @@ export default function ProfilePage() {
 
   return (
     <div className="relative">
+      {/* User avatar / icon at top */}
+      <div className="flex items-center gap-4 mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
+        <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200 flex items-center justify-center">
+          {user?.avatar ? (
+            <img src={user.avatar} alt={user?.name || "Profile"} className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
+          )}
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">{user?.name || "User"}</h2>
+          <p className="text-sm text-gray-500">{user?.email}</p>
+        </div>
+      </div>
+
       {loading && (
         <div className="absolute top-2 right-2 z-10">
           <div className="animate-spin rounded-full h-5 w-5 border-2 border-brand border-t-transparent" title="Refreshing..." />

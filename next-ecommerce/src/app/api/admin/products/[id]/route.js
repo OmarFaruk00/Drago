@@ -67,6 +67,13 @@ export async function PUT(request, { params }) {
         update.stockQuantity = body.stock;
         update.inStock = body.stock > 0;
       }
+      if (body.images != null && Array.isArray(body.images)) {
+        update.images = body.images;
+        if (body.images[0]) update.image = body.images[0];
+      }
+      if (body.image != null) update.image = body.image;
+      if (body.originalPrice != null) update.originalPrice = body.originalPrice;
+      if (body.subCategory != null) update.subCategory = body.subCategory;
       if (body.specifications != null) update.specifications = typeof body.specifications === "object" ? body.specifications : {};
       if (body.warranty != null) update.warranty = typeof body.warranty === "string" ? body.warranty : "";
       const product = await Product.findByIdAndUpdate(id, update, { new: true }).lean();
@@ -94,6 +101,12 @@ export async function PUT(request, { params }) {
     if (body.description != null) p.description = body.description;
     if (body.specifications != null) p.specifications = typeof body.specifications === "object" ? body.specifications : {};
     if (body.warranty != null) p.warranty = typeof body.warranty === "string" ? body.warranty : "";
+    if (body.images != null && Array.isArray(body.images)) {
+      p.images = body.images;
+      if (body.images[0]) p.image = body.images[0];
+    }
+    if (body.originalPrice != null) p.originalPrice = body.originalPrice;
+    if (body.subCategory != null) p.subCategory = body.subCategory;
     return NextResponse.json({ ...p, stock: p.stockQuantity ?? (p.inStock ? 99 : 0) });
   } catch (err) {
     console.error("Admin product PUT:", err);

@@ -45,7 +45,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { name, price, image, category, stock, description, sizeVariants, colors, specifications, warranty } = body;
+    const { name, price, originalPrice, image, images, category, subCategory, stock, description, sizeVariants, colors, specifications, warranty } = body;
     if (!name || price == null) {
       return NextResponse.json(
         { error: "Name and price are required" },
@@ -55,11 +55,15 @@ export async function POST(request) {
 
     if (USE_MONGODB) {
       await connectDB();
+      const imgList = Array.isArray(images) && images.length > 0 ? images : [image || "https://via.placeholder.com/400"];
       const product = await Product.create({
         name,
-        price,
-        image: image || "https://via.placeholder.com/400",
+        price: price ?? 0,
+        originalPrice: originalPrice != null && originalPrice > 0 ? originalPrice : null,
+        image: imgList[0],
+        images: imgList,
         category: category || "General",
+        subCategory: subCategory || "",
         stockQuantity: stock ?? 0,
         inStock: (stock ?? 0) > 0,
         description: description || "",
@@ -78,13 +82,16 @@ export async function POST(request) {
       });
     }
 
+    const imgList = Array.isArray(images) && images.length > 0 ? images : [image || "https://via.placeholder.com/400"];
     const newProduct = {
       id: String(products.length + 1),
       name,
-      price: Number(price),
-      originalPrice: null,
-      image: image || "https://via.placeholder.com/400",
+      price: Number(price ?? 0),
+      originalPrice: originalPrice != null && originalPrice > 0 ? Number(originalPrice) : null,
+      image: imgList[0],
+      images: imgList,
       category: category || "General",
+      subCategory: subCategory || "",
       rating: 0,
       reviewCount: 0,
       inStock: (stock ?? 0) > 0,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Upload } from "lucide-react";
@@ -9,12 +9,21 @@ export default function AddCategoryPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
     name: "",
     image: "",
     status: "active",
+    parentId: "",
   });
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/categories", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => (Array.isArray(data) ? setCategories(data.filter((c) => !c.parentId && !c.parent)) : []))
+      .catch(() => {});
+  }, []);
 
   async function handleFileUpload(e) {
     const file = e.target.files?.[0];
@@ -50,7 +59,10 @@ export default function AddCategoryPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          parentId: form.parentId || null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -101,6 +113,23 @@ export default function AddCategoryPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
                 placeholder="e.g. Electronics"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Parent Category (optional - leave empty for main category)
+              </label>
+              <select
+                value={form.parentId}
+                onChange={(e) => setForm((f) => ({ ...f, parentId: e.target.value }))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+              >
+                <option value="">Main Category</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

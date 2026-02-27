@@ -5,7 +5,8 @@
  * Account dashboard settings form
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useStore } from "@/lib/store/useStore";
 import ProfileAvatarCard from "./ProfileAvatarCard";
 import { cities } from "@/lib/data/bangladeshLocations";
 
@@ -37,13 +38,64 @@ function getInitialForm(user) {
 }
 
 export default function AccountSettingsForm({ user }) {
+  const setUser = useStore((s) => s.setUser);
   const [form, setForm] = useState(() => getInitialForm(user));
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
 
   useEffect(() => {
     setForm(getInitialForm(user));
   }, [user?.id, user?.email, user?.name]);
+
+  const handleAvatarChange = useCallback(
+    async (fileOrNull) => {
+      if (!user?.id) return;
+      setAvatarLoading(true);
+      try {
+        if (fileOrNull instanceof File) {
+          const fd = new FormData();
+          fd.append("file", fileOrNull);
+          const up = await fetch("/api/account/upload", { method: "POST", body: fd, credentials: "include" });
+          const upJson = await up.json();
+          if (!up.ok || !upJson.url) {
+            alert("Upload failed");
+            return;
+          }
+          const res = await fetch("/api/account/profile", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ avatar: upJson.url }),
+            credentials: "include",
+          });
+          const json = await res.json();
+          if (!res.ok) {
+            alert("Update failed");
+            return;
+          }
+          setUser({ ...user, avatar: json.avatar });
+        } else {
+          const res = await fetch("/api/account/profile", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ avatar: null }),
+            credentials: "include",
+          });
+          const json = await res.json();
+          if (!res.ok) {
+            alert("Update failed");
+            return;
+          }
+          setUser({ ...user, avatar: null });
+        }
+      } catch (err) {
+        alert("Something went wrong");
+      } finally {
+        setAvatarLoading(false);
+      }
+    },
+    [user, setUser]
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +108,11 @@ export default function AccountSettingsForm({ user }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <ProfileAvatarCard />
+      <ProfileAvatarCard
+        currentImage={user?.avatar}
+        onImageChange={handleAvatarChange}
+        loading={avatarLoading}
+      />
 
       {/* Personal Information */}
       <div>

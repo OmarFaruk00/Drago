@@ -9,6 +9,8 @@ export default function AdminFooterPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
+    logoUrl: "",
+    copyrightText: "",
     aboutTitle: "",
     aboutText: "",
     phone: "",
@@ -18,6 +20,8 @@ export default function AdminFooterPage() {
     accountLinks: [],
     policyLinks: [],
     socialLinks: [],
+    helpSupportItems: [],
+    instagramItems: [],
   });
 
   useEffect(() => {
@@ -26,6 +30,8 @@ export default function AdminFooterPage() {
       .then((data) => {
         if (data && !data.error) {
           setForm({
+            logoUrl: data.logoUrl ?? "",
+            copyrightText: data.copyrightText ?? "",
             aboutTitle: data.aboutTitle ?? "",
             aboutText: data.aboutText ?? "",
             phone: data.phone ?? "",
@@ -35,6 +41,8 @@ export default function AdminFooterPage() {
             accountLinks: Array.isArray(data.accountLinks) ? data.accountLinks : [],
             policyLinks: Array.isArray(data.policyLinks) ? data.policyLinks : [],
             socialLinks: Array.isArray(data.socialLinks) ? data.socialLinks : [],
+            helpSupportItems: Array.isArray(data.helpSupportItems) ? data.helpSupportItems : [],
+            instagramItems: Array.isArray(data.instagramItems) ? data.instagramItems : [],
           });
         }
       })
@@ -60,6 +68,34 @@ export default function AdminFooterPage() {
   function removeLink(type, index) {
     const key = type === "social" ? "socialLinks" : type === "about" ? "aboutLinks" : type === "account" ? "accountLinks" : "policyLinks";
     setForm((f) => ({ ...f, [key]: (f[key] || []).filter((_, i) => i !== index) }));
+  }
+
+  function addHelpSupport() {
+    setForm((f) => ({ ...f, helpSupportItems: [...(f.helpSupportItems || []), { label: "", value: "" }] }));
+  }
+  function updateHelpSupport(i, field, val) {
+    setForm((f) => {
+      const arr = [...(f.helpSupportItems || [])];
+      arr[i] = { ...arr[i], [field]: val };
+      return { ...f, helpSupportItems: arr };
+    });
+  }
+  function removeHelpSupport(i) {
+    setForm((f) => ({ ...f, helpSupportItems: (f.helpSupportItems || []).filter((_, j) => j !== i) }));
+  }
+
+  function addInstagram() {
+    setForm((f) => ({ ...f, instagramItems: [...(f.instagramItems || []), { image: "", link: "" }] }));
+  }
+  function updateInstagram(i, field, val) {
+    setForm((f) => {
+      const arr = [...(f.instagramItems || [])];
+      arr[i] = { ...arr[i], [field]: val };
+      return { ...f, instagramItems: arr };
+    });
+  }
+  function removeInstagram(i) {
+    setForm((f) => ({ ...f, instagramItems: (f.instagramItems || []).filter((_, j) => j !== i) }));
   }
 
   async function handleSubmit(e) {
@@ -99,6 +135,30 @@ export default function AdminFooterPage() {
       <p className="text-sm text-gray-600">Edit footer content, links, contact info, and social links.</p>
 
       <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Logo &amp; Copyright</h2>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Footer Logo URL</label>
+            <input
+              type="url"
+              value={form.logoUrl}
+              onChange={(e) => setForm((f) => ({ ...f, logoUrl: e.target.value }))}
+              placeholder="/logo.png (leave empty for default)"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Copyright Text</label>
+            <input
+              type="text"
+              value={form.copyrightText}
+              onChange={(e) => setForm((f) => ({ ...f, copyrightText: e.target.value }))}
+              placeholder="e.g. drago © 2025. All Rights Reserved"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+            />
+          </div>
+        </div>
+
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">About section</h2>
           <div>
@@ -156,35 +216,74 @@ export default function AdminFooterPage() {
           </div>
         </div>
 
-        {["about", "account", "policy"].map((type) => (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Privacy &amp; Policy Links</h2>
+          <p className="text-sm text-gray-500">Add links for Delivery Policy, Return Policy, Refund Policy, etc. (label + URL)</p>
+          {(form.policyLinks || []).map((item, i) => (
+            <div key={i} className="flex gap-2 items-center">
+              <input
+                type="text"
+                value={item.label || ""}
+                onChange={(e) => updateLink("policy", i, "label", e.target.value)}
+                placeholder="e.g. Delivery Policy"
+                className="flex-1 px-3 py-2 border rounded-lg text-sm"
+              />
+              <input
+                type="text"
+                value={item.href || ""}
+                onChange={(e) => updateLink("policy", i, "href", e.target.value)}
+                placeholder="URL: /policy/delivery"
+                className="flex-1 px-3 py-2 border rounded-lg text-sm"
+              />
+              <button type="button" onClick={() => removeLink("policy", i)} className="p-2 text-red-600 hover:bg-red-50 rounded">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={() => addLink("policy")} className="inline-flex items-center gap-1 text-sm text-brand hover:underline">
+            <Plus className="w-4 h-4" /> Add Privacy &amp; Policy link
+          </button>
+        </div>
+
+        {["about", "account"].map((type) => (
           <div key={type} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
             <h2 className="font-semibold text-gray-900 capitalize">{type} Links</h2>
             {(form[`${type}Links`] || []).map((item, i) => (
               <div key={i} className="flex gap-2 items-center">
-                <input
-                  type="text"
-                  value={item.label || ""}
-                  onChange={(e) => updateLink(type, i, "label", e.target.value)}
-                  placeholder="Label"
-                  className="flex-1 px-3 py-2 border rounded-lg text-sm"
-                />
-                <input
-                  type="text"
-                  value={item.href || ""}
-                  onChange={(e) => updateLink(type, i, "href", e.target.value)}
-                  placeholder="URL"
-                  className="flex-1 px-3 py-2 border rounded-lg text-sm"
-                />
-                <button type="button" onClick={() => removeLink(type, i)} className="p-2 text-red-600 hover:bg-red-50 rounded">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <input type="text" value={item.label || ""} onChange={(e) => updateLink(type, i, "label", e.target.value)} placeholder="Label" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+                <input type="text" value={item.href || ""} onChange={(e) => updateLink(type, i, "href", e.target.value)} placeholder="URL" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+                <button type="button" onClick={() => removeLink(type, i)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
               </div>
             ))}
-            <button type="button" onClick={() => addLink(type)} className="inline-flex items-center gap-1 text-sm text-brand hover:underline">
-              <Plus className="w-4 h-4" /> Add link
-            </button>
+            <button type="button" onClick={() => addLink(type)} className="inline-flex items-center gap-1 text-sm text-brand hover:underline"><Plus className="w-4 h-4" /> Add link</button>
           </div>
         ))}
+
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Help &amp; Support</h2>
+          <p className="text-sm text-gray-500">Add custom lines (e.g. Working Hours, Extra Phone). Or use Contact info above for Address, Phone, Email.</p>
+          {(form.helpSupportItems || []).map((item, i) => (
+            <div key={i} className="flex gap-2 items-center">
+              <input type="text" value={item.label || ""} onChange={(e) => updateHelpSupport(i, "label", e.target.value)} placeholder="Label (e.g. Working Hours)" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+              <input type="text" value={item.value || ""} onChange={(e) => updateHelpSupport(i, "value", e.target.value)} placeholder="Value (e.g. 9 AM - 5 PM)" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+              <button type="button" onClick={() => removeHelpSupport(i)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          ))}
+          <button type="button" onClick={addHelpSupport} className="inline-flex items-center gap-1 text-sm text-brand hover:underline"><Plus className="w-4 h-4" /> Add Help &amp; Support item</button>
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+          <h2 className="font-semibold text-gray-900">Instagram Grid</h2>
+          <p className="text-sm text-gray-500">Add images + links for Instagram section (image URL + link URL)</p>
+          {(form.instagramItems || []).map((item, i) => (
+            <div key={i} className="flex gap-2 items-center">
+              <input type="url" value={item.image || ""} onChange={(e) => updateInstagram(i, "image", e.target.value)} placeholder="Image URL" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+              <input type="url" value={item.link || ""} onChange={(e) => updateInstagram(i, "link", e.target.value)} placeholder="Link URL (optional)" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
+              <button type="button" onClick={() => removeInstagram(i)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          ))}
+          <button type="button" onClick={addInstagram} className="inline-flex items-center gap-1 text-sm text-brand hover:underline"><Plus className="w-4 h-4" /> Add Instagram image</button>
+        </div>
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">Social Links</h2>

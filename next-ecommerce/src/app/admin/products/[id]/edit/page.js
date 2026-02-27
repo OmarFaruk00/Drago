@@ -5,11 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Upload } from "lucide-react";
 
-const DEFAULT_CATEGORIES = ["Electronics", "Fashion", "Sports", "Home", "Mobile", "Laptop", "Camera", "Accessories"];
-
 export default function EditProductPage() {
   const params = useParams();
   const router = useRouter();
+  const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -17,26 +16,54 @@ export default function EditProductPage() {
     name: "",
     description: "",
     price: "",
+    originalPrice: "",
     stock: "",
-    category: "Electronics",
+    category: "",
+    subCategory: "",
     image: "",
+    images: [],
     specifications: [],
     warranty: "",
   });
   const [uploading, setUploading] = useState(false);
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const specsSectionRef = useRef(null);
+
+  function addSpecification() {
+    setForm((f) => ({ ...f, specifications: [...(f.specifications || []), { key: "", value: "" }] }));
+  }
+  function updateSpecification(i, field, val) {
+    setForm((f) => {
+      const arr = [...(f.specifications || [])];
+      arr[i] = { ...arr[i], [field]: val };
+      return { ...f, specifications: arr };
+    });
+  }
+  function removeSpecification(i) {
+    setForm((f) => ({ ...f, specifications: (f.specifications || []).filter((_, idx) => idx !== i) }));
+  }
 
   useEffect(() => {
     fetch("/api/admin/categories", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setCategories(data.map((c) => c.name).filter(Boolean));
-        }
+        if (Array.isArray(data) && data.length > 0) setCategories(data);
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const mainCat = categories.find((c) => (c.name || c) === form.category);
+    const mainId = mainCat?.id || mainCat?._id;
+    if (mainId) {
+      const subs = categories.filter((c) => {
+        const pid = c.parentId || c.parent;
+        return pid && (String(pid) === String(mainId) || pid === mainId);
+      });
+      setSubCategories(subs);
+    } else setSubCategories([]);
+  }, [form.category, categories]);
 
   useEffect(() => {
     fetch(`/api/admin/products/${params.id}`, { credentials: "include" })
@@ -51,9 +78,12 @@ export default function EditProductPage() {
           name: data.name || "",
           description: data.description || "",
           price: data.price ?? "",
+          originalPrice: data.originalPrice ?? "",
           stock: data.stock ?? data.stockQuantity ?? "",
-          category: data.category || "Electronics",
+          category: data.category || "",
+          subCategory: data.subCategory || "",
           image: data.image || "",
+          images: Array.isArray(data.images) && data.images.length > 0 ? data.images : [data.image].filter(Boolean),
           specifications: specsArr,
           warranty: data.warranty || "",
         });
@@ -69,28 +99,36 @@ export default function EditProductPage() {
   }, [loading]);
 
   async function handleFileUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
     setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        credentials: "include",
-        body: fd,
-      });
-      const data = await res.json();
-      if (res.ok && data.url) {
-        setForm((f) => ({ ...f, image: data.url }));
-      } else {
-        setError(data.error || "Upload failed");
+      for (const file of files) {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/admin/upload", { method: "POST", credentials: "include", body: fd });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setForm((f) => ({
+            ...f,
+            images: [...(f.images || []), data.url],
+            image: f.image || data.url,
+          }));
+        } else setError(data.error || "Upload failed");
       }
     } catch (err) {
       setError("Upload failed");
     } finally {
       setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  }
+  function removeImage(i) {
+    setForm((f) => {
+      const imgs = [...(f.images || [f.image]).filter(Boolean)];
+      imgs.splice(i, 1);
+      return { ...f, images: imgs, image: imgs[0] || "" };
+    });
   }
 
   async function handleSubmit(e) {
@@ -106,9 +144,12 @@ export default function EditProductPage() {
           name: form.name,
           description: form.description || "",
           price: parseFloat(form.price) || 0,
+          originalPrice: form.originalPrice ? parseFloat(form.originalPrice) : null,
           stock: parseInt(form.stock, 10) ?? 0,
-          category: form.category,
-          image: form.image || "https://via.placeholder.com/400",
+          category: form.category || "General",
+          subCategory: form.subCategory || "",
+          images: (form.images && form.images.length > 0) ? form.images : [form.image].filter(Boolean),
+          image: form.image || form.images?.[0] || "https://via.placeholder.com/400",
           specifications: (form.specifications || []).filter((s) => s.key && s.value).reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
           warranty: String(form.warranty || "").trim(),
         }),
@@ -194,17 +235,32 @@ export default function EditProductPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Price (regular) *</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   required
+                  value={form.originalPrice || form.price}
+                  onChange={(e) => setForm((f) => ({ ...f, originalPrice: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="Regular price"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Discount Price (sale)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
                   value={form.price}
                   onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="Sale price (leave same if no discount)"
                 />
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
                 <input

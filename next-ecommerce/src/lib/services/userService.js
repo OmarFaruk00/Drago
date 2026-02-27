@@ -116,6 +116,20 @@ export async function requestPasswordReset(email) {
   return { ok: true, resetUrl: process.env.NODE_ENV === "development" ? resetUrl : undefined };
 }
 
+export async function updateUserAvatar(userId, avatarUrl) {
+  if (!USE_MONGODB || !userId) return null;
+  const conn = await connectDB();
+  if (!conn) return null;
+
+  const User = (await import("@/lib/models/User")).default;
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { avatar: avatarUrl || null } },
+    { new: true }
+  ).lean();
+  return user ? toSafeUser(user) : null;
+}
+
 export async function resetPassword(token, newPassword) {
   if (!newPassword || newPassword.length < 6) {
     return { ok: false, error: "Password must be at least 6 characters" };

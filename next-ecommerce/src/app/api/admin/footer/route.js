@@ -20,6 +20,8 @@ export async function GET() {
   if (auth.error) return auth.error;
 
   const defaults = {
+    logoUrl: "",
+    copyrightText: "",
     aboutTitle: "",
     aboutText: "",
     phone: "",
@@ -29,6 +31,8 @@ export async function GET() {
     accountLinks: [],
     policyLinks: [],
     socialLinks: [],
+    helpSupportItems: [],
+    instagramItems: [],
   };
   try {
     if (USE_MONGODB) {
@@ -55,8 +59,9 @@ export async function PUT(request) {
   try {
     const body = await request.json();
     const allowed = [
-      "aboutTitle", "aboutText", "phone", "email", "address",
+      "logoUrl", "copyrightText", "aboutTitle", "aboutText", "phone", "email", "address",
       "aboutLinks", "accountLinks", "policyLinks", "socialLinks",
+      "helpSupportItems", "instagramItems",
     ];
     const data = {};
     for (const k of allowed) {
@@ -68,6 +73,14 @@ export async function PUT(request) {
       } else if (k === "socialLinks") {
         data[k] = Array.isArray(body[k])
           ? body[k].filter((x) => x && String(x.platform || "").trim() && String(x.url || "").trim())
+          : [];
+      } else if (k === "helpSupportItems") {
+        data[k] = Array.isArray(body[k])
+          ? body[k].filter((x) => x && (String(x.label || "").trim() || String(x.value || "").trim()))
+          : [];
+      } else if (k === "instagramItems") {
+        data[k] = Array.isArray(body[k])
+          ? body[k].filter((x) => x && String(x.image || "").trim())
           : [];
       } else {
         data[k] = body[k];
