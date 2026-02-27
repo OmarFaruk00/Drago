@@ -124,6 +124,7 @@ export default function HomePage() {
   }, [products]);
 
   const productPool = shuffledProducts.length ? shuffledProducts : products;
+
   const buildSegment = (start, count) => {
     if (!productPool.length) return [];
     const segment = [];
@@ -134,15 +135,45 @@ export default function HomePage() {
     return segment;
   };
 
+  /** Pick products from all categories (round-robin) for Explore section */
+  const buildExploreFromAllTypes = (excludeIds, count) => {
+    const exclude = new Set(excludeIds || []);
+    const rest = productPool.filter((p) => !exclude.has(p.id));
+    if (rest.length === 0 || count <= 0) return [];
+    const byCat = {};
+    for (const p of rest) {
+      const cat = p.category || "Other";
+      if (!byCat[cat]) byCat[cat] = [];
+      byCat[cat].push(p);
+    }
+    let cats = Object.keys(byCat);
+    const result = [];
+    while (result.length < count && cats.length > 0) {
+      let added = 0;
+      for (const cat of cats) {
+        const arr = byCat[cat];
+        if (arr.length > 0) {
+          result.push(arr.shift());
+          added++;
+          if (result.length >= count) break;
+        }
+      }
+      cats = cats.filter((c) => byCat[c]?.length > 0);
+      if (added === 0) break;
+    }
+    return result.slice(0, count);
+  };
+
   const useSectionData =
     !useDummyProducts &&
     (sectionProducts.topProducts.length > 0 || sectionProducts.exploreProducts.length > 0);
   const topProductsSegment = useSectionData
     ? sectionProducts.topProducts
     : buildSegment(0, 12);
+  const topIdsForExplore = topProductsSegment.map((p) => p.id);
   const exploreProductsSegment = useSectionData
     ? sectionProducts.exploreProducts
-    : buildSegment(12, 12);
+    : buildExploreFromAllTypes(topIdsForExplore, 12);
 
   const topRowOne = topProductsSegment.slice(0, 6);
   const topRowTwo = topProductsSegment.slice(6, 12);
@@ -152,7 +183,7 @@ export default function HomePage() {
   return (
     <div>
       <HeroSection />
-      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
+      <section className="max-w-6xl mx-auto mt-3 sm:mt-4 px-3 sm:px-4 md:px-6">
         <FlashSale products={productPool} />
       </section>
 

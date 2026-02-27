@@ -75,21 +75,22 @@ export default function FlashSale({ products = [] }) {
   ];
 
   return (
-    <section className="pt-2 pb-2 md:pt-4 md:pb-4">
-      <div className="border border-gray-800 bg-[#02020a] p-4 md:p-6 text-white">
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+    <section className="pt-2 pb-2 sm:pt-3 sm:pb-3 md:pt-4 md:pb-4 px-3 sm:px-4">
+      <div className="border border-gray-800 bg-[#02020a] p-3 sm:p-4 md:p-6 text-white rounded-lg sm:rounded-xl overflow-hidden">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-between">
           {/* FLASH SALE banner - original image */}
-          <div className="h-28 flex items-center">
+          <div className="h-16 sm:h-20 md:h-24 lg:h-28 flex items-center w-full sm:w-auto justify-center sm:justify-start shrink-0">
             <Image
               src="/flash-sale-banner.png.jpg"
               alt="Flash Sale"
               width={280}
               height={112}
-              className="h-full w-auto max-w-[280px] object-contain object-left"
+              className="h-full w-auto max-w-full sm:max-w-[200px] md:max-w-[240px] lg:max-w-[280px] object-contain object-left"
               priority
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 200px, 280px"
             />
           </div>
-          <div className="flex flex-col items-end gap-3">
+          <div className="flex flex-col sm:items-end items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/flash-sale"
               className="flex items-center gap-1 text-white text-sm font-medium hover:text-brand transition"
@@ -97,13 +98,13 @@ export default function FlashSale({ products = [] }) {
               View All
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             {countdownItems.map(({ label, value }) => (
-              <div key={label} className="flex flex-col items-center text-center gap-2">
-                <span className="text-xs font-normal uppercase tracking-widest text-white/90">
+              <div key={label} className="flex flex-col items-center text-center gap-1 sm:gap-2">
+                <span className="text-[10px] sm:text-xs font-normal uppercase tracking-widest text-white/90">
                   {label}
                 </span>
-                <div className="w-12 sm:w-14 rounded-lg bg-gray-100 px-2 sm:px-4 py-2 sm:py-3 text-xl sm:text-2xl font-bold text-gray-900 tabular-nums">
+                <div className="w-9 h-9 sm:w-12 sm:h-11 md:w-14 md:h-12 rounded-md sm:rounded-lg bg-gray-100 px-1.5 sm:px-2 md:px-4 py-1.5 sm:py-2 md:py-3 text-base sm:text-xl md:text-2xl font-bold text-gray-900 tabular-nums flex items-center justify-center">
                   {String(value).padStart(2, "0")}
                 </div>
               </div>
@@ -112,7 +113,7 @@ export default function FlashSale({ products = [] }) {
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-4 sm:mt-6 md:mt-8">
           <div className="relative">
             <div className="overflow-hidden">
               <div
@@ -122,12 +123,12 @@ export default function FlashSale({ products = [] }) {
                 }}
               >
                 {slides.map((slideProducts, idx) => (
-                  <div key={`slide-${idx}`} className="w-full flex-shrink-0 px-1">
-                    <div className="flex flex-nowrap gap-3 lg:gap-4">
+                  <div key={`slide-${idx}`} className="w-full flex-shrink-0 px-0.5 sm:px-1">
+                    <div className="flex flex-nowrap gap-2 sm:gap-3 lg:gap-4">
                       {slideProducts.map((product, productIndex) => (
                         <div
                           key={`${idx}-${product.id}`}
-                          className={`min-w-[170px] flex-[0_0_50%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] ${
+                          className={`min-w-[130px] sm:min-w-[170px] flex-[0_0_50%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] ${
                             productIndex >= 2 ? "hidden lg:block" : "block"
                           }`}
                         >

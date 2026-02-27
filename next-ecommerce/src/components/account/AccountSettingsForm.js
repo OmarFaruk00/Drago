@@ -190,13 +190,13 @@ export default function AccountSettingsForm({ user }) {
               <p className="mt-1 text-xs text-gray-500">Default: Bangladesh. You can change if needed.</p>
             </div>
             <div>
-              <label className={labelClass}>State / District (Bangladesh 64 districts)</label>
+              <label className={labelClass}>City</label>
               <input
                 type="text"
                 list="bd-states-datalist"
                 value={form.state}
                 onChange={(e) => setForm({ ...form, state: e.target.value })}
-                placeholder="Type or select district..."
+                placeholder="Type or select city..."
                 className={inputClass}
                 autoComplete="off"
               />
@@ -205,28 +205,6 @@ export default function AccountSettingsForm({ user }) {
                   <option key={district} value={district} />
                 ))}
               </datalist>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>City</label>
-              <input
-                type="text"
-                value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
-                placeholder="City"
-                className={inputClass}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Zip Code</label>
-              <input
-                type="text"
-                value={form.zipCode}
-                onChange={(e) => setForm({ ...form, zipCode: e.target.value })}
-                placeholder="Zip Code"
-                className={inputClass}
-              />
             </div>
           </div>
         </div>
