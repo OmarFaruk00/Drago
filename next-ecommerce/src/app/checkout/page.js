@@ -12,6 +12,7 @@ import { filterCities, filterThanas } from "@/lib/data/bangladeshLocations";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trackLead, trackPurchase } from "@/lib/tracking/client";
+import { sendToDataLayer } from "@/lib/utils/sendToDataLayer";
 
 export default function CheckoutPage() {
   const formatCurrency = useFormatCurrency();
@@ -193,6 +194,20 @@ export default function CheckoutPage() {
           item_price: item.price,
         })),
         num_items: cartSnapshot.reduce((sum, item) => sum + item.quantity, 0),
+      });
+      sendToDataLayer("purchase", {
+        ecommerce: {
+          transaction_id: data.id,
+          value: total,
+          currency: "BDT",
+          items: cartSnapshot.map((item, idx) => ({
+            item_id: item.id,
+            item_name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            index: idx,
+          })),
+        },
       });
       setPlaced(true);
       clearCart();

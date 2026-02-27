@@ -39,6 +39,7 @@ const menuItems = [
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },
   { href: "/admin/inbox", label: "Inbox", icon: Inbox },
   { href: "/admin/delivery-settings", label: "Delivery Settings", icon: Truck },
+  { href: "/admin/tracking-settings", label: "Tracking (GTM)", icon: BarChart3 },
   { href: "/admin/settings", label: "Personal Settings", icon: User },
 ];
 

@@ -4,6 +4,7 @@ import Script from "next/script";
 import StoreShell from "@/components/StoreShell";
 import Providers from "@/components/Providers";
 import FacebookPixelProvider from "@/components/tracking/FacebookPixelProvider";
+import GTMProvider from "@/components/tracking/GTMProvider";
 
 const geistSans = Inter({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <StoreShell>{children}</StoreShell>
         </Providers>
+        <GTMProvider />
         {fbPixelId ? (
           <>
             <Script

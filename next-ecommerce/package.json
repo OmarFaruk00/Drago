@@ -13,6 +13,7 @@
     "seed:coupons": "node scripts/seed-coupons.mjs"
   },
   "dependencies": {
+    "@next/third-parties": "^16.1.6",
     "bcryptjs": "^2.4.3",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.34.0",
