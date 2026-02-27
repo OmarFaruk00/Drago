@@ -219,11 +219,14 @@ export default function AdminProductsPage() {
                 className="w-full pl-3 pr-9 py-2 border border-gray-300 rounded-lg text-sm appearance-none bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand"
               >
                 <option value="">Filter</option>
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
+                {categories.map((c) => {
+                  const val = typeof c === "object" ? (c.name || c.slug || c.id || "") : String(c);
+                  return (
+                    <option key={val} value={val}>
+                      {val}
+                    </option>
+                  );
+                })}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>

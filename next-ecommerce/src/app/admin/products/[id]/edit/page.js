@@ -279,11 +279,15 @@ export default function EditProductPage() {
                 onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
               >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
+                {categories.map((c) => {
+                  const name = typeof c === "object" ? (c.name || c.slug || c.id || "") : String(c);
+                  const val = typeof c === "object" ? (c.name || c.slug || c.id || "") : c;
+                  return (
+                    <option key={c.id ?? c._id ?? val} value={val}>
+                      {name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
