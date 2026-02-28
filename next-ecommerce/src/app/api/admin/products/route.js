@@ -46,6 +46,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const { name, price, originalPrice, image, images, category, subCategory, stock, description, sizeVariants, colors, specifications, warranty } = body;
+    const catStr = typeof category === "string" ? category : (category?.name ?? "General");
     if (!name || price == null) {
       return NextResponse.json(
         { error: "Name and price are required" },
@@ -57,12 +58,12 @@ export async function POST(request) {
       await connectDB();
       const imgList = Array.isArray(images) && images.length > 0 ? images : [image || "https://via.placeholder.com/400"];
       const product = await Product.create({
-        name,
-        price: price ?? 0,
+        name: String(name).trim(),
+        price: Number(price) || 0,
         originalPrice: originalPrice != null && originalPrice > 0 ? originalPrice : null,
         image: imgList[0],
         images: imgList,
-        category: category || "General",
+        category: catStr || "General",
         subCategory: subCategory || "",
         stockQuantity: stock ?? 0,
         inStock: (stock ?? 0) > 0,
@@ -90,7 +91,7 @@ export async function POST(request) {
       originalPrice: originalPrice != null && originalPrice > 0 ? Number(originalPrice) : null,
       image: imgList[0],
       images: imgList,
-      category: category || "General",
+      category: catStr || "General",
       subCategory: subCategory || "",
       rating: 0,
       reviewCount: 0,
@@ -106,6 +107,9 @@ export async function POST(request) {
     return NextResponse.json(newProduct);
   } catch (err) {
     console.error("Admin products POST:", err);
-    return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
+    const msg =
+      err?.message ||
+      (err?.code === 11000 ? "A product with this name or slug already exists." : "Failed to create product");
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
