@@ -85,13 +85,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8">
           {/* Brand & Contact */}
           <div className="lg:col-span-2">
-            <Link href="/" className="block mb-3 p-0 m-0">
+            <Link href="/" className="block mb-2 shrink-0">
               <Image
                 src={logoUrl}
                 alt="Drago"
-                width={180}
-                height={180}
-                className="h-24 md:h-28 w-auto brightness-0 invert object-contain p-0 m-0"
+                width={200}
+                height={200}
+                className="h-32 md:h-40 w-auto brightness-0 invert object-contain"
                 unoptimized={logoUrl.startsWith("http")}
               />
             </Link>

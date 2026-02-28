@@ -15,6 +15,7 @@
   "dependencies": {
     "@next/third-parties": "^16.1.6",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.9.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.34.0",
     "jsonwebtoken": "^9.0.2",
