@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { verifyToken } from "./adminJwt";
 
 export async function requireAdmin() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("adminToken")?.value;
   if (!token) {
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };

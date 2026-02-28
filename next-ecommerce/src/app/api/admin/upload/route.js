@@ -13,15 +13,16 @@ export async function POST(request) {
 
   try {
     const formData = await request.formData();
-    const file = formData.get("file");
+    const file = formData.get("file") || formData.get("image");
     if (!file || !(file instanceof Blob)) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+      return NextResponse.json({ error: "No file provided. Select an image to upload." }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const ext = path.extname(file.name) || ".jpg";
-    const name = `img-${Date.now()}${ext}`;
+    let ext = (path.extname(file.name || "") || ".jpg").toLowerCase().replace(/^\./, "");
+    if (!/^[a-z0-9]+$/.test(ext)) ext = "jpg";
+    const name = `img-${Date.now()}.${ext}`;
     const uploadDir = path.join(process.cwd(), "public", "uploads");
     await mkdir(uploadDir, { recursive: true });
     const filePath = path.join(uploadDir, name);
@@ -29,7 +30,12 @@ export async function POST(request) {
     const url = `/uploads/${name}`;
     return NextResponse.json({ url });
   } catch (err) {
-    console.error("Upload error:", err);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const msg = err?.message || String(err);
+    console.error("Upload error:", msg);
+    const isDev = process.env.NODE_ENV !== "production";
+    return NextResponse.json(
+      { error: isDev ? `Upload failed: ${msg}` : "Upload failed" },
+      { status: 500 }
+    );
   }
 }

@@ -101,6 +101,7 @@ export default function EditProductPage() {
   async function handleFileUpload(e) {
     const files = e.target.files ? Array.from(e.target.files) : [];
     if (files.length === 0) return;
+    setError("");
     setUploading(true);
     try {
       for (const file of files) {
