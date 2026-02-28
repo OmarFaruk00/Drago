@@ -105,7 +105,7 @@ function LoginRequiredPopup({ onClose }) {
               className="w-full h-full object-contain brightness-0 invert"
             />
           </div>
-          <h3 className="font-semibold text-base">{isBn ? "হেল্পলাইন" : "Helpline"}</h3>
+          <h3 className="font-semibold text-lg">{isBn ? "হেল্পলাইন" : "Helpline"}</h3>
         </div>
         <button
           type="button"
@@ -184,8 +184,8 @@ function ChatWindowLoggedIn({ onClose }) {
             />
           </div>
           <div>
-            <h3 className="font-semibold text-sm">{isBn ? "হেল্পলাইন" : "Helpline"}</h3>
-            <p className="text-xs text-white/90">{isBn ? "সাপোর্ট টিমের সাথে লাইভ চ্যাট" : "Live chat with our support team"}</p>
+            <h3 className="font-semibold text-lg">{isBn ? "হেল্পলাইন" : "Helpline"}</h3>
+            <p className="text-sm text-white/90">{isBn ? "সাপোর্ট টিমের সাথে লাইভ চ্যাট" : "Live chat with our support team"}</p>
           </div>
         </div>
         <button

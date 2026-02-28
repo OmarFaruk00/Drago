@@ -1,16 +1,30 @@
 "use client";
 
 export default function GlobalError({ error, reset }) {
+  const isChunkLoad = error?.name === "ChunkLoadError" || error?.message?.includes?.("Loading chunk");
   return (
-    <html>
-      <body className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
-        <p className="text-gray-600 mb-6 text-center max-w-md">{error?.message || "An unexpected error occurred"}</p>
+    <html lang="en">
+      <body style={{ fontFamily: "system-ui", padding: "2rem", maxWidth: "32rem", margin: "0 auto" }}>
+        <h1 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>
+          {isChunkLoad ? "Page load failed" : "Something went wrong"}
+        </h1>
+        <p style={{ color: "#666", marginBottom: "1.5rem" }}>
+          {isChunkLoad
+            ? "The app failed to load. Try refreshing the page."
+            : error?.message || "An error occurred."}
+        </p>
         <button
-          onClick={reset}
-          className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark"
+          onClick={() => window.location.reload()}
+          style={{
+            padding: "0.5rem 1rem",
+            background: "#000",
+            color: "#fff",
+            border: "none",
+            borderRadius: "0.5rem",
+            cursor: "pointer",
+          }}
         >
-          Try again
+          Refresh page
         </button>
       </body>
     </html>
