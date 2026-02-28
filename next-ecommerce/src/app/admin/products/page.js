@@ -4,6 +4,29 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Pencil, Trash2, Plus, ChevronDown, Search, X, FileText } from "lucide-react";
+
+const ADMIN_IMG_PLACEHOLDER = "https://via.placeholder.com/48?text=No+Img";
+
+function AdminProductImage({ src, alt }) {
+  const [imgSrc, setImgSrc] = useState(src || ADMIN_IMG_PLACEHOLDER);
+  const isUpload = imgSrc?.startsWith("/uploads/") || imgSrc?.startsWith("data:");
+  useEffect(() => {
+    setImgSrc(src || ADMIN_IMG_PLACEHOLDER);
+  }, [src]);
+  return (
+    <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+      <Image
+        src={imgSrc}
+        alt={alt || "Product"}
+        width={48}
+        height={48}
+        className="w-full h-full object-cover"
+        unoptimized={isUpload}
+        onError={() => setImgSrc(ADMIN_IMG_PLACEHOLDER)}
+      />
+    </div>
+  );
+}
 import ProductsEmptyState from "@/components/admin/ProductsEmptyState";
 import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 import ImportSuccessModal from "@/components/admin/ImportSuccessModal";
@@ -304,16 +327,7 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
-                            <Image
-                              src={p.image || "/logo (1).png"}
-                              alt={p.name}
-                              width={48}
-                              height={48}
-                              className="w-full h-full object-cover"
-                              unoptimized={p.image?.startsWith("data:")}
-                            />
-                          </div>
+                          <AdminProductImage src={p.image} alt={p.name} />
                           <div>
                             <p className="font-medium text-gray-900">{p.name}</p>
                             <p className="text-xs text-gray-500">{p.category}</p>

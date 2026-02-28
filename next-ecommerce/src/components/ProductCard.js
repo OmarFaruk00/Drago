@@ -8,7 +8,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const PLACEHOLDER = "https://via.placeholder.com/400x400?text=No+Image";
+
+function ProductImage({ src, alt, fill, priority, loading, className, sizes }) {
+  const [imgSrc, setImgSrc] = useState(src || PLACEHOLDER);
+  const isUpload = imgSrc?.startsWith("/uploads/") || imgSrc?.startsWith("data:");
+  useEffect(() => {
+    setImgSrc(src || PLACEHOLDER);
+  }, [src]);
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill
+      priority={priority}
+      loading={loading}
+      className={className}
+      sizes={sizes}
+      unoptimized={isUpload}
+      onError={() => setImgSrc(PLACEHOLDER)}
+    />
+  );
+}
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useStore } from "@/lib/store/useStore";
@@ -60,7 +83,7 @@ export default function ProductCard({ product, variant = "default", priority = f
           variant === "flash" ? "aspect-square w-full" : "h-[180px]"
         }`}
       >
-        <Image
+        <ProductImage
           src={product.image}
           alt={product.name}
           fill
