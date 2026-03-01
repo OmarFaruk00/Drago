@@ -5,7 +5,7 @@
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { loginUser, findOrCreateOAuthUser } from "@/lib/services/userService";
+import { loginUser, findOrCreateOAuthUser, getUserById } from "@/lib/services/userService";
 
 export const authOptions = {
   providers: [
@@ -63,6 +63,10 @@ export const authOptions = {
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
+      } else if (token?.id) {
+        // Refresh avatar from DB so profile updates reflect in session
+        const dbUser = await getUserById(token.id);
+        if (dbUser?.avatar !== undefined) token.picture = dbUser.avatar;
       }
       return token;
     },

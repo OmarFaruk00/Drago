@@ -116,6 +116,16 @@ export async function requestPasswordReset(email) {
   return { ok: true, resetUrl: process.env.NODE_ENV === "development" ? resetUrl : undefined };
 }
 
+export async function getUserById(userId) {
+  if (!USE_MONGODB || !userId) return null;
+  const conn = await connectDB();
+  if (!conn) return null;
+
+  const User = (await import("@/lib/models/User")).default;
+  const user = await User.findById(userId).select("avatar").lean();
+  return user ? { id: user._id.toString(), avatar: user.avatar } : null;
+}
+
 export async function updateUserAvatar(userId, avatarUrl) {
   if (!USE_MONGODB || !userId) return null;
   const conn = await connectDB();

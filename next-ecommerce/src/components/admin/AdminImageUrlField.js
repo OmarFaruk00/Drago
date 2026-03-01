@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 
 /**
  * AdminImageUrlField - Upload button + optional URL input.
@@ -54,8 +54,18 @@ export default function AdminImageUrlField({ value, onChange, label = "Image", p
         />
       </div>
       {value && (
-        <div className="mt-2 w-20 h-20 rounded overflow-hidden bg-gray-100">
-          <img src={value} alt="Preview" className="w-full h-full object-cover" />
+        <div className="mt-2 flex items-start gap-2">
+          <div className="w-20 h-20 rounded overflow-hidden bg-gray-100 shrink-0">
+            <img src={value} alt="Preview" className="w-full h-full object-cover" />
+          </div>
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="inline-flex items-center gap-1 px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg border border-red-200"
+            title="Remove image"
+          >
+            <X className="w-4 h-4" /> Remove
+          </button>
         </div>
       )}
     </div>

@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import { useStore } from "@/lib/store/useStore";
 import ProfileAvatarCard from "./ProfileAvatarCard";
 import { cities } from "@/lib/data/bangladeshLocations";
@@ -38,6 +39,7 @@ function getInitialForm(user) {
 }
 
 export default function AccountSettingsForm({ user }) {
+  const { update: updateSession } = useSession();
   const setUser = useStore((s) => s.setUser);
   const [form, setForm] = useState(() => getInitialForm(user));
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -59,7 +61,7 @@ export default function AccountSettingsForm({ user }) {
           const up = await fetch("/api/account/upload", { method: "POST", body: fd, credentials: "include" });
           const upJson = await up.json();
           if (!up.ok || !upJson.url) {
-            alert("Upload failed");
+            alert(upJson.error || "Upload failed");
             return;
           }
           const res = await fetch("/api/account/profile", {
@@ -74,6 +76,7 @@ export default function AccountSettingsForm({ user }) {
             return;
           }
           setUser({ ...user, avatar: json.avatar });
+          updateSession?.();
         } else {
           const res = await fetch("/api/account/profile", {
             method: "PUT",
@@ -87,6 +90,7 @@ export default function AccountSettingsForm({ user }) {
             return;
           }
           setUser({ ...user, avatar: null });
+          updateSession?.();
         }
       } catch (err) {
         alert("Something went wrong");
@@ -94,7 +98,7 @@ export default function AccountSettingsForm({ user }) {
         setAvatarLoading(false);
       }
     },
-    [user, setUser]
+    [user, setUser, updateSession]
   );
 
   const handleSubmit = (e) => {

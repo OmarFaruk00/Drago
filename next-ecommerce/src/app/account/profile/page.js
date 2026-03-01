@@ -1,13 +1,14 @@
 "use client";
 
 /**
- * My Profile - User avatar/icon, 4 stat cards + Recent Order History (real-time from API)
+ * My Profile - User avatar/icon (editable), 4 stat cards + Recent Order History (real-time from API)
  */
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useStore } from "@/lib/store/useStore";
+import ProfileAvatarCard from "@/components/account/ProfileAvatarCard";
 
 const statusColors = {
   pending: "bg-amber-100 text-amber-800",
@@ -31,9 +32,63 @@ const fetchOrders = () =>
   fetch("/api/dashboard/orders", { credentials: "include" }).then((r) => r.json());
 
 export default function ProfilePage() {
+  const { update: updateSession } = useSession();
   const user = useStore((s) => s.user);
+  const setUser = useStore((s) => s.setUser);
   const cart = useStore((s) => s.cart);
   const [stats, setStats] = useState({ orders: 0, pendingCount: 0, cancelledCount: 0 });
+  const [avatarLoading, setAvatarLoading] = useState(false);
+
+  const handleAvatarChange = useCallback(
+    async (fileOrNull) => {
+      if (!user?.id) return;
+      setAvatarLoading(true);
+      try {
+        if (fileOrNull instanceof File) {
+          const fd = new FormData();
+          fd.append("file", fileOrNull);
+          const up = await fetch("/api/account/upload", { method: "POST", body: fd, credentials: "include" });
+          const upJson = await up.json();
+          if (!up.ok || !upJson.url) {
+            alert(upJson.error || "Upload failed");
+            return;
+          }
+          const res = await fetch("/api/account/profile", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ avatar: upJson.url }),
+            credentials: "include",
+          });
+          const json = await res.json();
+          if (!res.ok) {
+            alert(json.error || "Update failed");
+            return;
+          }
+          setUser({ ...user, avatar: json.avatar });
+          updateSession?.();
+        } else {
+          const res = await fetch("/api/account/profile", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ avatar: null }),
+            credentials: "include",
+          });
+          const json = await res.json();
+          if (!res.ok) {
+            alert(json.error || "Update failed");
+            return;
+          }
+          setUser({ ...user, avatar: null });
+          updateSession?.();
+        }
+      } catch (err) {
+        alert("Something went wrong");
+      } finally {
+        setAvatarLoading(false);
+      }
+    },
+    [user, setUser, updateSession]
+  );
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -83,16 +138,14 @@ export default function ProfilePage() {
 
   return (
     <div className="relative">
-      {/* User avatar / icon at top */}
-      <div className="flex items-center gap-4 mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200 flex items-center justify-center">
-          {user?.avatar ? (
-            <img src={user.avatar} alt={user?.name || "Profile"} className="w-full h-full object-cover" />
-          ) : (
-            <User className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
-          )}
-        </div>
-        <div>
+      {/* User avatar (editable) + name */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
+        <ProfileAvatarCard
+          currentImage={user?.avatar}
+          onImageChange={handleAvatarChange}
+          loading={avatarLoading}
+        />
+        <div className="flex-1">
           <h2 className="text-lg font-semibold text-gray-900">{user?.name || "User"}</h2>
           <p className="text-sm text-gray-500">{user?.email}</p>
         </div>
