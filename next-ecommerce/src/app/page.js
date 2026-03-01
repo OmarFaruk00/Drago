@@ -185,15 +185,15 @@ export default function HomePage() {
     !useDummyProducts &&
     (sectionProducts.topProducts.length > 0 || sectionProducts.exploreProducts.length > 0);
   const topProductsSegment = useSectionData
-    ? sectionProducts.topProducts
-    : buildSegment(0, 12);
+    ? sectionProducts.topProducts.slice(0, 10)
+    : buildSegment(0, 10);
   const topIdsForExplore = topProductsSegment.map((p) => p.id);
   const exploreProductsSegment = useSectionData
     ? sectionProducts.exploreProducts
     : buildExploreFromAllTypes(topIdsForExplore, 12);
 
-  const topRowOne = topProductsSegment.slice(0, 6);
-  const topRowTwo = topProductsSegment.slice(6, 12);
+  const topRowOne = topProductsSegment.slice(0, 5);
+  const topRowTwo = topProductsSegment.slice(5, 10);
   const exploreRowOne = exploreProductsSegment.slice(0, 6);
   const exploreRowTwo = exploreProductsSegment.slice(6, 12);
 
@@ -221,8 +221,8 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="space-y-6">
-            <ProductGrid products={topRowOne} columns={6} priorityCount={6} />
-            <ProductGrid products={topRowTwo} columns={6} priorityCount={0} />
+            <ProductGrid products={topRowOne} columns={5} priorityCount={5} />
+            <ProductGrid products={topRowTwo} columns={5} priorityCount={0} />
           </div>
         </div>
       </section>
