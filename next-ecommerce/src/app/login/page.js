@@ -14,6 +14,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const justRegistered = searchParams.get("registered") === "1";
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -53,6 +54,12 @@ function LoginForm() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-4 sm:p-5">
           <h1 className="text-xl font-bold text-gray-900 mb-0.5">Log In</h1>
           <p className="text-gray-600 text-sm mb-4">Welcome back to Drago Store</p>
+
+          {justRegistered && (
+            <div className="mb-4 p-3 bg-green-50 text-green-800 text-sm rounded-lg border border-green-200">
+              Account created successfully! Please log in.
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {error && (

@@ -66,6 +66,7 @@ export default function ProfilePage() {
           }
           setUser({ ...user, avatar: json.avatar });
           updateSession?.();
+          alert("Profile picture updated successfully!");
         } else {
           const res = await fetch("/api/account/profile", {
             method: "PUT",
@@ -80,6 +81,7 @@ export default function ProfilePage() {
           }
           setUser({ ...user, avatar: null });
           updateSession?.();
+          alert("Profile picture removed.");
         }
       } catch (err) {
         alert("Something went wrong");

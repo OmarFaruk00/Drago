@@ -99,16 +99,7 @@ export default function RegisterPage() {
         setSubmitError(data.error || "Registration failed");
         return;
       }
-      const signInRes = await signIn("credentials", {
-        email: form.email.trim(),
-        password: form.password,
-        redirect: false,
-      });
-      if (signInRes?.error) {
-        router.push("/login");
-        return;
-      }
-      router.push("/");
+      router.push("/login?registered=1");
       router.refresh();
     } catch (err) {
       setSubmitError("Something went wrong. Please try again.");
