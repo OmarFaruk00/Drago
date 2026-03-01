@@ -54,6 +54,8 @@ export default function Footer() {
   }, []);
 
   const logoUrl = footer?.logoUrl || "/logo.png";
+  const logoSize = footer?.logoSize || "medium";
+  const logoSizeClass = logoSize === "small" ? "h-24 md:h-28" : logoSize === "large" ? "h-48 md:h-56" : "h-32 md:h-40";
   const copyrightText = footer?.copyrightText || `drago © ${new Date().getFullYear()}. All Rights Reserved`;
   const phone = footer?.phone || DEFAULT_PHONE;
   const email = footer?.email || DEFAULT_EMAIL;
@@ -91,7 +93,7 @@ export default function Footer() {
                 alt="Drago"
                 width={200}
                 height={200}
-                className="h-40 md:h-48 w-auto brightness-0 invert object-contain"
+                className={`${logoSizeClass} w-auto brightness-0 invert object-contain`}
                 unoptimized={logoUrl.startsWith("http")}
               />
             </Link>

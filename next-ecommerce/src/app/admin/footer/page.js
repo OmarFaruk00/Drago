@@ -11,6 +11,7 @@ export default function AdminFooterPage() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     logoUrl: "",
+    logoSize: "medium",
     copyrightText: "",
     aboutTitle: "",
     aboutText: "",
@@ -32,6 +33,7 @@ export default function AdminFooterPage() {
         if (data && !data.error) {
           setForm({
             logoUrl: data.logoUrl ?? "",
+            logoSize: data.logoSize ?? "medium",
             copyrightText: data.copyrightText ?? "",
             aboutTitle: data.aboutTitle ?? "",
             aboutText: data.aboutText ?? "",
@@ -144,6 +146,18 @@ export default function AdminFooterPage() {
             onChange={(v) => setForm((f) => ({ ...f, logoUrl: v }))}
             placeholder="/logo.png (leave empty for default)"
           />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Logo Size</label>
+            <select
+              value={form.logoSize || "medium"}
+              onChange={(e) => setForm((f) => ({ ...f, logoSize: e.target.value }))}
+              className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+            >
+              <option value="small">Small</option>
+              <option value="medium">Medium (standard)</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Copyright Text</label>
             <input
