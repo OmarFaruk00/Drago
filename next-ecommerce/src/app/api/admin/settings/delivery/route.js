@@ -45,28 +45,36 @@ export async function PUT(request) {
 
   try {
     const body = await request.json();
-    const deliveryInsideDhaka = Number(body.deliveryInsideDhaka);
-    const deliveryOutsideDhaka = Number(body.deliveryOutsideDhaka);
-    const codPercentage = Number(body.codPercentage);
+    const deliveryInsideDhaka = !isNaN(Number(body.deliveryInsideDhaka)) && Number(body.deliveryInsideDhaka) >= 0
+      ? Number(body.deliveryInsideDhaka) : DEFAULTS.deliveryInsideDhaka;
+    const deliveryOutsideDhaka = !isNaN(Number(body.deliveryOutsideDhaka)) && Number(body.deliveryOutsideDhaka) >= 0
+      ? Number(body.deliveryOutsideDhaka) : DEFAULTS.deliveryOutsideDhaka;
+    const codPercentage = !isNaN(Number(body.codPercentage))
+      ? Math.min(100, Math.max(0, Number(body.codPercentage))) : DEFAULTS.codPercentage;
 
     if (!USE_MONGODB) {
-      return NextResponse.json({
-        deliveryInsideDhaka: !isNaN(deliveryInsideDhaka) ? deliveryInsideDhaka : DEFAULTS.deliveryInsideDhaka,
-        deliveryOutsideDhaka: !isNaN(deliveryOutsideDhaka) ? deliveryOutsideDhaka : DEFAULTS.deliveryOutsideDhaka,
-        codPercentage: !isNaN(codPercentage) ? Math.min(100, Math.max(0, codPercentage)) : DEFAULTS.codPercentage,
-      });
+      return NextResponse.json(
+        { error: "Delivery settings require MongoDB. Set MONGODB_URI in your environment." },
+        { status: 503 }
+      );
     }
 
-    await connectDB();
-    const doc = await DeliverySettings.findOneAndUpdate(
-      {},
-      {
-        deliveryInsideDhaka: !isNaN(deliveryInsideDhaka) && deliveryInsideDhaka >= 0 ? deliveryInsideDhaka : DEFAULTS.deliveryInsideDhaka,
-        deliveryOutsideDhaka: !isNaN(deliveryOutsideDhaka) && deliveryOutsideDhaka >= 0 ? deliveryOutsideDhaka : DEFAULTS.deliveryOutsideDhaka,
-        codPercentage: !isNaN(codPercentage) ? Math.min(100, Math.max(0, codPercentage)) : DEFAULTS.codPercentage,
-      },
-      { new: true, upsert: true }
-    ).lean();
+    const conn = await connectDB();
+    if (!conn) {
+      return NextResponse.json(
+        { error: "Database connection failed. Check MONGODB_URI." },
+        { status: 503 }
+      );
+    }
+
+    let doc = await DeliverySettings.findOne();
+    if (!doc) {
+      doc = await DeliverySettings.create(DEFAULTS);
+    }
+    doc.deliveryInsideDhaka = deliveryInsideDhaka;
+    doc.deliveryOutsideDhaka = deliveryOutsideDhaka;
+    doc.codPercentage = codPercentage;
+    await doc.save();
 
     return NextResponse.json({
       deliveryInsideDhaka: doc.deliveryInsideDhaka,
@@ -75,6 +83,6 @@ export async function PUT(request) {
     });
   } catch (err) {
     console.error("Admin delivery settings PUT:", err);
-    return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
+    return NextResponse.json({ error: err?.message || "Failed to update settings" }, { status: 500 });
   }
 }

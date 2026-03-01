@@ -5,7 +5,7 @@
  * Hero, Flash Sale, Categories, Top Products, Promo Banner, Explore Products, Testimonials
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -63,10 +63,7 @@ export default function HomePage() {
   const [products, setProducts] = useState(staticProducts);
   const [shuffledProducts, setShuffledProducts] = useState(staticProducts);
   const [shuffledCategories, setShuffledCategories] = useState(categories);
-  const [sectionProducts, setSectionProducts] = useState({
-    topProducts: [],
-    exploreProducts: [],
-  });
+  const [sectionProducts, setSectionProducts] = useState({ topProducts: [] });
   const [testimonials, setTestimonials] = useState(dummyTestimonials);
 
   useEffect(() => {
@@ -105,11 +102,8 @@ export default function HomePage() {
       .then((res) => res.json())
       .then((data) => {
         if (!isActive || !data) return;
-        if (Array.isArray(data.topProducts) && Array.isArray(data.exploreProducts)) {
-          setSectionProducts({
-            topProducts: data.topProducts,
-            exploreProducts: data.exploreProducts,
-          });
+        if (Array.isArray(data.topProducts)) {
+          setSectionProducts({ topProducts: data.topProducts });
         }
       })
       .catch(() => {});
@@ -152,50 +146,27 @@ export default function HomePage() {
     return segment;
   };
 
-  /** Pick products from all categories (round-robin) for Explore section */
-  const buildExploreFromAllTypes = (excludeIds, count) => {
-    const exclude = new Set(excludeIds || []);
-    const rest = productPool.filter((p) => !exclude.has(p.id));
-    if (rest.length === 0 || count <= 0) return [];
-    const byCat = {};
-    for (const p of rest) {
-      const cat = p.category || "Other";
-      if (!byCat[cat]) byCat[cat] = [];
-      byCat[cat].push(p);
-    }
-    let cats = Object.keys(byCat);
-    const result = [];
-    while (result.length < count && cats.length > 0) {
-      let added = 0;
-      for (const cat of cats) {
-        const arr = byCat[cat];
-        if (arr.length > 0) {
-          result.push(arr.shift());
-          added++;
-          if (result.length >= count) break;
-        }
-      }
-      cats = cats.filter((c) => byCat[c]?.length > 0);
-      if (added === 0) break;
-    }
-    return result.slice(0, count);
-  };
-
-  const useSectionData =
-    !useDummyProducts &&
-    (sectionProducts.topProducts.length > 0 || sectionProducts.exploreProducts.length > 0);
+  const useSectionData = !useDummyProducts && sectionProducts.topProducts.length > 0;
   const topProductsSegment = useSectionData
     ? sectionProducts.topProducts.slice(0, 10)
     : buildSegment(0, 10);
   const topIdsForExplore = topProductsSegment.map((p) => p.id);
-  const exploreProductsSegment = useSectionData
-    ? sectionProducts.exploreProducts
-    : buildExploreFromAllTypes(topIdsForExplore, 12);
+  const exploreRows = useMemo(() => {
+    const exclude = new Set(topIdsForExplore);
+    const pool = productPool.filter((p) => !exclude.has(p.id));
+    const shuffled = shuffleArray([...pool]);
+    const segment = shuffled.slice(0, 30);
+    return {
+      row1: segment.slice(0, 6),
+      row2: segment.slice(6, 12),
+      row3: segment.slice(12, 18),
+      row4: segment.slice(18, 24),
+      row5: segment.slice(24, 30),
+    };
+  }, [productPool, topIdsForExplore.join(",")]);
 
   const topRowOne = topProductsSegment.slice(0, 5);
   const topRowTwo = topProductsSegment.slice(5, 10);
-  const exploreRowOne = exploreProductsSegment.slice(0, 6);
-  const exploreRowTwo = exploreProductsSegment.slice(6, 12);
 
   return (
     <div>
@@ -231,7 +202,7 @@ export default function HomePage() {
         <PromoBanner />
       </section>
 
-      {/* Explore Our Products */}
+      {/* Explore Our Products - 5 rows × 6, shuffled from all products */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
         <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
@@ -241,8 +212,11 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="space-y-6">
-            <ProductGrid products={exploreRowOne} columns={6} priorityCount={0} />
-            <ProductGrid products={exploreRowTwo} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRows.row1} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRows.row2} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRows.row3} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRows.row4} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRows.row5} columns={6} priorityCount={0} />
           </div>
         </div>
       </section>

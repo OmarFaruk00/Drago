@@ -437,21 +437,23 @@ export default function ProductDetailsPage() {
                     +
                   </button>
                 </div>
-                <button
-                  onClick={handleBuyNow}
-                  disabled={!product.inStock}
-                  className="flex items-center justify-center gap-2 min-w-[180px] sm:min-w-[220px] px-8 py-3.5 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition"
-                >
-                  Buy now
-                </button>
-                <button
-                  onClick={handleAddToCart}
-                  disabled={!product.inStock}
-                  className="flex items-center justify-center gap-2 min-w-[180px] sm:min-w-[220px] px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  Add to cart
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleBuyNow}
+                    disabled={!product.inStock}
+                    className="flex items-center justify-center gap-2 min-w-[200px] sm:min-w-[240px] px-10 py-4 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition text-base"
+                  >
+                    Buy now
+                  </button>
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={!product.inStock}
+                    className="flex items-center justify-center gap-2 min-w-[200px] sm:min-w-[240px] px-10 py-4 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition text-base"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Add to cart
+                  </button>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
