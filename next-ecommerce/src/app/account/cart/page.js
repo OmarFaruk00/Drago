@@ -4,7 +4,7 @@
  * Account Shopping Cart - Table layout with Cart Total and Active Coupons
  */
 
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
@@ -61,7 +61,7 @@ export default function AccountCartPage() {
                             href={`/products/${item.id}`}
                             className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0"
                           >
-                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
+                            <SafeProductImage src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
                           </Link>
                           <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-brand">
                             {item.name}

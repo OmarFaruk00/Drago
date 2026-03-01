@@ -1,7 +1,10 @@
 "use client";
 
 export default function GlobalError({ error, reset }) {
-  const isChunkLoad = error?.name === "ChunkLoadError" || error?.message?.includes?.("Loading chunk");
+  const isChunkLoad =
+    error?.name === "ChunkLoadError" ||
+    error?.message?.includes?.("Loading chunk") ||
+    error?.message?.includes?.("Failed to load chunk");
   return (
     <html lang="en">
       <body style={{ fontFamily: "system-ui", padding: "2rem", maxWidth: "32rem", margin: "0 auto" }}>

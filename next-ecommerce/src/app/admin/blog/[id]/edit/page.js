@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import AdminImageUrlField from "@/components/admin/AdminImageUrlField";
 
 export default function AdminBlogEditPage() {
   const router = useRouter();
@@ -106,10 +107,12 @@ export default function AdminBlogEditPage() {
           <label className={labelCls}>Content</label>
           <textarea value={form.content} onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))} rows={8} className={inputCls} />
         </div>
-        <div>
-          <label className={labelCls}>Image URL</label>
-          <input type="url" value={form.image} onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))} className={inputCls} />
-        </div>
+        <AdminImageUrlField
+          label="Image (optional)"
+          value={form.image}
+          onChange={(v) => setForm((f) => ({ ...f, image: v }))}
+          placeholder="Upload or paste image URL (optional)"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelCls}>Author</label>

@@ -5,7 +5,7 @@
  * Shows image, name, price, quantity controls, remove
  */
 
-import Image from "next/image";
+import SafeProductImage from "./SafeProductImage";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
@@ -18,7 +18,7 @@ export default function CartItem({ item }) {
     <div className="flex gap-4 p-4 bg-white rounded-lg border border-gray-200">
       {/* Image */}
       <Link href={`/products/${item.id}`} className="flex-shrink-0 w-24 h-24 relative rounded-lg overflow-hidden bg-gray-100">
-        <Image src={item.image} alt={item.name} fill className="object-cover" />
+        <SafeProductImage src={item.image} alt={item.name} fill className="object-cover" sizes="96px" />
       </Link>
       {/* Details */}
       <div className="flex-1 min-w-0">

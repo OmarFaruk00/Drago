@@ -6,12 +6,32 @@ import Image from "next/image";
 import { Pencil, Trash2, Plus, ChevronDown, Search, X, FileText } from "lucide-react";
 
 const ADMIN_IMG_PLACEHOLDER = "https://via.placeholder.com/48?text=No+Img";
+const ALLOWED_IMG_HOSTS = ["images.unsplash.com", "via.placeholder.com", "res.cloudinary.com", "creassmart.com", "localhost", "127.0.0.1"];
+function isAllowedImg(url) {
+  if (!url || url.startsWith("/uploads/") || url.startsWith("data:") || url.startsWith("/")) return true;
+  try {
+    const u = new URL(url);
+    return ALLOWED_IMG_HOSTS.some((h) => u.hostname === h || u.hostname.endsWith("." + h));
+  } catch {
+    return false;
+  }
+}
+function extractImgUrl(url) {
+  if (!url || !url.includes("google.com")) return url;
+  try {
+    const u = new URL(url);
+    const imgurl = u.searchParams.get("imgurl");
+    if (imgurl && imgurl.startsWith("http")) return decodeURIComponent(imgurl);
+  } catch (_) {}
+  return url;
+}
 
 function AdminProductImage({ src, alt }) {
-  const [imgSrc, setImgSrc] = useState(src || ADMIN_IMG_PLACEHOLDER);
-  const isUpload = imgSrc?.startsWith("/uploads/") || imgSrc?.startsWith("data:");
+  const resolved = extractImgUrl(src || ADMIN_IMG_PLACEHOLDER);
+  const [imgSrc, setImgSrc] = useState(resolved || ADMIN_IMG_PLACEHOLDER);
+  const needsUnopt = imgSrc?.startsWith("/uploads/") || imgSrc?.startsWith("data:") || !isAllowedImg(imgSrc);
   useEffect(() => {
-    setImgSrc(src || ADMIN_IMG_PLACEHOLDER);
+    setImgSrc(extractImgUrl(src || ADMIN_IMG_PLACEHOLDER) || ADMIN_IMG_PLACEHOLDER);
   }, [src]);
   return (
     <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
@@ -21,7 +41,7 @@ function AdminProductImage({ src, alt }) {
         width={48}
         height={48}
         className="w-full h-full object-cover"
-        unoptimized={isUpload}
+        unoptimized={needsUnopt}
         onError={() => setImgSrc(ADMIN_IMG_PLACEHOLDER)}
       />
     </div>

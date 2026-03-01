@@ -6,6 +6,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import SafeProductImage from "./SafeProductImage";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, Search, Heart } from "lucide-react";
@@ -132,13 +133,14 @@ export default function Navbar() {
                             onClick={hideSuggestions}
                             className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0"
                           >
-                            <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
-                              <Image
+                            <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0 relative">
+                              <SafeProductImage
                                 src={p.image || "/logo.png"}
                                 alt={p.name}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="48px"
+                                className="object-cover"
+                                placeholder="/logo.png"
                               />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -254,13 +256,14 @@ export default function Navbar() {
                           onClick={() => { hideSuggestions(); setMobileOpen(false); }}
                           className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0"
                         >
-                          <div className="w-10 h-10 rounded overflow-hidden bg-gray-100 flex-shrink-0">
-                            <Image
+                          <div className="w-10 h-10 rounded overflow-hidden bg-gray-100 flex-shrink-0 relative">
+                            <SafeProductImage
                               src={p.image || "/logo.png"}
                               alt={p.name}
-                              width={40}
-                              height={40}
-                              className="w-full h-full object-cover"
+                              fill
+                              sizes="40px"
+                              className="object-cover"
+                              placeholder="/logo.png"
                             />
                           </div>
                           <div className="flex-1 min-w-0">

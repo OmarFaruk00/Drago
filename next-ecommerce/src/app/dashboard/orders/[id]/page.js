@@ -4,7 +4,7 @@
  * Order Details - Timeline, items, address, total
  */
 
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -84,7 +84,7 @@ export default function OrderDetailsPage() {
           {(order.items || []).map((item, i) => (
             <div key={i} className="flex gap-4 p-4">
               <div className="relative w-16 h-16 rounded overflow-hidden bg-gray-100 flex-shrink-0">
-                <Image src={item.image || "https://via.placeholder.com/64"} alt={item.name} fill className="object-cover" sizes="64px" />
+                <SafeProductImage src={item.image || "https://via.placeholder.com/64"} alt={item.name} fill className="object-cover" sizes="64px" />
               </div>
               <div className="flex-1 min-w-0">
                 <Link href={`/products/${item.id}`} className="font-medium text-gray-900 hover:text-brand">

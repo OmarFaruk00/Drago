@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
+import AdminImageUrlField from "@/components/admin/AdminImageUrlField";
 
 const PLATFORMS = ["facebook", "youtube", "instagram", "tiktok", "twitter", "linkedin"];
 
@@ -137,16 +138,12 @@ export default function AdminFooterPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">Logo &amp; Copyright</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Footer Logo URL</label>
-            <input
-              type="url"
-              value={form.logoUrl}
-              onChange={(e) => setForm((f) => ({ ...f, logoUrl: e.target.value }))}
-              placeholder="/logo.png (leave empty for default)"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
-            />
-          </div>
+          <AdminImageUrlField
+            label="Footer Logo (optional)"
+            value={form.logoUrl}
+            onChange={(v) => setForm((f) => ({ ...f, logoUrl: v }))}
+            placeholder="/logo.png (leave empty for default)"
+          />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Copyright Text</label>
             <input
@@ -276,10 +273,17 @@ export default function AdminFooterPage() {
           <h2 className="font-semibold text-gray-900">Instagram Grid</h2>
           <p className="text-sm text-gray-500">Add images + links for Instagram section (image URL + link URL)</p>
           {(form.instagramItems || []).map((item, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <input type="url" value={item.image || ""} onChange={(e) => updateInstagram(i, "image", e.target.value)} placeholder="Image URL" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
-              <input type="url" value={item.link || ""} onChange={(e) => updateInstagram(i, "link", e.target.value)} placeholder="Link URL (optional)" className="flex-1 px-3 py-2 border rounded-lg text-sm" />
-              <button type="button" onClick={() => removeInstagram(i)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
+            <div key={i} className="flex gap-2 items-center flex-wrap">
+              <div className="flex-1 min-w-[200px]">
+                <AdminImageUrlField
+                  label=""
+                  value={item.image || ""}
+                  onChange={(v) => updateInstagram(i, "image", v)}
+                  placeholder="Image URL or Upload"
+                />
+              </div>
+              <input type="url" value={item.link || ""} onChange={(e) => updateInstagram(i, "link", e.target.value)} placeholder="Link URL (optional)" className="flex-1 min-w-[120px] px-3 py-2 border rounded-lg text-sm" />
+              <button type="button" onClick={() => removeInstagram(i)} className="p-2 text-red-600 hover:bg-red-50 rounded shrink-0"><Trash2 className="w-4 h-4" /></button>
             </div>
           ))}
           <button type="button" onClick={addInstagram} className="inline-flex items-center gap-1 text-sm text-brand hover:underline"><Plus className="w-4 h-4" /> Add Instagram image</button>

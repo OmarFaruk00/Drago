@@ -8,7 +8,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import {
   sidebarCategories,
@@ -232,7 +232,7 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
                 className="flex gap-2 p-2 rounded border border-gray-100 hover:border-red-200 group"
               >
                 <div className="relative w-14 h-14 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                  <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-105" sizes="56px" />
+                  <SafeProductImage src={p.image} alt={p.name} fill className="object-cover group-hover:scale-105" sizes="56px" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-gray-800 line-clamp-2 group-hover:text-brand">{p.name}</p>

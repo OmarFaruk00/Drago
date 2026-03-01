@@ -4,7 +4,7 @@
  * Wishlist - Product cards with Add to Cart
  */
 
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
@@ -29,7 +29,7 @@ export default function WishlistPage() {
             className="bg-white rounded-lg border border-gray-200 p-4 flex gap-4 hover:shadow-md transition"
           >
             <Link href={`/products/${product.id}`} className="flex-shrink-0 w-20 h-20 relative rounded overflow-hidden bg-gray-100">
-              <Image src={product.image} alt={product.name} fill className="object-cover" sizes="80px" />
+              <SafeProductImage src={product.image} alt={product.name} fill className="object-cover" sizes="80px" />
             </Link>
             <div className="min-w-0 flex-1">
               <Link href={`/products/${product.id}`} className="font-medium text-gray-900 hover:text-brand line-clamp-2 text-sm">

@@ -5,33 +5,12 @@
  * Wishlist, Compare, Quick View on hover; Add to cart
  */
 
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const PLACEHOLDER = "https://via.placeholder.com/400x400?text=No+Image";
-
-function ProductImage({ src, alt, fill, priority, loading, className, sizes }) {
-  const [imgSrc, setImgSrc] = useState(src || PLACEHOLDER);
-  const isUpload = imgSrc?.startsWith("/uploads/") || imgSrc?.startsWith("data:");
-  useEffect(() => {
-    setImgSrc(src || PLACEHOLDER);
-  }, [src]);
-  return (
-    <Image
-      src={imgSrc}
-      alt={alt}
-      fill
-      priority={priority}
-      loading={loading}
-      className={className}
-      sizes={sizes}
-      unoptimized={isUpload}
-      onError={() => setImgSrc(PLACEHOLDER)}
-    />
-  );
-}
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useStore } from "@/lib/store/useStore";
@@ -83,7 +62,7 @@ export default function ProductCard({ product, variant = "default", priority = f
           variant === "flash" ? "aspect-square w-full" : "h-[180px]"
         }`}
       >
-        <ProductImage
+        <SafeProductImage
           src={product.image}
           alt={product.name}
           fill
@@ -93,6 +72,7 @@ export default function ProductCard({ product, variant = "default", priority = f
             variant === "flash" ? "object-cover p-2" : "object-contain p-1"
           }`}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+          placeholder={PLACEHOLDER}
         />
         {!product.inStock && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">

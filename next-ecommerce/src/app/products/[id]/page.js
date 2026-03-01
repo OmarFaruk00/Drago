@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
@@ -23,13 +23,22 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+function extractDirectImageUrl(url) {
+  if (!url || !url.includes("google.com")) return url;
+  try {
+    const u = new URL(url);
+    const imgurl = u.searchParams.get("imgurl");
+    if (imgurl && imgurl.startsWith("http")) return decodeURIComponent(imgurl);
+  } catch (_) {}
+  return url;
+}
+
 // Augment product with gallery images, variants (colors, sim, storage)
 function augmentProduct(p) {
   if (!p) return null;
   const baseImg = p.image || "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop";
-  const images = p.images && Array.isArray(p.images) && p.images.length
-    ? p.images
-    : [baseImg, baseImg, baseImg, baseImg, baseImg, baseImg];
+  const raw = p.images && Array.isArray(p.images) && p.images.length ? p.images : [baseImg, baseImg, baseImg, baseImg, baseImg, baseImg];
+  const images = raw.map((img) => extractDirectImageUrl(img));
   const brand = p.brand || (p.category === "Electronics" ? "Samsung" : p.category || "Drago");
   const productCode = p.productCode ?? "1000";
   const colors = (p.colors && p.colors.length > 0) ? p.colors : [
@@ -238,14 +247,13 @@ export default function ProductDetailsPage() {
                 onMouseLeave={() => setZoomLens((p) => ({ ...p, show: false }))}
                 onClick={() => setZoomLightboxOpen(true)}
               >
-                <Image
+                <SafeProductImage
                   src={product.images[selectedImage]}
                   alt={product.name}
                   fill
                   className="object-contain object-center select-none pointer-events-none"
                   priority
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 450px"
-                  draggable={false}
                 />
                 {/* Hover zoom lens - desktop: shows 2x zoom near cursor */}
                 {zoomLens.show && zoomLens.rectWidth && (
@@ -284,7 +292,7 @@ export default function ProductDetailsPage() {
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" sizes="64px" />
+                    <SafeProductImage src={img} alt="" fill className="object-cover" sizes="64px" />
                   </button>
                 ))}
               </div>
@@ -559,7 +567,7 @@ export default function ProductDetailsPage() {
                   className="group block bg-white rounded-lg border border-gray-100 overflow-hidden hover:shadow-md hover:border-brand/20 transition"
                 >
                   <div className="relative aspect-square bg-gray-50">
-                    <Image
+                    <SafeProductImage
                       src={p.image}
                       alt={p.name}
                       fill
@@ -631,13 +639,12 @@ export default function ProductDetailsPage() {
               <ChevronLeft className="w-8 h-8" />
             </button>
             <div className="relative w-full h-full min-h-[50vh] max-h-[85vh] flex items-center justify-center">
-              <Image
+              <SafeProductImage
                 src={product.images[selectedImage]}
                 alt={`${product.name} - view ${selectedImage + 1}`}
                 fill
                 className="object-contain"
                 sizes="100vw"
-                unoptimized={product.images[selectedImage]?.startsWith("data:")}
               />
             </div>
             <button
@@ -662,7 +669,7 @@ export default function ProductDetailsPage() {
                   selectedImage === i ? "border-white ring-2 ring-white/50" : "border-white/30 hover:border-white/60"
                 }`}
               >
-                <Image src={img} alt="" fill className="object-cover" sizes="56px" />
+                <SafeProductImage src={img} alt="" fill className="object-cover" sizes="56px" />
               </button>
             ))}
           </div>

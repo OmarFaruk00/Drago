@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "node scripts/seed-products.mjs",
     "seed:admin": "node scripts/seed-admin.mjs",
     "seed:categories": "node scripts/seed-categories.mjs",
-    "seed:coupons": "node scripts/seed-coupons.mjs"
+    "seed:coupons": "node scripts/seed-coupons.mjs",
+    "seed:testimonials": "node scripts/seed-testimonials.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.1.6",

@@ -4,7 +4,7 @@
  * My Shop - Product management with Add New
  */
 
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import DashboardTable from "@/components/dashboard/DashboardTable";
 import { shopProducts } from "@/lib/data/dashboard";
@@ -14,7 +14,7 @@ export default function ShopPage() {
     { key: "image", label: "Product", render: (_, row) => (
       <div className="flex items-center gap-2">
         <div className="relative w-10 h-10 rounded overflow-hidden bg-gray-100">
-          <Image src={row.image} alt={row.name} fill className="object-cover" sizes="40px" />
+          <SafeProductImage src={row.image} alt={row.name} fill className="object-cover" sizes="40px" />
         </div>
         <span className="text-sm font-medium">{row.name}</span>
       </div>

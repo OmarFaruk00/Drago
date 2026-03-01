@@ -4,7 +4,7 @@
  * OrderItemsTable - Ordered products as card layout, each item in its own card
  */
 
-import Image from "next/image";
+import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
 
@@ -24,7 +24,7 @@ export default function OrderItemsTable({ items = [] }) {
               href={`/products/${item.id}`}
               className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-md overflow-hidden bg-gray-100 flex-shrink-0"
             >
-              <Image
+              <SafeProductImage
                 src={item.image || "https://via.placeholder.com/56"}
                 alt={item.name}
                 fill

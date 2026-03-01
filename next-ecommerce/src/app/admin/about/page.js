@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
+import AdminImageUrlField from "@/components/admin/AdminImageUrlField";
 
 export default function AdminAboutPage() {
   const [loading, setLoading] = useState(true);
@@ -151,10 +152,7 @@ export default function AdminAboutPage() {
             <label className={labelCls}>Vision Text</label>
             <textarea value={form.visionText} onChange={(e) => set("visionText", e.target.value)} rows={2} className={inputCls} />
           </div>
-          <div>
-            <label className={labelCls}>Mission Image URL</label>
-            <input type="url" value={form.missionImage} onChange={(e) => set("missionImage", e.target.value)} className={inputCls} />
-          </div>
+          <AdminImageUrlField label="Mission Image (optional)" value={form.missionImage} onChange={(v) => set("missionImage", v)} placeholder="Upload or paste URL (optional)" />
         </section>
 
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
@@ -177,10 +175,7 @@ export default function AdminAboutPage() {
               <Plus className="w-4 h-4" /> Add item
             </button>
           </div>
-          <div>
-            <label className={labelCls}>Image URL</label>
-            <input type="url" value={form.whyChooseImage} onChange={(e) => set("whyChooseImage", e.target.value)} className={inputCls} />
-          </div>
+          <AdminImageUrlField label="Image (optional)" value={form.whyChooseImage} onChange={(v) => set("whyChooseImage", v)} placeholder="Upload or paste URL (optional)" />
         </section>
 
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
@@ -193,10 +188,7 @@ export default function AdminAboutPage() {
             <label className={labelCls}>Terms Text</label>
             <textarea value={form.termsText} onChange={(e) => set("termsText", e.target.value)} rows={3} className={inputCls} />
           </div>
-          <div>
-            <label className={labelCls}>Image URL</label>
-            <input type="url" value={form.termsImage} onChange={(e) => set("termsImage", e.target.value)} className={inputCls} />
-          </div>
+          <AdminImageUrlField label="Image (optional)" value={form.termsImage} onChange={(v) => set("termsImage", v)} placeholder="Upload or paste URL (optional)" />
         </section>
 
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
@@ -219,10 +211,7 @@ export default function AdminAboutPage() {
               <input type="email" value={form.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} className={inputCls} />
             </div>
           </div>
-          <div>
-            <label className={labelCls}>Contact Image URL</label>
-            <input type="url" value={form.contactImage} onChange={(e) => set("contactImage", e.target.value)} className={inputCls} />
-          </div>
+          <AdminImageUrlField label="Contact Image (optional)" value={form.contactImage} onChange={(v) => set("contactImage", v)} placeholder="Upload or paste URL (optional)" />
         </section>
 
         <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
@@ -236,7 +225,9 @@ export default function AdminAboutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <input type="text" value={member.name} onChange={(e) => updateTeam(i, "name", e.target.value)} className={inputCls} placeholder="Name" />
                 <input type="text" value={member.role} onChange={(e) => updateTeam(i, "role", e.target.value)} className={inputCls} placeholder="Role" />
-                <input type="url" value={member.image} onChange={(e) => updateTeam(i, "image", e.target.value)} className={inputCls} placeholder="Image URL" />
+                <div className="sm:col-span-1">
+                  <AdminImageUrlField label="" value={member.image} onChange={(v) => updateTeam(i, "image", v)} placeholder="Upload or paste image URL" />
+                </div>
               </div>
               <button type="button" onClick={() => removeTeamMember(i)} className="text-sm text-red-600 hover:underline">
                 Remove

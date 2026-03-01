@@ -30,6 +30,7 @@ const menuItems = [
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/banners", label: "Banners", icon: Image },
   { href: "/admin/home-sections", label: "Home Sections", icon: LayoutGrid },
+  { href: "/admin/testimonials", label: "Testimonials", icon: Star },
   { href: "/admin/about", label: "About Us", icon: BookOpen },
   { href: "/admin/contact", label: "Contact Us", icon: Mail },
   { href: "/admin/blog", label: "Blog", icon: PenSquare },

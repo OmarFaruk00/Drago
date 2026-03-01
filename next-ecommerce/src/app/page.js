@@ -15,7 +15,7 @@ import ProductGrid from "@/components/ProductGrid";
 import PromoBanner from "@/components/PromoBanner";
 import Testimonials from "@/components/Testimonials";
 import { categories } from "@/lib/data/categories";
-import { testimonials } from "@/lib/data/testimonials";
+import { testimonials as dummyTestimonials } from "@/lib/data/testimonials";
 import { products as staticProducts } from "@/lib/data/products";
 import { shuffleArray } from "@/lib/utils/shuffle";
 
@@ -67,6 +67,7 @@ export default function HomePage() {
     topProducts: [],
     exploreProducts: [],
   });
+  const [testimonials, setTestimonials] = useState(dummyTestimonials);
 
   useEffect(() => {
     setShuffledCategories(shuffleArray([...categories]));
@@ -116,6 +117,22 @@ export default function HomePage() {
       isActive = false;
     };
   }, [useDummyProducts]);
+
+  useEffect(() => {
+    let isActive = true;
+    fetch("/api/testimonials")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isActive) return;
+        if (Array.isArray(data) && data.length > 0) {
+          setTestimonials(data);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (products.length) {
