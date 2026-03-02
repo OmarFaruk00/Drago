@@ -38,10 +38,22 @@ export async function getProducts(filters = {}) {
   if (category) query.category = category;
   if (inStock === true || inStock === "true") query.inStock = true;
   if (search) {
-    query.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { description: { $regex: search, $options: "i" } },
-    ];
+    const words = search.split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      // fallback: whole phrase
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    } else {
+      // word-by-word: each word must match in name or description
+      query.$and = words.map((word) => ({
+        $or: [
+          { name: { $regex: word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" } },
+          { description: { $regex: word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" } },
+        ],
+      }));
+    }
   }
   const docs = await Product.find(query).lean();
   return docs.map(toApiProduct).map(normalizeProduct);
