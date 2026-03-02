@@ -72,9 +72,6 @@ export default function Footer() {
     return () => ac.abort();
   }, []);
 
-  const logoUrl = footer?.logoUrl || "/logo.png";
-  const logoSize = footer?.logoSize || "medium";
-  const logoSizeClass = logoSize === "small" ? "h-32 md:h-36" : logoSize === "large" ? "h-56 md:h-72" : "h-48 md:h-60";
   const copyrightText = footer?.copyrightText || `drago © ${new Date().getFullYear()}. All Rights Reserved`;
   const phone = footer?.phone || DEFAULT_PHONE;
   const email = footer?.email || DEFAULT_EMAIL;
@@ -106,16 +103,6 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8 items-start">
           {/* Brand & Contact */}
           <div className="lg:col-span-2 flex flex-col">
-            <Link href="/" className={`block shrink-0 -mt-1 mb-2 overflow-hidden rounded relative ${logoSizeClass} w-48 md:w-60`}>
-              <Image
-                src={logoUrl}
-                alt="Drago"
-                fill
-                className="brightness-0 invert object-cover object-left-top"
-                sizes="240px"
-                unoptimized={logoUrl.startsWith("http")}
-              />
-            </Link>
             <div className="text-sm text-gray-200 mb-4 space-y-1">
               <p className="font-semibold text-white text-base">{aboutTitle}</p>
               <p className="leading-relaxed">{aboutText}</p>
@@ -169,15 +156,20 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Help &amp; Support</h4>
             <ul className="space-y-2 text-sm">
-              {address && <li>{address}</li>}
-              {phone && <li><a href={`tel:${phone.replace(/\s/g, "")}`} className="font-semibold hover:text-red-400 transition">{phone}</a></li>}
-              {email && <li><a href={`mailto:${email}`} className="font-semibold hover:text-red-400 transition">{email}</a></li>}
-              {helpSupportItems.map((item, i) => (
-                <li key={i}>
-                  {item.label && <span>{item.label}: </span>}
-                  {item.value}
-                </li>
-              ))}
+              {helpSupportItems.length > 0 ? (
+                helpSupportItems.map((item, i) => (
+                  <li key={i}>
+                    {item.label && <span>{item.label}: </span>}
+                    {item.value}
+                  </li>
+                ))
+              ) : (
+                <>
+                  {address && <li>{address}</li>}
+                  {phone && <li><a href={`tel:${phone.replace(/\s/g, "")}`} className="font-semibold hover:text-red-400 transition">{phone}</a></li>}
+                  {email && <li><a href={`mailto:${email}`} className="font-semibold hover:text-red-400 transition">{email}</a></li>}
+                </>
+              )}
             </ul>
           </div>
 
