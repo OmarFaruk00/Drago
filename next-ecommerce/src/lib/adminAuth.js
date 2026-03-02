@@ -4,7 +4,7 @@ import { verifyToken } from "./adminJwt";
 import connectDB from "@/lib/db/mongodb";
 import Admin from "@/lib/models/Admin";
 
-export async function requireAdmin() {
+async function requireAdmin() {
   const cookieStore = await cookies();
   const token = cookieStore.get("adminToken")?.value;
   if (!token) {
@@ -18,7 +18,7 @@ export async function requireAdmin() {
 }
 
 /** Same as requireAdmin but ensures admin has role "super_admin". Use for moderator management. */
-export async function requireSuperAdmin() {
+async function requireSuperAdmin() {
   const auth = await requireAdmin();
   if (auth.error) return auth;
   const id = auth.admin?.id;
@@ -36,3 +36,5 @@ export async function requireSuperAdmin() {
   }
   return { admin: auth.admin };
 }
+
+export { requireAdmin, requireSuperAdmin };
