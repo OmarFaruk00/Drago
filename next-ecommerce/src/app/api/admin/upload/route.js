@@ -14,6 +14,8 @@ const HAS_CLOUDINARY =
   process.env.CLOUDINARY_API_KEY &&
   process.env.CLOUDINARY_API_SECRET;
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
 async function uploadToCloudinary(buffer, ext) {
   const { v2: cloudinary } = await import("cloudinary");
   cloudinary.config({
@@ -52,6 +54,12 @@ export async function POST(request) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    if (buffer.length > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024} MB.` },
+        { status: 400 }
+      );
+    }
     let ext = (path.extname(file.name || "") || ".jpg").toLowerCase().replace(/^\./, "");
     if (!/^[a-z0-9]+$/.test(ext)) ext = "jpg";
 

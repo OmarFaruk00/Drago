@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Upload, Key } from "lucide-react";
 
 const TABS = [
@@ -55,6 +55,8 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/admin/settings", { credentials: "include" })
@@ -94,6 +96,32 @@ export default function AdminSettingsPage() {
       console.error(e);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleAvatarUpload(e) {
+    const file = e.target?.files?.[0];
+    if (!file) return;
+    setAvatarUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        credentials: "include",
+        body: fd,
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setForm((f) => ({ ...f, avatar: data.url }));
+      } else {
+        alert(data.error || "Upload failed");
+      }
+    } catch (err) {
+      alert("Upload failed");
+    } finally {
+      setAvatarUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }
 
@@ -169,18 +197,31 @@ export default function AdminSettingsPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarUpload}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0 border-2 border-dashed border-gray-300 hover:border-brand transition"
+                    >
                       {form.avatar ? (
                         <img src={form.avatar} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <Upload className="w-6 h-6 text-gray-400" />
                       )}
-                    </div>
+                    </button>
                     <button
                       type="button"
-                      className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={avatarUploading}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50"
                     >
-                      Add File
+                      {avatarUploading ? "Uploading..." : "Add File"}
                     </button>
                   </div>
                 </div>
