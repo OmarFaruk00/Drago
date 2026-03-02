@@ -12,6 +12,7 @@ function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
+  const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,12 +34,16 @@ function ResetPasswordForm() {
       setError("Invalid reset link. Please request a new one.");
       return;
     }
+    if (!code || code.trim().length < 4) {
+      setError("Please enter the verification code sent to your email.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
+        body: JSON.stringify({ token, password, code: code.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -96,11 +101,22 @@ function ResetPasswordForm() {
       <div className="w-full max-w-sm">
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-5">
           <h1 className="text-xl font-bold text-gray-900 mb-0.5">Reset password</h1>
-          <p className="text-gray-600 text-sm mb-4">Enter your new password</p>
+          <p className="text-gray-600 text-sm mb-4">Enter the verification code from your email, then choose a new password.</p>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="p-2 bg-red-50 text-brand rounded-lg text-xs">{error}</div>
             )}
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-0.5">Verification code</label>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand tracking-[0.3em]"
+                placeholder="••••••"
+              />
+            </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-0.5">New password</label>
               <input

@@ -62,8 +62,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Password reset fields
     resetToken: { type: String, default: null },
     resetTokenExpiry: { type: Date, default: null },
+    // Short verification code sent to email (e.g. 6 digits)
+    resetCode: { type: String, default: null },
   },
   {
     timestamps: true,

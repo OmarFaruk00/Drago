@@ -104,16 +104,34 @@ export async function requestPasswordReset(email) {
   const User = (await import("@/lib/models/User")).default;
   const user = await User.findOne({ email }).select("+password").lean();
   if (!user || !user.password) return { ok: true };
+
   const crypto = await import("crypto");
   const token = crypto.randomBytes(32).toString("hex");
+  // 6-digit verification code for email
+  const code = String(Math.floor(100000 + Math.random() * 900000));
   const expiry = new Date(Date.now() + 60 * 60 * 1000);
+
   await User.updateOne(
     { _id: user._id },
-    { $set: { resetToken: token, resetTokenExpiry: expiry } }
+    {
+      $set: {
+        resetToken: token,
+        resetTokenExpiry: expiry,
+        resetCode: code,
+      },
+    }
   );
+
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
   const resetUrl = `${baseUrl}/reset-password?token=${token}`;
-  return { ok: true, resetUrl };
+
+  // In development we can return the code to show in UI;
+  // in production, email service should send this code to the user.
+  const payload = { ok: true, resetUrl };
+  if (process.env.NODE_ENV !== "production") {
+    payload.code = code;
+  }
+  return payload;
 }
 
 export async function getUserById(userId) {
@@ -140,9 +158,12 @@ export async function updateUserAvatar(userId, avatarUrl) {
   return user ? toSafeUser(user) : null;
 }
 
-export async function resetPassword(token, newPassword) {
+export async function resetPassword(token, newPassword, code) {
   if (!newPassword || newPassword.length < 6) {
     return { ok: false, error: "Password must be at least 6 characters" };
+  }
+  if (!code) {
+    return { ok: false, error: "Verification code is required" };
   }
   if (!USE_MONGODB) {
     return { ok: false, error: "Password reset requires database." };
@@ -151,15 +172,22 @@ export async function resetPassword(token, newPassword) {
   if (!conn) return { ok: false, error: "Database unavailable" };
   const User = (await import("@/lib/models/User")).default;
   const bcrypt = (await import("bcryptjs")).default;
+
   const user = await User.findOne({
     resetToken: token,
     resetTokenExpiry: { $gt: new Date() },
+    resetCode: code,
   }).lean();
-  if (!user) return { ok: false, error: "Invalid or expired reset link" };
+
+  if (!user) return { ok: false, error: "Invalid or expired reset link or code" };
+
   const hashed = await bcrypt.hash(newPassword, 10);
   await User.updateOne(
     { _id: user._id },
-    { $set: { password: hashed }, $unset: { resetToken: 1, resetTokenExpiry: 1 } }
+    {
+      $set: { password: hashed },
+      $unset: { resetToken: 1, resetTokenExpiry: 1, resetCode: 1 },
+    }
   );
   return { ok: true };
 }
