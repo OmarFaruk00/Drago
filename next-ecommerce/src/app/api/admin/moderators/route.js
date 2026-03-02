@@ -5,7 +5,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Admin from "@/lib/models/Admin";
-import { requireSuperAdmin } from "@/lib/adminAuth";
+import { requireSuperAdmin } from "../../../../lib/adminAuth.js";
 import { USE_MONGODB } from "@/lib/config";
 
 const MAX_MODERATORS = 5;
