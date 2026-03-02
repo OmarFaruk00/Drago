@@ -5,9 +5,23 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Admin from "@/lib/models/Admin";
-import { requireSuperAdmin } from "../../../../../lib/adminAuth.js";
+import { requireAdmin } from "@/lib/adminAuth";
 import { USE_MONGODB } from "@/lib/config";
 import mongoose from "mongoose";
+
+/** Requires admin to be super_admin (used for moderator management). */
+async function ensureSuperAdmin() {
+  const auth = await requireAdmin();
+  if (auth.error) return auth;
+  const id = auth.admin?.id;
+  if (!id) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  await connectDB();
+  const doc = await Admin.findById(id).select("role").lean();
+  if (!doc || doc.role !== "super_admin") {
+    return { error: NextResponse.json({ error: "Forbidden" }, { status: 403 }) };
+  }
+  return { admin: auth.admin };
+}
 
 const DEFAULT_PERMISSIONS = {
   products: false,
@@ -21,7 +35,7 @@ const DEFAULT_PERMISSIONS = {
 };
 
 export async function GET(request, { params }) {
-  const auth = await requireSuperAdmin();
+  const auth = await ensureSuperAdmin();
   if (auth.error) return auth.error;
 
   const id = params?.id;
@@ -47,7 +61,7 @@ export async function GET(request, { params }) {
 }
 
 export async function PUT(request, { params }) {
-  const auth = await requireSuperAdmin();
+  const auth = await ensureSuperAdmin();
   if (auth.error) return auth.error;
 
   const id = params?.id;
@@ -88,7 +102,7 @@ export async function PUT(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  const auth = await requireSuperAdmin();
+  const auth = await ensureSuperAdmin();
   if (auth.error) return auth.error;
 
   const id = params?.id;
