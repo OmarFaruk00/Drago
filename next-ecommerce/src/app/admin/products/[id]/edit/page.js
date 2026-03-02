@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Plus, Trash2, Upload } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Upload, X } from "lucide-react";
 
 export default function EditProductPage() {
   const params = useParams();
@@ -315,22 +315,46 @@ export default function EditProductPage() {
                   {uploading ? "Uploading..." : "Click to upload"}
                 </span>
               </label>
-              {form.image && (
-                <div className="mt-4">
+              {(form.images && form.images.length > 0) ? (
+                <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {form.images.map((url, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-1 right-1 w-7 h-7 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition shadow"
+                        aria-label="Remove image"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : form.image ? (
+                <div className="mt-4 relative inline-block">
                   <img
                     src={form.image}
                     alt="Preview"
-                    className="mx-auto max-h-40 rounded object-cover"
+                    className="max-h-40 rounded object-cover"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, image: "", images: [] }))}
+                    className="absolute top-1 right-1 w-7 h-7 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition shadow"
+                    aria-label="Remove image"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                   <input
                     type="url"
                     value={form.image}
-                    onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
+                    onChange={(e) => setForm((f) => ({ ...f, image: e.target.value, images: [e.target.value] }))}
                     className="mt-2 w-full px-3 py-1.5 text-sm border rounded"
                     placeholder="Image URL"
                   />
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, X } from "lucide-react";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -148,6 +148,13 @@ export default function AddProductPage() {
   }
   function removeSpecification(i) {
     setForm((f) => ({ ...f, specifications: (f.specifications || []).filter((_, idx) => idx !== i) }));
+  }
+  function removeImage(i) {
+    setForm((f) => {
+      const imgs = [...(f.images || [])];
+      imgs.splice(i, 1);
+      return { ...f, images: imgs, image: imgs[0] || "" };
+    });
   }
 
   function addTag() {
@@ -312,6 +319,14 @@ export default function AddProductPage() {
                   {form.images.map((url, i) => (
                     <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
                       <img src={url} alt="" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-1 right-1 w-7 h-7 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition shadow"
+                        aria-label="Remove image"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   ))}
                 </div>
