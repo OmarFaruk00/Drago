@@ -7,6 +7,7 @@ const nextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" },
       { protocol: "https", hostname: "creassmart.com", pathname: "/**" },
       { protocol: "https", hostname: "www.google.com", pathname: "/**" },
+      { protocol: "https", hostname: "preview.redd.it", pathname: "/**" },
       { protocol: "http", hostname: "localhost", pathname: "/**" },
       { protocol: "http", hostname: "127.0.0.1", pathname: "/**" },
     ],
