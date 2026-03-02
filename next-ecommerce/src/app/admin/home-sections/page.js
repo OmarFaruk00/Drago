@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   ChevronUp,
   ChevronDown,
   Trash2,
-  Plus,
   GripVertical,
+  Search,
 } from "lucide-react";
 
 function ProductChip({ product, onRemove, onMoveUp, onMoveDown, canMoveUp, canMoveDown }) {
@@ -51,6 +51,9 @@ export default function AdminHomeSectionsPage() {
   const [saving, setSaving] = useState(false);
   const [products, setProducts] = useState([]);
   const [settings, setSettings] = useState({ topProductIds: [] });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     Promise.all([
@@ -73,12 +76,34 @@ export default function AdminHomeSectionsPage() {
   const topProducts = settings.topProductIds.map((id) => productMap[id]).filter(Boolean);
   const availableForTop = products.filter((p) => !settings.topProductIds.includes(p.id));
 
+  const searchFiltered = useMemo(() => {
+    if (!searchQuery.trim()) return availableForTop;
+    const q = searchQuery.trim().toLowerCase();
+    return availableForTop.filter(
+      (p) =>
+        (p.name || "").toLowerCase().includes(q) ||
+        (p.id || "").toLowerCase().includes(q)
+    );
+  }, [availableForTop, searchQuery]);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   function addToTop(productId) {
     if (!productId || settings.topProductIds.includes(productId)) return;
     setSettings((s) => ({
       ...s,
       topProductIds: [...s.topProductIds, productId],
     }));
+    setSearchQuery("");
+    setSearchOpen(false);
   }
 
   function removeFromTop(productId) {
@@ -138,22 +163,41 @@ export default function AdminHomeSectionsPage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4 max-w-2xl">
             <h2 className="font-semibold text-gray-900">Top Products</h2>
             <p className="text-xs text-gray-500">These show in the &quot;Top Products&quot; block. Add and reorder below.</p>
-            <div>
+            <div ref={searchRef} className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">Add product</label>
-              <select
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
-                value=""
-                onChange={(e) => {
-                  const v = e.target.value;
-                  if (v) addToTop(v);
-                  e.target.value = "";
-                }}
-              >
-                <option value="">Select a product…</option>
-                {availableForTop.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setSearchOpen(true);
+                  }}
+                  onFocus={() => setSearchOpen(true)}
+                  placeholder="Search or select a product…"
+                  className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                />
+                {searchOpen && (
+                  <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                    {searchFiltered.length === 0 ? (
+                      <li className="px-4 py-3 text-sm text-gray-500">No matching products</li>
+                    ) : (
+                      searchFiltered.map((p) => (
+                        <li key={p.id}>
+                          <button
+                            type="button"
+                            onClick={() => addToTop(p.id)}
+                            className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-100 transition truncate"
+                          >
+                            {p.name || p.id || "—"}
+                          </button>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </div>
             </div>
             <div className="space-y-1 max-h-64 overflow-y-auto">
               {settings.topProductIds.length === 0 ? (
