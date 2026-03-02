@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import { Upload, Key } from "lucide-react";
 
 const TABS = [
@@ -56,6 +57,7 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -72,6 +74,7 @@ export default function AdminSettingsPage() {
           language: data.language || "en",
           notificationPreferences: data.notificationPreferences || {},
         });
+        setAvatarError(false);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -113,6 +116,7 @@ export default function AdminSettingsPage() {
       });
       const data = await res.json();
       if (res.ok && data.url) {
+        setAvatarError(false);
         setForm((f) => ({ ...f, avatar: data.url }));
       } else {
         alert(data.error || "Upload failed");
@@ -209,8 +213,16 @@ export default function AdminSettingsPage() {
                       onClick={() => fileInputRef.current?.click()}
                       className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0 border-2 border-dashed border-gray-300 hover:border-brand transition"
                     >
-                      {form.avatar ? (
-                        <img src={form.avatar} alt="" className="w-full h-full object-cover" />
+                      {form.avatar && !avatarError ? (
+                        <Image
+                          src={form.avatar}
+                          alt="Profile"
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover"
+                          unoptimized
+                          onError={() => setAvatarError(true)}
+                        />
                       ) : (
                         <Upload className="w-6 h-6 text-gray-400" />
                       )}
