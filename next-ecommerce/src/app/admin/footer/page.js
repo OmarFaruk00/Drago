@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import AdminImageUrlField from "@/components/admin/AdminImageUrlField";
+import AdminFooterLogoField from "@/components/admin/AdminFooterLogoField";
 
 const PLATFORMS = ["facebook", "youtube", "instagram", "tiktok", "twitter", "linkedin"];
 
@@ -140,11 +141,11 @@ export default function AdminFooterPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">Logo &amp; Copyright</h2>
-          <AdminImageUrlField
+          <AdminFooterLogoField
             label="Footer Logo (optional)"
             value={form.logoUrl}
             onChange={(v) => setForm((f) => ({ ...f, logoUrl: v }))}
-            placeholder="/logo.png (leave empty for default)"
+            placeholder="Or paste image URL (optional)"
           />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Logo Size</label>

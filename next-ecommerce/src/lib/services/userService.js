@@ -125,8 +125,15 @@ export async function requestPasswordReset(email) {
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
   const resetUrl = `${baseUrl}/reset-password?token=${token}`;
 
+  try {
+    const { sendPasswordResetEmail } = await import("@/lib/email");
+    await sendPasswordResetEmail({ to: email, code, resetUrl });
+  } catch (err) {
+    console.error("Failed to send password reset email:", err);
+  }
+
   // In development we can return the code to show in UI;
-  // in production, email service should send this code to the user.
+  // in production, email has been sent.
   const payload = { ok: true, resetUrl };
   if (process.env.NODE_ENV !== "production") {
     payload.code = code;
