@@ -13,6 +13,9 @@ export async function POST(request) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
     const result = await requestPasswordReset(email.trim().toLowerCase());
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error || "Password reset unavailable" }, { status: 503 });
+    }
     return NextResponse.json({
       success: true,
       message: "If this email exists, we've sent a reset link.",

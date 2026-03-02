@@ -43,17 +43,19 @@ export default function ForgotPasswordPage() {
       <div className="min-h-[100vh] flex items-start justify-center pt-12 sm:pt-16 px-4 pb-4">
         <div className="w-full max-w-sm">
           <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-5">
-            <h1 className="text-xl font-bold text-gray-900 mb-2">Check your email</h1>
+            <h1 className="text-xl font-bold text-gray-900 mb-2">Password reset link</h1>
             <p className="text-gray-600 text-sm mb-4">
-              If an account exists for {email}, we&apos;ve sent a password reset link.
+              {resetUrl
+                ? "If an account exists for " + email + ", click the link below to reset your password."
+                : "If an account exists for " + email + ", we've sent a password reset link to your email."}
             </p>
             {resetUrl && (
-              <p className="text-xs text-gray-500 mb-4 p-3 bg-gray-50 rounded">
-                <strong>Dev mode:</strong>{" "}
-                <a href={resetUrl} className="text-brand underline break-all">
-                  Click here to reset
-                </a>
-              </p>
+              <a
+                href={resetUrl}
+                className="block w-full py-2.5 mb-4 text-center bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-black"
+              >
+                Click here to reset password
+              </a>
             )}
             <Link
               href="/login"

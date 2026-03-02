@@ -41,16 +41,35 @@ const DEFAULT_PHONE = "+88 01923035628";
 const DEFAULT_EMAIL = "drago.com.bd@gmail.com";
 const DEFAULT_ADDRESS = "Kendua - Ishwargonj Road, Mymensingh, 2280";
 
+let footerCache = null;
+let footerCacheTs = 0;
+const FOOTER_CACHE_TTL = 60000;
+
 export default function Footer() {
   const { t } = useLanguage();
   const user = useStore((s) => s.user);
   const [footer, setFooter] = useState(null);
 
   useEffect(() => {
-    fetch("/api/settings/footer")
+    if (footerCache && Date.now() - footerCacheTs < FOOTER_CACHE_TTL) {
+      setFooter(footerCache);
+      return;
+    }
+    const ac = new AbortController();
+    fetch("/api/settings/footer", { signal: ac.signal })
       .then((r) => r.json())
-      .then((d) => d && !d.error && setFooter(d))
-      .catch(() => {});
+      .then((d) => {
+        if (ac.signal.aborted) return;
+        if (d && !d.error) {
+          footerCache = d;
+          footerCacheTs = Date.now();
+          setFooter(d);
+        }
+      })
+      .catch((err) => {
+        if (err?.name !== "AbortError") setFooter((f) => f);
+      });
+    return () => ac.abort();
   }, []);
 
   const logoUrl = footer?.logoUrl || "/logo.png";

@@ -98,9 +98,9 @@ export async function findOrCreateOAuthUser(profile) {
 }
 
 export async function requestPasswordReset(email) {
-  if (!USE_MONGODB) return { ok: true };
+  if (!USE_MONGODB) return { ok: false, error: "Password reset requires database." };
   const conn = await connectDB();
-  if (!conn) return { ok: true };
+  if (!conn) return { ok: false, error: "Database unavailable." };
   const User = (await import("@/lib/models/User")).default;
   const user = await User.findOne({ email }).select("+password").lean();
   if (!user || !user.password) return { ok: true };
@@ -113,7 +113,7 @@ export async function requestPasswordReset(email) {
   );
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
   const resetUrl = `${baseUrl}/reset-password?token=${token}`;
-  return { ok: true, resetUrl: process.env.NODE_ENV === "development" ? resetUrl : undefined };
+  return { ok: true, resetUrl };
 }
 
 export async function getUserById(userId) {
