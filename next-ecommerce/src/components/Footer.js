@@ -74,7 +74,7 @@ export default function Footer() {
 
   const logoUrl = footer?.logoUrl || "/logo.png";
   const logoSize = footer?.logoSize || "medium";
-  const logoSizeClass = logoSize === "small" ? "h-24 md:h-28" : logoSize === "large" ? "h-48 md:h-56" : "h-32 md:h-40";
+  const logoSizeClass = logoSize === "small" ? "h-32 md:h-36" : logoSize === "large" ? "h-56 md:h-72" : "h-48 md:h-60";
   const copyrightText = footer?.copyrightText || `drago © ${new Date().getFullYear()}. All Rights Reserved`;
   const phone = footer?.phone || DEFAULT_PHONE;
   const email = footer?.email || DEFAULT_EMAIL;
@@ -102,17 +102,17 @@ export default function Footer() {
 
   return (
     <footer className="bg-black text-gray-300 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8 items-start">
           {/* Brand & Contact */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="block mb-0 shrink-0 -my-1">
+          <div className="lg:col-span-2 flex flex-col">
+            <Link href="/" className={`block shrink-0 -mt-1 mb-2 overflow-hidden rounded relative ${logoSizeClass} w-48 md:w-60`}>
               <Image
                 src={logoUrl}
                 alt="Drago"
-                width={200}
-                height={200}
-                className={`${logoSizeClass} w-auto brightness-0 invert object-contain`}
+                fill
+                className="brightness-0 invert object-cover object-left-top"
+                sizes="240px"
                 unoptimized={logoUrl.startsWith("http")}
               />
             </Link>
