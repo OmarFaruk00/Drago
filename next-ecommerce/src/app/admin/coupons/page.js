@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Search, Tag, MoreVertical } from "lucide-react";
+import { Plus, Search, Tag, Pencil, Trash2 } from "lucide-react";
 import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 
 const FILTER_TABS = [
@@ -16,8 +16,9 @@ export default function AdminCouponsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("active");
-  const [menuOpen, setMenuOpen] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
     fetch("/api/admin/coupons", { credentials: "include" })
@@ -89,7 +90,7 @@ export default function AdminCouponsPage() {
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Usage</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Validity Period</th>
-                <th className="w-12 px-4 py-3" />
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -127,43 +128,24 @@ export default function AdminCouponsPage() {
                   <td className="px-4 py-3 text-sm text-gray-600">
                     {new Date(c.startDate).toLocaleDateString()} - {new Date(c.endDate).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 relative">
-                    <button
-                      onClick={() => setMenuOpen(menuOpen === c.id ? null : c.id)}
-                      className="p-1.5 text-gray-500 hover:bg-gray-100 rounded"
-                    >
-                      <MoreVertical className="w-5 h-5" />
-                    </button>
-                    {menuOpen === c.id && (
-                      <>
-                        <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(null)} />
-                        <div className="absolute right-4 top-full mt-1 py-1 bg-white border rounded-lg shadow-lg z-20 min-w-[120px]">
-                          <Link
-                            href={`/admin/coupons/${c.id}/edit`}
-                            className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            onClick={() => setMenuOpen(null)}
-                          >
-                            Edit
-                          </Link>
-                          <button
-                            onClick={async () => {
-                              const res = await fetch(`/api/admin/coupons/${c.id}`, {
-                                method: "DELETE",
-                                credentials: "include",
-                              });
-                              setMenuOpen(null);
-                              if (res.ok) {
-                                setCoupons((p) => p.filter((x) => x.id !== c.id));
-                                setShowDeleteSuccess(true);
-                              }
-                            }}
-                            className="block w-full text-left px-3 py-2 text-sm text-brand hover:bg-red-50"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </>
-                    )}
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1">
+                      <Link
+                        href={`/admin/coupons/${c.id}/edit`}
+                        className="p-2 text-gray-500 hover:text-brand hover:bg-brand/5 rounded-lg"
+                        title="Edit"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDelete(c.id)}
+                        className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -176,6 +158,50 @@ export default function AdminCouponsPage() {
       </div>
 
       <DeleteSuccessModal isOpen={showDeleteSuccess} onClose={() => setShowDeleteSuccess(false)} />
+
+      {confirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full">
+            <h3 className="font-semibold text-gray-900">Delete coupon?</h3>
+            <p className="mt-2 text-sm text-gray-500">This action cannot be undone.</p>
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(null)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const id = confirmDelete;
+                  setConfirmDelete(null);
+                  setDeletingId(id);
+                  try {
+                    const res = await fetch(`/api/admin/coupons/${id}`, {
+                      method: "DELETE",
+                      credentials: "include",
+                    });
+                    if (res.ok) {
+                      setCoupons((p) => p.filter((x) => x.id !== id));
+                      setShowDeleteSuccess(true);
+                    }
+                  } catch (e) {
+                    console.error(e);
+                  } finally {
+                    setDeletingId(null);
+                  }
+                }}
+                disabled={deletingId !== null}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              >
+                {deletingId ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

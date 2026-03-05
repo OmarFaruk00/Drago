@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * HeroSection - Slider with 6 hero banners
+ * HeroSection - Slider from admin banners (up to 6), fallback to default slides
  */
 
 import Link from "next/link";
@@ -10,37 +10,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
 
-const slides = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=600&fit=crop",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1200&h=600&fit=crop",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1505740106531-4243f3831c78?w=1200&h=600&fit=crop",
-  },
-  {
-    id: 4,
-    image:
-      "https://images.unsplash.com/photo-1514996937319-344454492b37?w=1200&h=600&fit=crop",
-  },
-  {
-    id: 5,
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=600&fit=crop",
-  },
-  {
-    id: 6,
-    image:
-      "https://images.unsplash.com/photo-1522204523234-8729aa6e3d4f?w=1200&h=600&fit=crop",
-  },
+const DEFAULT_SLIDES = [
+  { id: "d1", image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
+  { id: "d2", image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
+  { id: "d3", image: "https://images.unsplash.com/photo-1505740106531-4243f3831c78?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
+  { id: "d4", image: "https://images.unsplash.com/photo-1514996937319-344454492b37?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
+  { id: "d5", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
+  { id: "d6", image: "https://images.unsplash.com/photo-1522204523234-8729aa6e3d4f?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
 ];
 
 const container = {
@@ -62,16 +38,42 @@ const itemUp = {
 
 export default function HeroSection() {
   const { t } = useLanguage();
+  const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    fetch("/api/banners?section=hero", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const withImage = data.filter((b) => b.image && b.image.trim());
+          if (withImage.length > 0) {
+            setSlides(
+              withImage.slice(0, 6).map((b) => ({
+              id: b.id || b._id,
+              image: b.image || "",
+              title: b.title || "",
+              subtitle: b.subtitle || "",
+              link: b.link || "",
+              linkText: b.linkText || "",
+              }))
+            );
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % slides.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const current = slides[index];
+  if (!current || !current.image) return null;
 
   return (
     <section className="relative bg-white overflow-hidden pt-0">
@@ -95,7 +97,7 @@ export default function HeroSection() {
               >
                 <Image
                   src={current.image}
-                  alt="Big Sale"
+                  alt={current.title || "Hero"}
                   fill
                   className="object-cover"
                   priority={index === 0}
@@ -116,27 +118,44 @@ export default function HeroSection() {
                 initial="hidden"
                 animate="visible"
               >
-                <motion.p
-                  variants={itemUp}
-                  className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[11px] sm:text-xs text-white/90 mb-2 backdrop-blur"
-                >
-                  <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  {t("home.hero.badge") ?? "LIMITED TIME OFFER"}
-                </motion.p>
-                <motion.h1
-                  variants={itemUp}
-                  className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight"
-                >
-                  {t("home.hero.bigSale")}
-                </motion.h1>
-                <motion.p
-                  variants={itemUp}
-                  className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md"
-                >
-                  {t("home.hero.updateStyle")}
-                </motion.p>
+                {(current.title || current.subtitle) && (
+                  <>
+                    {current.title && (
+                      <motion.h1
+                        variants={itemUp}
+                        className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight"
+                      >
+                        {current.title}
+                      </motion.h1>
+                    )}
+                    {current.subtitle && (
+                      <motion.p
+                        variants={itemUp}
+                        className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md"
+                      >
+                        {current.subtitle}
+                      </motion.p>
+                    )}
+                  </>
+                )}
+                {!current.title && !current.subtitle && (
+                  <>
+                    <motion.h1
+                      variants={itemUp}
+                      className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight"
+                    >
+                      {t("home.hero.bigSale")}
+                    </motion.h1>
+                    <motion.p
+                      variants={itemUp}
+                      className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md"
+                    >
+                      {t("home.hero.updateStyle")}
+                    </motion.p>
+                  </>
+                )}
                 <motion.div variants={itemUp}>
-                  <Link href="/products">
+                  <Link href={current.link || "/products"}>
                     <motion.span
                       className="inline-flex w-fit px-5 py-2.5 sm:px-6 sm:py-2.5 md:px-8 md:py-3 text-sm sm:text-base bg-brand text-white font-semibold rounded-lg shadow-lg cursor-pointer"
                       whileHover={{
@@ -146,7 +165,7 @@ export default function HeroSection() {
                       whileTap={{ scale: 0.98 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
-                      {t("home.hero.cta")}
+                      {current.linkText || t("home.hero.cta")}
                     </motion.span>
                   </Link>
                 </motion.div>

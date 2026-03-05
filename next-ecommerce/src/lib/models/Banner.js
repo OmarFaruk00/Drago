@@ -13,6 +13,8 @@ const bannerSchema = new mongoose.Schema(
     linkText: { type: String, default: "" },
     order: { type: Number, default: 0 },
     enabled: { type: Boolean, default: true },
+    /** Where to show: "hero" = hero slider, "after_top_products" = after Top Products, "promo" = promo area */
+    section: { type: String, default: "hero", trim: true },
   },
   { timestamps: true }
 );

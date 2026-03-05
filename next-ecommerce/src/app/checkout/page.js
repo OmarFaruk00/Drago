@@ -18,6 +18,7 @@ export default function CheckoutPage() {
   const formatCurrency = useFormatCurrency();
   const { t } = useLanguage();
   const { cart, clearCart, user } = useStore();
+  const [buyNowItems, setBuyNowItems] = useState(null);
   const [placed, setPlaced] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -50,6 +51,24 @@ export default function CheckoutPage() {
   const thanaRef = useRef(null);
 
   useEffect(() => {
+    try {
+      const raw = typeof window !== "undefined" ? sessionStorage.getItem("buyNowItem") : null;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        sessionStorage.removeItem("buyNowItem");
+        const item = {
+          id: parsed.id,
+          name: parsed.name,
+          price: parsed.price,
+          image: parsed.image,
+          quantity: parsed.quantity ?? 1,
+        };
+        setBuyNowItems([item]);
+      }
+    } catch (_) {}
+  }, []);
+
+  useEffect(() => {
     fetch("/api/settings/delivery")
       .then((r) => r.json())
       .then((data) => {
@@ -64,21 +83,22 @@ export default function CheckoutPage() {
       .catch(() => {});
   }, []);
 
-  const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const displayItems = buyNowItems ?? cart;
+  const subtotal = displayItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const deliveryChargeBase = deliveryArea === "inside" ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
   const deliveryCharge = appliedCoupon?.freeShipping ? 0 : deliveryChargeBase;
   const codFee = paymentMethod === "cod" ? Math.round((subtotal * deliverySettings.codPercentage) / 100) : 0;
   const discountAmount = appliedCoupon?.discount ?? 0;
   const total = Math.max(0, subtotal - discountAmount + deliveryCharge + codFee);
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const itemCount = displayItems.reduce((sum, item) => sum + item.quantity, 0);
   useEffect(() => {
-    if (cart.length === 0 || placed) return;
+    if (displayItems.length === 0 || placed) return;
     trackLead({
       value: subtotal,
       currency: "BDT",
       num_items: itemCount,
     });
-  }, [cart.length, placed, subtotal, itemCount]);
+  }, [displayItems.length, placed, subtotal, itemCount]);
 
 
   const handleChange = (e) => {
@@ -154,10 +174,11 @@ export default function CheckoutPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const cartSnapshot = cart.map((item) => ({ ...item }));
+    const itemsToUse = buyNowItems ?? cart;
+    const cartSnapshot = itemsToUse.map((item) => ({ ...item }));
 
     try {
-      const items = cart.map((i) => ({
+      const items = itemsToUse.map((i) => ({
         id: i.id,
         name: i.name,
         price: i.price,
@@ -210,7 +231,8 @@ export default function CheckoutPage() {
         },
       });
       setPlaced(true);
-      clearCart();
+      if (buyNowItems) setBuyNowItems(null);
+      else clearCart();
     } catch (err) {
       setError("Something went wrong");
     } finally {
@@ -218,7 +240,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (cart.length === 0 && !placed) {
+  if (displayItems.length === 0 && !placed) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("cart.empty")}</h1>
@@ -415,7 +437,7 @@ export default function CheckoutPage() {
           <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
             <h2 className="font-semibold text-gray-900 mb-4">{t("cart.orderSummary")}</h2>
             <ul className="space-y-2 mb-4 max-h-64 overflow-y-auto">
-              {cart.map((item) => (
+              {displayItems.map((item) => (
                 <li key={item.id} className="flex justify-between text-sm">
                   <span className="text-gray-700">
                     {item.name} × {item.quantity}

@@ -227,11 +227,13 @@ export default function EditProductPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
+              <p className="text-xs text-gray-500 mb-1">Write in your own words — no character limit.</p>
               <textarea
-                rows={4}
+                rows={8}
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="Product description, features, materials..."
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -361,32 +363,32 @@ export default function EditProductPage() {
 
         <div id="specification-warranty" ref={specsSectionRef} className="mt-8 space-y-6 scroll-mt-24 p-6 bg-gray-50/50 rounded-lg border border-gray-100">
           <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-1">Specification & Warranty</h2>
-            <p className="text-sm text-gray-500 mb-4">Add or modify specifications (key-value) and warranty. Changes will appear on the product page.</p>
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Product Attributes / Specification</h2>
+            <p className="text-sm text-gray-500 mb-4">Add any attributes you want. Key = attribute name, Value = your text (any length). Changes will appear on the product page.</p>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-gray-600">Add key-value pairs for product specs</span>
+              <span className="text-sm text-gray-600">Key-value pairs — write as you like</span>
               <button type="button" onClick={addSpecification} className="inline-flex items-center gap-1 text-sm text-red-600 font-medium hover:underline">
                 <Plus className="w-4 h-4" /> Add
               </button>
             </div>
             <div className="space-y-3">
               {(form.specifications || []).map((s, i) => (
-                <div key={i} className="flex gap-2 items-end">
+                <div key={i} className="flex gap-2 items-start">
                   <input
                     type="text"
                     value={s.key}
                     onChange={(e) => updateSpecification(i, "key", e.target.value)}
-                    placeholder="Key (e.g. Display Size)"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    placeholder="Attribute name (e.g. Display, RAM)"
+                    className="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg text-sm"
                   />
-                  <input
-                    type="text"
+                  <textarea
+                    rows={2}
                     value={s.value}
                     onChange={(e) => updateSpecification(i, "value", e.target.value)}
-                    placeholder="Value (e.g. 6.1 Inch)"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    placeholder="Value — write as you like (any length)"
+                    className="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg text-sm resize-y"
                   />
-                  <button type="button" onClick={() => removeSpecification(i)} className="p-2 text-red-500 hover:bg-red-50 rounded">
+                  <button type="button" onClick={() => removeSpecification(i)} className="p-2 text-red-500 hover:bg-red-50 rounded shrink-0">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>

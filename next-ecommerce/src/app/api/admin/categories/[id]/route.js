@@ -52,6 +52,7 @@ export async function PUT(request, { params }) {
     if (body.image != null) update.image = body.image;
     if (body.status != null) update.status = body.status;
     if (body.slug != null) update.slug = body.slug;
+    if (body.parentId !== undefined) update.parentId = body.parentId || null;
     const category = await Category.findByIdAndUpdate(id, update, { new: true }).lean();
     if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
     return NextResponse.json({

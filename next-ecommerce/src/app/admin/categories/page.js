@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Search, Pencil, Trash2, FolderTree, Upload } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Upload, FolderPlus } from "lucide-react";
 import CategoriesEmptyState from "@/components/admin/CategoriesEmptyState";
 import DeleteSuccessModal from "@/components/admin/DeleteSuccessModal";
 
@@ -15,7 +15,7 @@ export default function AdminCategoriesPage() {
   const [deleting, setDeleting] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [addForm, setAddForm] = useState({ name: "", image: "", status: "active" });
+  const [addForm, setAddForm] = useState({ name: "", image: "", status: "active", parentId: "" });
   const [addSaving, setAddSaving] = useState(false);
 
   useEffect(() => {
@@ -53,13 +53,13 @@ export default function AdminCategoriesPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(addForm),
+        body: JSON.stringify({ ...addForm, parentId: addForm.parentId || null }),
       });
       if (res.ok) {
         const data = await res.json();
         setCategories((prev) => [...prev, data]);
         setAddModalOpen(false);
-        setAddForm({ name: "", image: "", status: "active" });
+        setAddForm({ name: "", image: "", status: "active", parentId: "" });
       }
     } catch (e) {
       console.error(e);
@@ -78,7 +78,31 @@ export default function AdminCategoriesPage() {
     if (res.ok && data.url) setAddForm((f) => ({ ...f, image: data.url }));
   }
 
-  const filtered = categories.filter(
+  const mainCategories = useMemo(
+    () => categories.filter((c) => !c.parentId || c.parentId === ""),
+    [categories]
+  );
+  const subcategoriesByParent = useMemo(() => {
+    const map = {};
+    categories.forEach((c) => {
+      const pid = c.parentId?.toString?.() || c.parentId;
+      if (pid) {
+        if (!map[pid]) map[pid] = [];
+        map[pid].push(c);
+      }
+    });
+    return map;
+  }, [categories]);
+  /** Flat list for table: each main cat then its subcats */
+  const tableRows = useMemo(() => {
+    const list = [];
+    mainCategories.forEach((main) => {
+      list.push({ ...main, isSub: false });
+      (subcategoriesByParent[main.id] || []).forEach((sub) => list.push({ ...sub, isSub: true, parentName: main.name }));
+    });
+    return list;
+  }, [mainCategories, subcategoriesByParent]);
+  const filtered = tableRows.filter(
     (c) => !search || (c.name || "").toLowerCase().includes(search.toLowerCase())
   );
 
@@ -107,11 +131,14 @@ export default function AdminCategoriesPage() {
               />
             </div>
             <button
-              onClick={() => setAddModalOpen(true)}
+              onClick={() => {
+                setAddForm({ name: "", image: "", status: "active", parentId: "" });
+                setAddModalOpen(true);
+              }}
               className="inline-flex items-center gap-2 px-4 py-2 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition"
             >
               <Plus className="w-4 h-4" />
-              Add New Category
+              Add Category
             </button>
           </div>
         )}
@@ -126,6 +153,7 @@ export default function AdminCategoriesPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Category Name</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Type</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Image</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Slug</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
@@ -134,7 +162,21 @@ export default function AdminCategoriesPage() {
               <tbody className="divide-y divide-gray-200">
                 {filtered.map((cat) => (
                   <tr key={cat.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium text-gray-900">{cat.name}</td>
+                    <td className="px-4 py-3">
+                      <div className={cat.isSub ? "pl-6 border-l-2 border-gray-200" : ""}>
+                        <span className="font-medium text-gray-900">{cat.name}</span>
+                        {cat.isSub && cat.parentName && (
+                          <span className="ml-2 text-xs text-gray-500">under {cat.parentName}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {cat.isSub ? (
+                        <span className="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">Subcategory</span>
+                      ) : (
+                        <span className="text-xs text-gray-500">Main</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
                         <Image
@@ -149,7 +191,20 @@ export default function AdminCategoriesPage() {
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{cat.slug || "-"}</td>
                     <td className="px-4 py-3">
-                      <div className="flex gap-1">
+                      <div className="flex items-center gap-1 flex-wrap">
+                        {!cat.isSub && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAddForm({ name: "", image: "", status: "active", parentId: cat.id });
+                              setAddModalOpen(true);
+                            }}
+                            className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
+                            title="Add subcategory"
+                          >
+                            <FolderPlus className="w-4 h-4" />
+                          </button>
+                        )}
                         <Link
                           href={`/admin/categories/${cat.id}/edit`}
                           className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
@@ -158,7 +213,7 @@ export default function AdminCategoriesPage() {
                         </Link>
                         <button
                           onClick={() => setConfirmDelete(cat.id)}
-                          className="p-1.5 text-gray-500 hover:text-brand hover:bg-brand/5 rounded"
+                          className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -183,6 +238,20 @@ export default function AdminCategoriesPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Category</h3>
               <form onSubmit={handleAddCategory} className="space-y-4">
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
+                  <select
+                    value={addForm.parentId}
+                    onChange={(e) => setAddForm((f) => ({ ...f, parentId: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                  >
+                    <option value="">Main category (no parent)</option>
+                    {mainCategories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                  <p className="mt-0.5 text-xs text-gray-500">Select a parent to add a subcategory.</p>
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category Name *</label>
                   <input
                     type="text"
@@ -190,7 +259,7 @@ export default function AdminCategoriesPage() {
                     value={addForm.name}
                     onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
-                    placeholder="e.g. Electronics"
+                    placeholder={addForm.parentId ? "e.g. Smartphones" : "e.g. Electronics"}
                   />
                 </div>
                 <div>

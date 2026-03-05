@@ -45,7 +45,7 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: "Invalid banner ID" }, { status: 400 });
     }
     const body = await request.json();
-    const { title, subtitle, image, link, linkText, order, enabled } = body;
+    const { title, subtitle, image, link, linkText, order, enabled, section } = body;
 
     await connectDB();
     const banner = await Banner.findByIdAndUpdate(
@@ -58,6 +58,7 @@ export async function PUT(request, { params }) {
         ...(linkText !== undefined && { linkText }),
         ...(order !== undefined && { order }),
         ...(enabled !== undefined && { enabled }),
+        ...(section !== undefined && { section: String(section).trim() || "hero" }),
       },
       { new: true }
     );

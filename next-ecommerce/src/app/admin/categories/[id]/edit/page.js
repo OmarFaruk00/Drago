@@ -11,18 +11,32 @@ export default function EditCategoryPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ name: "", image: "", status: "active" });
+  const [form, setForm] = useState({ name: "", image: "", status: "active", parentId: "" });
   const [uploading, setUploading] = useState(false);
+  const [mainCategories, setMainCategories] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/admin/categories", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setMainCategories(data.filter((c) => !c.parentId && c.id !== params.id));
+        }
+      })
+      .catch(() => {});
+  }, [params.id]);
 
   useEffect(() => {
     fetch(`/api/admin/categories/${params.id}`, { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
         if (data.error) throw new Error(data.error);
+        const parentId = data.parentId?.toString?.() || data.parentId || "";
         setForm({
           name: data.name || "",
           image: data.image || "",
           status: data.status || "active",
+          parentId: parentId || "",
         });
       })
       .catch(() => setForm(null))
@@ -60,7 +74,7 @@ export default function EditCategoryPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, parentId: form.parentId || null }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -117,6 +131,19 @@ export default function EditCategoryPage() {
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
+              <select
+                value={form.parentId}
+                onChange={(e) => setForm((f) => ({ ...f, parentId: e.target.value }))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+              >
+                <option value="">Main category (no parent)</option>
+                {mainCategories.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>

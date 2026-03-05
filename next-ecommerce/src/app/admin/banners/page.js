@@ -10,6 +10,11 @@ export default function AdminBannersPage() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const SECTION_OPTIONS = [
+    { value: "hero", label: "Hero Slider" },
+    { value: "after_top_products", label: "After Top Products" },
+    { value: "promo", label: "Promo / Other" },
+  ];
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
@@ -18,6 +23,7 @@ export default function AdminBannersPage() {
     linkText: "",
     order: 0,
     enabled: true,
+    section: "hero",
   });
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -46,6 +52,7 @@ export default function AdminBannersPage() {
       linkText: "",
       order: banners.length,
       enabled: true,
+      section: "hero",
     });
     setModalOpen(true);
   }
@@ -60,6 +67,7 @@ export default function AdminBannersPage() {
       linkText: banner.linkText || "",
       order: banner.order ?? 0,
       enabled: banner.enabled !== false,
+      section: banner.section || "hero",
     });
     setModalOpen(true);
   }
@@ -174,6 +182,9 @@ export default function AdminBannersPage() {
                   <p className="font-medium text-gray-900 truncate">{b.title || "Untitled"}</p>
                   <p className="text-sm text-gray-500 truncate">{b.subtitle || b.link || "—"}</p>
                 </div>
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 whitespace-nowrap">
+                  {SECTION_OPTIONS.find((o) => o.value === (b.section || "hero"))?.label || b.section || "Hero"}
+                </span>
                 <span
                   className={`px-2 py-0.5 rounded text-xs font-medium ${
                     b.enabled ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"
@@ -270,6 +281,19 @@ export default function AdminBannersPage() {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     placeholder="Shop Now"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Show in section</label>
+                  <select
+                    value={form.section || "hero"}
+                    onChange={(e) => setForm((f) => ({ ...f, section: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                  >
+                    {SECTION_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  <p className="mt-1 text-xs text-gray-500">Hero Slider = top slider; After Top Products = banner below Top Products.</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <input

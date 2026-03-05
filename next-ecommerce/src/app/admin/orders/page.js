@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -10,6 +10,7 @@ import {
   MoreVertical,
   ChevronLeft,
   ChevronRight,
+  Calendar,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
@@ -40,7 +41,21 @@ export default function AdminOrdersPage() {
   const [selected, setSelected] = useState(new Set());
   const [search, setSearch] = useState("");
   const [orderFilter, setOrderFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [showDateFilter, setShowDateFilter] = useState(false);
+  const dateFilterRef = useRef(null);
   const perPage = 10;
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (dateFilterRef.current && !dateFilterRef.current.contains(e.target)) {
+        setShowDateFilter(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     fetch("/api/admin/orders", { credentials: "include" })
@@ -81,7 +96,17 @@ export default function AdminOrdersPage() {
       String(o.id || "").toLowerCase().includes(q);
     const matchFilter =
       orderFilter === "all" || (o.status || "").toLowerCase() === orderFilter.toLowerCase();
-    return matchSearch && matchFilter;
+    const orderDate = new Date(o.createdAt || o.created_at).getTime();
+    let matchDate = true;
+    if (dateFrom) {
+      const fromStart = new Date(dateFrom).setHours(0, 0, 0, 0);
+      if (orderDate < fromStart) matchDate = false;
+    }
+    if (dateTo) {
+      const toEnd = new Date(dateTo).setHours(23, 59, 59, 999);
+      if (orderDate > toEnd) matchDate = false;
+    }
+    return matchSearch && matchFilter && matchDate;
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
@@ -147,10 +172,66 @@ export default function AdminOrdersPage() {
               className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-brand/20 focus:border-brand"
             />
           </div>
-          <button className="shrink-0 flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100">
-            Filter By Date
-            <ChevronDown className="w-4 h-4" />
-          </button>
+          <div ref={dateFilterRef} className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowDateFilter((s) => !s)}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-2 text-sm border rounded-lg transition ${
+                dateFrom || dateTo
+                  ? "border-brand bg-brand/5 text-brand"
+                  : "border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Calendar className="w-4 h-4" />
+              Filter By Date
+              <ChevronDown className={`w-4 h-4 transition-transform ${showDateFilter ? "rotate-180" : ""}`} />
+            </button>
+            {showDateFilter && (
+              <div className="absolute right-0 top-full mt-1 z-20 bg-white rounded-lg border border-gray-200 shadow-lg p-4 w-72">
+                <p className="text-xs font-medium text-gray-500 mb-3">Filter orders by date range</p>
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-xs text-gray-600 mb-0.5">From</label>
+                    <input
+                      type="date"
+                      value={dateFrom}
+                      onChange={(e) => setDateFrom(e.target.value)}
+                      className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-600 mb-0.5">To</label>
+                    <input
+                      type="date"
+                      value={dateTo}
+                      onChange={(e) => setDateTo(e.target.value)}
+                      className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDateFrom("");
+                      setDateTo("");
+                      setShowDateFilter(false);
+                    }}
+                    className="flex-1 px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowDateFilter(false)}
+                    className="flex-1 px-3 py-1.5 text-sm bg-brand text-white rounded-lg hover:bg-brand-dark"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="flex gap-1 shrink-0">
             <button className="p-2 text-gray-500 hover:text-brand hover:bg-red-50 rounded-lg">
               <Pencil className="w-4 h-4" />

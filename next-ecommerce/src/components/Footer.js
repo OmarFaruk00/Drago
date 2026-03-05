@@ -82,9 +82,8 @@ export default function Footer() {
   const aboutLinks = Array.isArray(footer?.aboutLinks) && footer.aboutLinks.length > 0 ? footer.aboutLinks : [
     { label: "Our Mission & Vision", href: "/about" },
     { label: "Why Choose Us", href: "/about" },
-    { label: "Terms & Condition", href: "/terms" },
+    { label: "Terms & Condition", href: "/about#terms" },
     { label: "Blog", href: "/blog" },
-    { label: "Faqs", href: "/faq" },
   ];
   const accountLinks = Array.isArray(footer?.accountLinks) && footer.accountLinks.length > 0 ? footer.accountLinks : [
     { label: "My Account", href: "/account" },

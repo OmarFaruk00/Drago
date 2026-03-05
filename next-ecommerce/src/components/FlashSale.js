@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * FlashSale - 3-slide carousel (4 cards per slide) using ProductCard
+ * FlashSale - Fetches from /api/flash-sale. Renders only when active and end time not passed.
+ * Products and time are set by admin (Flash Sale settings).
  */
 
 import { useState, useEffect, useMemo } from "react";
@@ -11,15 +12,29 @@ import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { useFlashSaleCountdown } from "@/lib/utils/useFlashSaleCountdown";
 
-export default function FlashSale({ products = [] }) {
-  const timeLeft = useFlashSaleCountdown();
+export default function FlashSale() {
+  const [flashData, setFlashData] = useState(null);
+  const timeLeft = useFlashSaleCountdown(flashData?.endTime ?? null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  useEffect(() => {
+    fetch("/api/flash-sale")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.active && Array.isArray(data.products) && data.products.length > 0) {
+          setFlashData({ products: data.products, endTime: data.endTime });
+        } else {
+          setFlashData(null);
+        }
+      })
+      .catch(() => setFlashData(null));
+  }, []);
+
+  const products = flashData?.products ?? [];
   const SLIDE_SIZE = 4;
   const TOTAL_SLIDES = 3;
   const TOTAL_PRODUCTS = SLIDE_SIZE * TOTAL_SLIDES;
 
-  // Deterministic initial list so server and client render the same (avoids hydration error)
   const initialPool = useMemo(() => {
     if (!products?.length) return [];
     const pool = [];
@@ -27,11 +42,10 @@ export default function FlashSale({ products = [] }) {
       pool.push(...products);
     }
     return pool.slice(0, TOTAL_PRODUCTS);
-  }, [products, TOTAL_PRODUCTS]);
+  }, [products.length]);
 
   const [preparedProducts, setPreparedProducts] = useState(initialPool);
 
-  // Shuffle only on client after mount so server and first client paint match
   useEffect(() => {
     if (!products?.length) return;
     const shuffled = [...products];
@@ -44,7 +58,7 @@ export default function FlashSale({ products = [] }) {
       pool.push(...shuffled);
     }
     setPreparedProducts(pool.slice(0, TOTAL_PRODUCTS));
-  }, [products, TOTAL_PRODUCTS]);
+  }, [products]);
 
   const slides = useMemo(() => {
     if (!preparedProducts.length) return [];
@@ -73,6 +87,9 @@ export default function FlashSale({ products = [] }) {
     { label: "Min", value: timeLeft.min },
     { label: "Sec", value: timeLeft.sec },
   ];
+
+  const expired = timeLeft.days === 0 && timeLeft.hrs === 0 && timeLeft.min === 0 && timeLeft.sec === 0;
+  if (!flashData || !products.length || expired) return null;
 
   return (
     <section className="pt-2 pb-2 sm:pt-3 sm:pb-3 md:pt-4 md:pb-4 px-3 sm:px-4">

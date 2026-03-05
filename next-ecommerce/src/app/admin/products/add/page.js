@@ -273,12 +273,13 @@ export default function AddProductPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Product Description</label>
+                <p className="text-xs text-gray-500 mb-1">Write in your own words — no character limit. Use as much detail as you want.</p>
                 <textarea
-                  rows={4}
+                  rows={8}
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
-                  placeholder="Product description"
+                  placeholder="e.g. Full product description, features, materials, care instructions..."
                 />
               </div>
             </div>
@@ -541,8 +542,8 @@ export default function AddProductPage() {
 
             {/* Specification & Warranty - Add and modify anytime */}
             <div id="specification-warranty" className="p-6 border-b border-gray-100 bg-gray-50/50 rounded-lg">
-              <h2 className="text-base font-bold text-gray-900 mb-1">Specification & Warranty</h2>
-              <p className="text-sm text-gray-500 mb-4">Add specifications (key-value) and warranty text. You can modify these later from the product edit page.</p>
+              <h2 className="text-base font-bold text-gray-900 mb-1">Product Attributes / Specification</h2>
+              <p className="text-sm text-gray-500 mb-4">Add any attributes you want. Key = attribute name (e.g. Display, RAM), Value = your text (any length). You can modify these later from the product edit page.</p>
               <div className="space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -557,25 +558,25 @@ export default function AddProductPage() {
                   </div>
                   <div className="space-y-3">
                     {(form.specifications || []).map((s, i) => (
-                      <div key={i} className="flex gap-2 items-end">
+                      <div key={i} className="flex gap-2 items-start">
                         <input
                           type="text"
                           value={s.key}
                           onChange={(e) => updateSpecification(i, "key", e.target.value)}
-                          placeholder="Key (e.g. Display Size)"
-                          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                          placeholder="Attribute name (e.g. Display, RAM, Color)"
+                          className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-lg text-sm"
                         />
-                        <input
-                          type="text"
+                        <textarea
+                          rows={2}
                           value={s.value}
                           onChange={(e) => updateSpecification(i, "value", e.target.value)}
-                          placeholder="Value (e.g. 6.1 Inch)"
-                          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                          placeholder="Value — write as you like (e.g. 6.1 Inch, 8GB, or longer text)"
+                          className="flex-1 min-w-0 px-3 py-2 border border-gray-200 rounded-lg text-sm resize-y"
                         />
                         <button
                           type="button"
                           onClick={() => removeSpecification(i)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded"
+                          className="p-2 text-red-500 hover:bg-red-50 rounded shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

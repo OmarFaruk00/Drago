@@ -70,7 +70,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="space-y-8">
+        <section id="terms" className="space-y-8 scroll-mt-24">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{d.termsTitle || "Terms & Conditions"}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>

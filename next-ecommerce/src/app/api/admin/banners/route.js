@@ -38,7 +38,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { title, subtitle, image, link, linkText, order, enabled } = body;
+    const { title, subtitle, image, link, linkText, order, enabled, section } = body;
     if (!image || !image.trim()) {
       return NextResponse.json({ error: "Banner image is required" }, { status: 400 });
     }
@@ -53,6 +53,7 @@ export async function POST(request) {
         linkText: linkText || "",
         order: typeof order === "number" ? order : 0,
         enabled: enabled !== false,
+        section: (section && String(section).trim()) || "hero",
       });
       return NextResponse.json(toJson(banner));
     }

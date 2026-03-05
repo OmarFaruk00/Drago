@@ -1,23 +1,26 @@
 "use client";
 
 /**
- * Home Page - Matches Figma design
- * Hero, Flash Sale, Categories, Top Products, Promo Banner, Explore Products, Testimonials
+ * Home Page - Hero, Flash Sale, Categories, Top Products, Promo, Explore, Testimonials
+ * Below-fold sections lazy-loaded for faster initial load.
  */
 
 import { useEffect, useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
 import { useLanguage } from "@/contexts/LanguageContext";
-import CategorySection from "@/components/CategorySection";
-import FlashSale from "@/components/FlashSale";
-import ProductGrid from "@/components/ProductGrid";
-import PromoBanner from "@/components/PromoBanner";
-import Testimonials from "@/components/Testimonials";
 import { categories } from "@/lib/data/categories";
 import { testimonials as dummyTestimonials } from "@/lib/data/testimonials";
 import { products as staticProducts } from "@/lib/data/products";
 import { shuffleArray } from "@/lib/utils/shuffle";
+
+const FlashSale = dynamic(() => import("@/components/FlashSale"), { loading: () => <div className="min-h-[200px] rounded-xl bg-gray-100 animate-pulse" /> });
+const CategorySection = dynamic(() => import("@/components/CategorySection"), { loading: () => <div className="min-h-[120px] rounded-lg bg-gray-100 animate-pulse" /> });
+const ProductGrid = dynamic(() => import("@/components/ProductGrid"), { loading: () => <div className="min-h-[280px] rounded-lg bg-gray-100 animate-pulse" /> });
+const AfterTopProductsBanner = dynamic(() => import("@/components/AfterTopProductsBanner"), { loading: () => <div className="min-h-[100px] rounded-xl bg-gray-100 animate-pulse" /> });
+const PromoBanner = dynamic(() => import("@/components/PromoBanner"), { loading: () => <div className="min-h-[140px] rounded-xl bg-gray-100 animate-pulse" /> });
+const Testimonials = dynamic(() => import("@/components/Testimonials"), { loading: () => <div className="min-h-[180px] rounded-xl bg-gray-100 animate-pulse" /> });
 
 const PRODUCT_CACHE_KEY = "drago.products.cache.v1";
 const PRODUCT_CACHE_TTL = 1000 * 60 * 5; // 5 minutes
@@ -114,17 +117,18 @@ export default function HomePage() {
 
   useEffect(() => {
     let isActive = true;
-    fetch("/api/testimonials")
-      .then((res) => res.json())
-      .then((data) => {
-        if (!isActive) return;
-        if (Array.isArray(data) && data.length > 0) {
-          setTestimonials(data);
-        }
-      })
-      .catch(() => {});
+    const tId = setTimeout(() => {
+      fetch("/api/testimonials")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!isActive) return;
+          if (Array.isArray(data) && data.length > 0) setTestimonials(data);
+        })
+        .catch(() => {});
+    }, 400);
     return () => {
       isActive = false;
+      clearTimeout(tId);
     };
   }, []);
 
@@ -172,7 +176,7 @@ export default function HomePage() {
     <div>
       <HeroSection />
       <section className="max-w-6xl mx-auto mt-3 sm:mt-4 px-3 sm:px-4 md:px-6">
-        <FlashSale products={productPool} />
+        <FlashSale />
       </section>
 
       {/* Categories - Top Products এর উপরে */}
@@ -197,6 +201,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <AfterTopProductsBanner />
 
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
         <PromoBanner />

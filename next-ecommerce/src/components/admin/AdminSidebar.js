@@ -21,6 +21,7 @@ import {
   BookOpen,
   Mail,
   PenSquare,
+  Zap,
 } from "lucide-react";
 
 const menuItems = [
@@ -29,6 +30,7 @@ const menuItems = [
   { href: "/admin/products", label: "Products", icon: Tag },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/banners", label: "Banners", icon: Image },
+  { href: "/admin/flash-sale", label: "Flash Sale", icon: Zap },
   { href: "/admin/home-sections", label: "Home Sections", icon: LayoutGrid },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },
   { href: "/admin/about", label: "About Us", icon: BookOpen },

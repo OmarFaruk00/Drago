@@ -328,7 +328,7 @@ export default function RegisterPage() {
                 />
                 <span className="text-sm text-gray-600">
                   I agree to the{" "}
-                  <Link href="/terms" className="text-brand hover:underline">
+                  <Link href="/about#terms" className="text-brand hover:underline">
                     Terms of Service
                   </Link>
                   {" "}and{" "}

@@ -69,8 +69,8 @@ function augmentProduct(p) {
   return { ...p, images, brand, productCode, colors, sizeVariants, simTypes, storageVariants, specs };
 }
 
-function FlashSaleTimer() {
-  const timeLeft = useFlashSaleCountdown();
+function FlashSaleTimer({ endTime }) {
+  const timeLeft = useFlashSaleCountdown(endTime ?? null);
   const items = [
     { label: "Day", value: timeLeft.days },
     { label: "Hour", value: timeLeft.hrs },
@@ -115,6 +115,21 @@ export default function ProductDetailsPage() {
   const removeFromWishlist = useStore((s) => s.removeFromWishlist);
   const wishlist = useStore((s) => s.wishlist);
   const isInWishlist = product && wishlist?.some((w) => w.id === product.id);
+  const [flashSaleEndTime, setFlashSaleEndTime] = useState(null);
+
+  useEffect(() => {
+    if (!product?.id) return;
+    fetch("/api/flash-sale")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.active && Array.isArray(data.productIds) && data.productIds.includes(product.id)) {
+          setFlashSaleEndTime(data.endTime ?? null);
+        } else {
+          setFlashSaleEndTime(null);
+        }
+      })
+      .catch(() => setFlashSaleEndTime(null));
+  }, [product?.id]);
 
   // Scroll to top on load to prevent footer jump on certain viewport sizes
   useEffect(() => {
@@ -166,16 +181,16 @@ export default function ProductDetailsPage() {
   const handleBuyNow = () => {
     if (!product) return;
     const variantPrice = product.sizeVariants?.[selectedSize]?.price ?? product.storageVariants?.[selectedStorage]?.price ?? product.price;
-    addToCart(
-      { id: product.id, name: product.name, price: variantPrice, image: product.image },
-      quantity
-    );
+    const item = { id: product.id, name: product.name, price: variantPrice, image: product.image, quantity };
+    try {
+      sessionStorage.setItem("buyNowItem", JSON.stringify(item));
+    } catch (_) {}
     router.push("/checkout");
   };
 
   const currentPrice = product?.sizeVariants?.[selectedSize]?.price ?? product?.storageVariants?.[selectedStorage]?.price ?? product?.price ?? 0;
   const regularPrice = product?.originalPrice ?? product?.price ?? 0;
-  const isFlashSale = product && product.originalPrice != null && product.originalPrice > product.price;
+  const isFlashSale = product && flashSaleEndTime != null;
 
   if (loading) {
     return (
@@ -310,7 +325,7 @@ export default function ProductDetailsPage() {
                       {t("product.flashSaleLabel")}
                     </p>
                   </div>
-                  <FlashSaleTimer />
+                  <FlashSaleTimer endTime={flashSaleEndTime} />
                 </div>
               )}
               <p className="text-brand font-semibold">{product.brand}</p>
@@ -526,18 +541,7 @@ export default function ProductDetailsPage() {
                       {t("product.flashSaleLabel")}
                     </p>
                   )}
-                  <p>{product.description}</p>
-                  {product.category === "Electronics" && (
-                    <>
-                      <h3 className="text-lg font-semibold mt-4">Features</h3>
-                      <ul className="list-disc pl-6 space-y-1 mt-2">
-                        <li>Elegant design with premium build quality</li>
-                        <li>Gorilla Glass protection</li>
-                        <li>Advanced camera system</li>
-                        <li>Long-lasting battery</li>
-                      </ul>
-                    </>
-                  )}
+                  <div className="whitespace-pre-wrap">{product.description || t("product.noDescription") || "No description added."}</div>
                 </div>
               )}
               {activeTab === "warranty" && (
