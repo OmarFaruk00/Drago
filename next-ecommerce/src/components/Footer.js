@@ -14,12 +14,12 @@ import { useStore } from "@/lib/store/useStore";
 import AuthLink from "./account/AuthLink";
 
 const DEFAULT_POLICY_LINKS = [
-  { label: "Delivery Policy", href: "/policy/delivery" },
-  { label: "Return Policy", href: "/policy/return" },
-  { label: "Refund Policy", href: "/policy/refund" },
-  { label: "Cancellation Policy", href: "/policy/cancellation" },
-  { label: "Privacy Policy", href: "/policy/privacy" },
-  { label: "Warranty Policy", href: "/policy/warranty" },
+  { label: "Delivery Policy", href: "/policy#delivery" },
+  { label: "Return Policy", href: "/policy#return" },
+  { label: "Refund Policy", href: "/policy#refund" },
+  { label: "Cancellation Policy", href: "/policy#cancellation" },
+  { label: "Privacy Policy", href: "/policy#privacy" },
+  { label: "Warranty Policy", href: "/policy#warranty" },
 ];
 
 const DEFAULT_INSTAGRAM_IMAGES = [
@@ -72,6 +72,8 @@ export default function Footer() {
     return () => ac.abort();
   }, []);
 
+  const logoUrl = footer?.logoUrl || "";
+  const logoSize = footer?.logoSize || "medium";
   const copyrightText = footer?.copyrightText || `drago © ${new Date().getFullYear()}. All Rights Reserved`;
   const phone = footer?.phone || DEFAULT_PHONE;
   const email = footer?.email || DEFAULT_EMAIL;
@@ -102,6 +104,24 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-8 items-start">
           {/* Brand & Contact */}
           <div className="lg:col-span-2 flex flex-col">
+            {logoUrl && (
+              <Link href="/" className="mb-4 block w-fit">
+                <div
+                  className={`relative bg-white/5 rounded-lg overflow-hidden ${
+                    logoSize === "small" ? "h-10 w-24" : logoSize === "large" ? "h-14 w-36" : "h-12 w-28"
+                  }`}
+                >
+                  <Image
+                    src={logoUrl}
+                    alt="Logo"
+                    fill
+                    className="object-contain p-1.5"
+                    sizes="(max-width: 768px) 112px, 144px"
+                    unoptimized={logoUrl?.startsWith("data:")}
+                  />
+                </div>
+              </Link>
+            )}
             <div className="text-sm text-gray-200 mb-4 space-y-1">
               <p className="font-semibold text-white text-base">{aboutTitle}</p>
               <p className="leading-relaxed">{aboutText}</p>

@@ -32,6 +32,21 @@ export const DEFAULT_ABOUT = {
   ],
 };
 
+export const DEFAULT_POLICY = {
+  deliveryTitle: "Delivery Policy",
+  deliveryText: "We deliver across Bangladesh. Inside Dhaka delivery typically takes 2-3 business days. Outside Dhaka may take 4-7 business days depending on location. Delivery charges apply as per your area. COD available.",
+  returnTitle: "Return Policy",
+  returnText: "Products can be returned within 7 days of delivery if defective or not as described. Items must be unused and in original packaging. Contact our support to initiate a return. Return shipping may apply.",
+  refundTitle: "Refund Policy",
+  refundText: "Refunds are processed within 5-7 business days after we receive the returned item. Payment will be credited to your original payment method. For COD orders, refunds are processed via bKash or bank transfer.",
+  cancellationTitle: "Cancellation Policy",
+  cancellationText: "Orders can be cancelled before dispatch. Once shipped, cancellation is not possible. Contact us as soon as possible if you wish to cancel. Refund will be processed as per our refund policy.",
+  privacyTitle: "Privacy Policy",
+  privacyText: "We collect and use your information to process orders, improve our service, and send relevant updates. We do not sell your data. Your payment details are secure. We use cookies for a better browsing experience.",
+  warrantyTitle: "Warranty Policy",
+  warrantyText: "Products come with manufacturer warranty as stated on the product page. Warranty does not cover physical damage or misuse. Keep your invoice for warranty claims. Contact support for warranty service.",
+};
+
 export const DEFAULT_CONTACT = {
   address: "123 Main Street, Dhaka 1000, Bangladesh",
   phone: "+880 1XXX-XXXXXX",

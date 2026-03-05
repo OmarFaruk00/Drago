@@ -8,10 +8,10 @@ import connectDB from "@/lib/db/mongodb";
 import PageContent from "@/lib/models/PageContent";
 import { requireAdmin } from "@/lib/adminAuth";
 import { USE_MONGODB } from "@/lib/config";
-import { DEFAULT_ABOUT, DEFAULT_CONTACT } from "@/lib/data/pageDefaults";
+import { DEFAULT_ABOUT, DEFAULT_CONTACT, DEFAULT_POLICY } from "@/lib/data/pageDefaults";
 
-const ALLOWED_KEYS = ["about", "contact"];
-const DEFAULTS = { about: DEFAULT_ABOUT, contact: DEFAULT_CONTACT };
+const ALLOWED_KEYS = ["about", "contact", "policy"];
+const DEFAULTS = { about: DEFAULT_ABOUT, contact: DEFAULT_CONTACT, policy: DEFAULT_POLICY };
 
 export async function GET(request, { params }) {
   const auth = await requireAdmin();

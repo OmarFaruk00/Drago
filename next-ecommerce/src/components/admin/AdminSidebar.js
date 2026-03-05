@@ -22,6 +22,7 @@ import {
   Mail,
   PenSquare,
   Zap,
+  Shield,
 } from "lucide-react";
 
 const menuItems = [
@@ -34,6 +35,7 @@ const menuItems = [
   { href: "/admin/home-sections", label: "Home Sections", icon: LayoutGrid },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },
   { href: "/admin/about", label: "About Us", icon: BookOpen },
+  { href: "/admin/policy", label: "Privacy & Policy", icon: Shield },
   { href: "/admin/contact", label: "Contact Us", icon: Mail },
   { href: "/admin/blog", label: "Blog", icon: PenSquare },
   { href: "/admin/footer", label: "Footer", icon: FileText },

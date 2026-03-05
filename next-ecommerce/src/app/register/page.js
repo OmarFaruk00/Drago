@@ -332,7 +332,7 @@ export default function RegisterPage() {
                     Terms of Service
                   </Link>
                   {" "}and{" "}
-                  <Link href="/policy/privacy" className="text-brand hover:underline">
+                  <Link href="/policy#privacy" className="text-brand hover:underline">
                     Privacy Policy
                   </Link> *
                 </span>
