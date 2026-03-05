@@ -64,14 +64,17 @@ export default function HomePage() {
   const useDummyProducts =
     process.env.NEXT_PUBLIC_USE_DUMMY_PRODUCTS === "true";
   const [products, setProducts] = useState(staticProducts);
-  const [shuffledProducts, setShuffledProducts] = useState(staticProducts);
-  const [shuffledCategories, setShuffledCategories] = useState(categories);
   const [sectionProducts, setSectionProducts] = useState({ topProducts: [] });
   const [testimonials, setTestimonials] = useState(dummyTestimonials);
 
-  useEffect(() => {
-    setShuffledCategories(shuffleArray([...categories]));
-  }, []);
+  const shuffledProducts = useMemo(
+    () => (products.length ? shuffleArray([...products]) : []),
+    [products]
+  );
+  const shuffledCategories = useMemo(
+    () => shuffleArray([...categories]),
+    []
+  );
 
   useEffect(() => {
     if (useDummyProducts) return;
@@ -131,12 +134,6 @@ export default function HomePage() {
       clearTimeout(tId);
     };
   }, []);
-
-  useEffect(() => {
-    if (products.length) {
-      setShuffledProducts(shuffleArray(products));
-    }
-  }, [products]);
 
   const productPool = shuffledProducts.length ? shuffledProducts : products;
 
