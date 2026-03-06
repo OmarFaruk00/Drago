@@ -19,6 +19,7 @@ function toJson(doc) {
     topProductIds,
     exploreProductIds,
     exploreCount: o.exploreCount ?? 12,
+    showTestimonials: !!o.showTestimonials,
     _id: undefined,
     __v: undefined,
   };
@@ -34,6 +35,7 @@ export async function GET() {
         topProductIds: [],
         exploreProductIds: [],
         exploreCount: 12,
+        showTestimonials: false,
       });
     }
     await connectDB();
@@ -43,6 +45,7 @@ export async function GET() {
         topProductIds: [],
         exploreProductIds: [],
         exploreCount: 12,
+        showTestimonials: false,
       });
     }
     return NextResponse.json(toJson(doc));
@@ -69,12 +72,14 @@ export async function PUT(request) {
       : undefined;
     const exploreCount =
       body.exploreCount !== undefined ? Math.max(0, Number(body.exploreCount) || 12) : undefined;
+    const showTestimonials = body.showTestimonials === true || body.showTestimonials === false ? body.showTestimonials : undefined;
 
     if (!USE_MONGODB) {
       return NextResponse.json({
         topProductIds: topProductIds || [],
         exploreProductIds: exploreProductIds || [],
         exploreCount: exploreCount ?? 12,
+        showTestimonials: showTestimonials ?? false,
       });
     }
     await connectDB();
@@ -98,6 +103,7 @@ export async function PUT(request) {
         .filter(Boolean);
     }
     if (exploreCount !== undefined) doc.exploreCount = exploreCount;
+    if (showTestimonials !== undefined) doc.showTestimonials = showTestimonials;
     await doc.save();
     return NextResponse.json(toJson(doc));
   } catch (err) {

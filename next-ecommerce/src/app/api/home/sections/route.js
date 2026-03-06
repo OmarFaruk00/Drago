@@ -18,20 +18,21 @@ export async function GET() {
     if (!USE_MONGODB) {
       const all = await getProducts({});
       const topProducts = all.slice(0, 10);
-      return NextResponse.json({ topProducts });
+      return NextResponse.json({ topProducts, showTestimonials: false });
     }
     await connectDB();
     const settings = await HomeSections.get();
     const topIds = settings?.topProductIds?.length ? settings.topProductIds.map((id) => id.toString()) : [];
+    const showTestimonials = !!settings?.showTestimonials;
 
     if (topIds.length > 0) {
       const topProducts = await getProductsByIds(topIds);
-      return NextResponse.json({ topProducts });
+      return NextResponse.json({ topProducts, showTestimonials });
     }
 
     const all = await getProducts({});
     const topProducts = all.slice(0, 10);
-    return NextResponse.json({ topProducts });
+    return NextResponse.json({ topProducts, showTestimonials });
   } catch (err) {
     console.error("Home sections GET:", err);
     return NextResponse.json(

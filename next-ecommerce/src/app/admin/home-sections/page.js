@@ -50,7 +50,7 @@ export default function AdminHomeSectionsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [products, setProducts] = useState([]);
-  const [settings, setSettings] = useState({ topProductIds: [] });
+  const [settings, setSettings] = useState({ topProductIds: [], showTestimonials: false });
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef(null);
@@ -65,6 +65,7 @@ export default function AdminHomeSectionsPage() {
         if (sect && !sect.error) {
           setSettings({
             topProductIds: Array.isArray(sect.topProductIds) ? sect.topProductIds : [],
+            showTestimonials: !!sect.showTestimonials,
           });
         }
       })
@@ -129,7 +130,10 @@ export default function AdminHomeSectionsPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(settings),
+        body: JSON.stringify({
+          topProductIds: settings.topProductIds,
+          showTestimonials: settings.showTestimonials,
+        }),
       });
       if (res.ok) alert("Home sections saved.");
       else {
@@ -217,6 +221,20 @@ export default function AdminHomeSectionsPage() {
               )}
             </div>
           </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+          <h2 className="font-semibold text-gray-900 mb-2">Testimonials</h2>
+          <p className="text-xs text-gray-500 mb-4">Show &quot;What Our Customers Say&quot; section on the home page. Add testimonials from the Testimonials menu.</p>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={!!settings.showTestimonials}
+              onChange={(e) => setSettings((s) => ({ ...s, showTestimonials: e.target.checked }))}
+              className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
+            />
+            <span className="text-sm font-medium text-gray-700">Show testimonials section on home page</span>
+          </label>
+        </div>
 
         <div className="flex justify-end">
           <button

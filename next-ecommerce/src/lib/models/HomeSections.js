@@ -10,6 +10,7 @@ const homeSectionsSchema = new mongoose.Schema(
     topProductIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     exploreProductIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     exploreCount: { type: Number, default: 12 },
+    showTestimonials: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

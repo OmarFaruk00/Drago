@@ -108,9 +108,11 @@ export default function HomePage() {
       .then((res) => res.json())
       .then((data) => {
         if (!isActive || !data) return;
-        if (Array.isArray(data.topProducts)) {
-          setSectionProducts({ topProducts: data.topProducts });
-        }
+        setSectionProducts((prev) => ({
+          ...prev,
+          topProducts: Array.isArray(data.topProducts) ? data.topProducts : prev.topProducts || [],
+          showTestimonials: !!data.showTestimonials,
+        }));
       })
       .catch(() => {});
     return () => {
@@ -118,7 +120,9 @@ export default function HomePage() {
     };
   }, [useDummyProducts]);
 
+  const showTestimonials = sectionProducts.showTestimonials === true;
   useEffect(() => {
+    if (!showTestimonials) return;
     let isActive = true;
     const tId = setTimeout(() => {
       fetch("/api/testimonials")
@@ -133,7 +137,7 @@ export default function HomePage() {
       isActive = false;
       clearTimeout(tId);
     };
-  }, []);
+  }, [showTestimonials]);
 
   const productPool = shuffledProducts.length ? shuffledProducts : products;
 
@@ -224,9 +228,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto mt-4 mb-12 px-4 sm:px-6">
-        <Testimonials testimonials={testimonials} />
-      </section>
+      {showTestimonials && (
+        <section className="max-w-6xl mx-auto mt-4 mb-12 px-4 sm:px-6">
+          <Testimonials testimonials={testimonials} />
+        </section>
+      )}
     </div>
   );
 }
