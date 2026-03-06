@@ -2,25 +2,50 @@
 
 /**
  * ProductFilterSidebar - Dronado-style sticky filter
- * All Categories (hierarchical), Price, Color, Size, Rating, Brand, Top Selling
- * Collapses to drawer on mobile
+ * All Categories from API (admin), Price, Color, Size, Rating, Brand, Top Selling
  */
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
-import {
-  sidebarCategories,
-  colors,
-  sizes,
-  brands,
-} from "@/lib/data/sidebarCategories";
+import { colors, sizes, brands } from "@/lib/data/sidebarCategories";
 
 export default function ProductFilterSidebar({ products = [], isOpen, onClose }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [expandedCats, setExpandedCats] = useState(["electronics"]);
+  const [categories, setCategories] = useState([]);
+  const [expandedCats, setExpandedCats] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((data) => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => setCategories([]));
+  }, []);
+
+  const sidebarCategories = useMemo(() => {
+    const main = categories.filter((c) => !c.parentId);
+    const byParent = {};
+    categories.forEach((c) => {
+      const pid = c.parentId?.toString?.() || c.parentId;
+      if (pid) {
+        if (!byParent[pid]) byParent[pid] = [];
+        byParent[pid].push(c);
+      }
+    });
+    return main.map((m) => ({
+      id: m.id,
+      name: m.name,
+      slug: m.slug || m.name,
+      count: products.filter((p) => p.category === m.name).length,
+      children: (byParent[m.id] || []).map((s) => ({
+        name: s.name,
+        slug: s.name,
+        count: products.filter((p) => p.category === s.name).length,
+      })),
+    }));
+  }, [categories, products]);
   const [priceMin, setPriceMin] = useState(searchParams.get("min") || "");
   const [priceMax, setPriceMax] = useState(searchParams.get("max") || "");
   const [priceRange, setPriceRange] = useState(500);
@@ -70,47 +95,63 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
       >
         All Products
       </Link>
-      {/* All Categories - Hierarchical */}
-      <div>
-        <h4 className="text-sm font-semibold text-gray-900 mb-3">All Categories</h4>
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
-          {sidebarCategories.map((cat) => (
-            <div key={cat.id} className="border-b border-gray-200 last:border-b-0">
-              <button
-                onClick={() => toggleCategory(cat.id)}
-                className="w-full flex items-center justify-between px-3 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50"
-              >
-                <span>{cat.name}</span>
-                <span className="text-gray-400 text-xs">({cat.count})</span>
-                <svg
-                  className={`w-4 h-4 transition-transform ${expandedCats.includes(cat.id) ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {expandedCats.includes(cat.id) && (
-                <div className="bg-gray-50 py-1">
-                  {cat.children.map((sub) => (
+      {/* All Categories - from admin API, hierarchical */}
+      {sidebarCategories.length > 0 && (
+        <div>
+          <h4 className="text-sm font-semibold text-gray-900 mb-3">All Categories</h4>
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            {sidebarCategories.map((cat) => (
+              <div key={cat.id} className="border-b border-gray-200 last:border-b-0">
+                {cat.children?.length > 0 ? (
+                  <>
                     <button
-                      key={sub.name}
-                      onClick={() => {
-                        updateParams("category", sub.slug);
-                        onClose?.();
-                      }}
-                      className={`block w-full text-left px-4 py-1.5 text-xs ${currentCategory === sub.slug ? "text-brand font-medium" : "text-gray-600 hover:text-brand"}`}
+                      onClick={() => toggleCategory(cat.id)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50"
                     >
-                      {sub.name} ({sub.count})
+                      <span>{cat.name}</span>
+                      <span className="text-gray-400 text-xs">({cat.count})</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${expandedCats.includes(cat.id) ? "rotate-180" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
                     </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                    {expandedCats.includes(cat.id) && (
+                      <div className="bg-gray-50 py-1">
+                        {cat.children.map((sub) => (
+                          <button
+                            key={sub.name}
+                            onClick={() => {
+                              updateParams("category", sub.slug);
+                              onClose?.();
+                            }}
+                            className={`block w-full text-left px-4 py-1.5 text-xs ${currentCategory === sub.slug ? "text-brand font-medium" : "text-gray-600 hover:text-brand"}`}
+                          >
+                            {sub.name} ({sub.count})
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      updateParams("category", cat.slug || cat.name);
+                      onClose?.();
+                    }}
+                    className={`block w-full text-left px-3 py-2.5 text-sm ${currentCategory === (cat.slug || cat.name) ? "text-brand font-medium bg-brand/5" : "text-gray-700 hover:bg-gray-50"}`}
+                  >
+                    {cat.name} ({cat.count})
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Filter by Price */}
       <div>

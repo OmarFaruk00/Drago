@@ -28,7 +28,7 @@ export default function CategorySection({ categories }) {
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              href={`/products?category=${cat.slug || cat.name}`}
+              href={`/products?category=${encodeURIComponent(cat.name || "")}`}
               className="flex flex-col items-center bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition w-full"
             >
               <div className="aspect-square w-full relative bg-gray-50 overflow-hidden">

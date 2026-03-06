@@ -10,7 +10,6 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { categories } from "@/lib/data/categories";
 import { testimonials as dummyTestimonials } from "@/lib/data/testimonials";
 import { products as staticProducts } from "@/lib/data/products";
 import { shuffleArray } from "@/lib/utils/shuffle";
@@ -65,14 +64,15 @@ export default function HomePage() {
   const [products, setProducts] = useState(staticProducts);
   const [sectionProducts, setSectionProducts] = useState({ topProducts: [] });
   const [testimonials, setTestimonials] = useState(dummyTestimonials);
+  const [categories, setCategories] = useState([]);
 
   const shuffledProducts = useMemo(
     () => (products.length ? shuffleArray([...products]) : []),
     [products]
   );
   const shuffledCategories = useMemo(
-    () => shuffleArray([...categories]),
-    []
+    () => (categories.length ? shuffleArray([...categories]) : []),
+    [categories]
   );
 
   useEffect(() => {
@@ -99,6 +99,21 @@ export default function HomePage() {
       isActive = false;
     };
   }, [useDummyProducts]);
+
+  useEffect(() => {
+    let isActive = true;
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!isActive) return;
+        setCategories(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setCategories([]);
+      });
+    return () => { isActive = false; };
+  }, []);
 
   useEffect(() => {
     if (useDummyProducts) return;
@@ -183,12 +198,14 @@ export default function HomePage() {
         <FlashSale />
       </section>
 
-      {/* Categories - Top Products এর উপরে */}
-      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <CategorySection categories={shuffledCategories} />
-        </div>
-      </section>
+      {/* Categories - only when admin has added categories */}
+      {shuffledCategories.length > 0 && (
+        <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <CategorySection categories={shuffledCategories} />
+          </div>
+        </section>
+      )}
 
       {/* Top Products */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
