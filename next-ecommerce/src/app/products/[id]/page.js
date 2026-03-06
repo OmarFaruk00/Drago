@@ -50,22 +50,13 @@ function augmentProduct(p) {
     { name: "Purple", hex: "#a78bfa" },
   ];
   const sizeVariants = (p.sizeVariants && p.sizeVariants.length > 0) ? p.sizeVariants : null;
-  const simTypes = p.simTypes || ["Dual", "Single"];
-  const storageVariants = p.storageVariants || (sizeVariants ? sizeVariants.map((sv) => ({ label: sv.size, price: sv.price })) : null) || [
-    { label: "8/128GB", price: p.price },
-    { label: "8/256GB", price: Math.round(p.price * 1.15) },
-    { label: "8/512GB", price: Math.round(p.price * 1.35) },
-  ];
-  const specs = p.specifications || {
-    Model: p.name,
-    Brand: brand,
-    Network: "GSM/CDMA/HSPA/EVDO",
-    Dimensions: "146.3*70.9*7.6 mm",
-    Weight: "168 grams",
-    SIM: "Nano-SIM | eSIM | Dual SIM",
-    "Display Type": "Dynamic AMOLED 2X",
-    "Display Size": "6.1 Inch",
-  };
+  const simTypes = (p.simTypes && Array.isArray(p.simTypes) && p.simTypes.length > 0) ? p.simTypes : null;
+  const storageVariants = (p.storageVariants && p.storageVariants.length > 0)
+    ? p.storageVariants
+    : (sizeVariants ? sizeVariants.map((sv) => ({ label: sv.size, price: sv.price })) : null);
+  const specs = (p.specifications && typeof p.specifications === "object" && Object.keys(p.specifications).length > 0)
+    ? p.specifications
+    : {};
   return { ...p, images, brand, productCode, colors, sizeVariants, simTypes, storageVariants, specs };
 }
 
@@ -396,7 +387,7 @@ export default function ProductDetailsPage() {
                   </div>
                 </div>
                 )}
-                {!product.sizeVariants?.length && (
+                {!product.sizeVariants?.length && product.simTypes && product.simTypes.length > 0 && (
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-2">Sim:</p>
                   <div className="flex gap-2">
@@ -529,16 +520,20 @@ export default function ProductDetailsPage() {
             <div className="p-6">
               {activeTab === "specification" && (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <tbody>
-                      {Object.entries(product.specs || {}).map(([key, val]) => (
-                        <tr key={key} className="border-b border-gray-100">
-                          <td className="py-2 pr-4 font-medium text-gray-600 w-40">{key}</td>
-                          <td className="py-2 text-gray-900">{val}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  {product.specs && Object.keys(product.specs).length > 0 ? (
+                    <table className="w-full text-sm">
+                      <tbody>
+                        {Object.entries(product.specs).map(([key, val]) => (
+                          <tr key={key} className="border-b border-gray-100">
+                            <td className="py-2 pr-4 font-medium text-gray-600 w-40">{key}</td>
+                            <td className="py-2 text-gray-900">{val}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="text-gray-500">No specifications added.</p>
+                  )}
                 </div>
               )}
               {activeTab === "description" && (
