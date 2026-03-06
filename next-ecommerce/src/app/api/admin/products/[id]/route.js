@@ -77,6 +77,7 @@ export async function PUT(request, { params }) {
       if (body.specifications != null) update.specifications = typeof body.specifications === "object" ? body.specifications : {};
       if (body.warranty != null) update.warranty = typeof body.warranty === "string" ? body.warranty : "";
       if (body.freeShipping != null) update.freeShipping = !!body.freeShipping;
+      if (body.productCode != null) update.productCode = typeof body.productCode === "string" ? body.productCode.trim() : "";
       const product = await Product.findByIdAndUpdate(id, update, { new: true }).lean();
       if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json({

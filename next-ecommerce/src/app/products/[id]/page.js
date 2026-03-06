@@ -40,7 +40,7 @@ function augmentProduct(p) {
   const raw = p.images && Array.isArray(p.images) && p.images.length ? p.images : [baseImg, baseImg, baseImg, baseImg, baseImg, baseImg];
   const images = raw.map((img) => extractDirectImageUrl(img));
   const brand = p.brand || (p.category === "Electronics" ? "Samsung" : p.category || "Drago");
-  const productCode = p.productCode ?? "1000";
+  const productCode = (p.productCode != null && String(p.productCode).trim()) ? String(p.productCode).trim() : "";
   const colors = (p.colors && p.colors.length > 0) ? p.colors : [
     { name: "Pink", hex: "#ec4899" },
     { name: "White", hex: "#f8fafc" },
@@ -346,9 +346,11 @@ export default function ProductDetailsPage() {
                     Free Shipping
                   </span>
                 )}
-                <span className="inline-flex items-center px-3 py-1 rounded bg-gray-100 text-sm text-gray-700">
-                  Product Code: {product.productCode}
-                </span>
+                {product.productCode && (
+                  <span className="inline-flex items-center px-3 py-1 rounded bg-gray-100 text-sm text-gray-700">
+                    Product Code: {product.productCode}
+                  </span>
+                )}
               </div>
               {/* Selection Controls */}
               <div className="mt-6 space-y-4">

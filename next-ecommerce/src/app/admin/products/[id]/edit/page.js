@@ -25,6 +25,7 @@ export default function EditProductPage() {
     specifications: [],
     warranty: "",
     freeShipping: false,
+    productCode: "",
   });
   const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -88,6 +89,7 @@ export default function EditProductPage() {
           specifications: specsArr,
           warranty: data.warranty || "",
           freeShipping: !!data.freeShipping,
+          productCode: data.productCode || "",
         });
       })
       .catch(() => setForm(null))
@@ -156,6 +158,7 @@ export default function EditProductPage() {
           specifications: (form.specifications || []).filter((s) => s.key && s.value).reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
           warranty: String(form.warranty || "").trim(),
           freeShipping: !!form.freeShipping,
+          productCode: String(form.productCode || "").trim(),
         }),
       });
       const data = await res.json();
@@ -225,6 +228,19 @@ export default function EditProductPage() {
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Product Code
+              </label>
+              <input
+                type="text"
+                value={form.productCode}
+                onChange={(e) => setForm((f) => ({ ...f, productCode: e.target.value }))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="e.g. DRG-S24U-256"
+              />
+              <p className="mt-0.5 text-xs text-gray-500">Optional. Shown on product page.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

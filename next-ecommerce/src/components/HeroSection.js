@@ -2,14 +2,16 @@
 
 /**
  * HeroSection - Simple slider from admin banners (up to 6), fallback to default slides.
- * No framer-motion animations, just auto-rotating slides.
+ * No arrow icons on mobile; user swipes with finger. Desktop: arrows on hover.
  */
 
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+const SWIPE_THRESHOLD = 50;
 
 const DEFAULT_SLIDES = [
   { id: "d1", image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
@@ -24,6 +26,24 @@ export default function HeroSection() {
   const { t } = useLanguage();
   const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [index, setIndex] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const goPrev = () => setIndex((i) => (i - 1 + slides.length) % slides.length);
+  const goNext = () => setIndex((i) => (i + 1) % slides.length);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) < SWIPE_THRESHOLD) return;
+    if (diff > 0) goNext();
+    else goPrev();
+  };
 
   useEffect(() => {
     fetch("/api/banners?section=hero", { credentials: "include" })
@@ -62,7 +82,12 @@ export default function HeroSection() {
   return (
     <section className="relative bg-white overflow-hidden pt-0">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 pt-0 pb-3 sm:pb-4 md:pb-6">
-        <div className="relative group min-h-[180px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-[360px] rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+        <div
+          className="relative group min-h-[180px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-[360px] rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           {/* Background image */}
           <div className="absolute inset-0">
             <Image
@@ -126,10 +151,10 @@ export default function HeroSection() {
             ))}
           </div>
 
-          {/* Arrows - desktop: show on hover, mobile: always */}
+          {/* Arrows - desktop only (hidden on mobile; user swipes) */}
           <button
             type="button"
-            onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
+            onClick={goPrev}
             className="hidden sm:flex items-center justify-center absolute top-1/2 -translate-y-1/2 left-3 w-9 h-9 rounded-full bg-black/35 text-white hover:bg-black/60 transition-opacity opacity-0 group-hover:opacity-100"
             aria-label="Previous slide"
           >
@@ -137,31 +162,12 @@ export default function HeroSection() {
           </button>
           <button
             type="button"
-            onClick={() => setIndex((i) => (i + 1) % slides.length)}
+            onClick={goNext}
             className="hidden sm:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-3 w-9 h-9 rounded-full bg-black/35 text-white hover:bg-black/60 transition-opacity opacity-0 group-hover:opacity-100"
             aria-label="Next slide"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
-          {/* Mobile arrows - always visible, smaller */}
-          <div className="flex sm:hidden items-center justify-between absolute inset-y-1/2 -translate-y-1/2 left-2 right-2 pointer-events-none">
-            <button
-              type="button"
-              onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
-              className="pointer-events-auto w-7 h-7 rounded-full bg-black/35 text-white flex items-center justify-center"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setIndex((i) => (i + 1) % slides.length)}
-              className="pointer-events-auto w-7 h-7 rounded-full bg-black/35 text-white flex items-center justify-center"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </div>
     </section>

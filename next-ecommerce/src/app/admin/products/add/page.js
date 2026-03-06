@@ -39,6 +39,7 @@ export default function AddProductPage() {
     colors: [], // { name, hex }
     specifications: [], // { key, value }
     warranty: "",
+    productCode: "",
   });
   const [uploading, setUploading] = useState(false);
 
@@ -220,6 +221,7 @@ export default function AddProductPage() {
             .reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
           warranty: String(form.warranty || "").trim(),
           freeShipping: !!form.freeShipping,
+          productCode: String(form.productCode || "").trim(),
         }),
       });
       const data = await res.json();
@@ -271,6 +273,17 @@ export default function AddProductPage() {
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
                   placeholder="Summer T-Shirt"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Code</label>
+                <input
+                  type="text"
+                  value={form.productCode}
+                  onChange={(e) => setForm((f) => ({ ...f, productCode: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="e.g. DRG-S24U-256"
+                />
+                <p className="mt-0.5 text-xs text-gray-500">Optional. Shown on product page (e.g. for support or orders).</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Product Description</label>

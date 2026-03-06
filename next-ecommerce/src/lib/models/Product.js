@@ -98,6 +98,8 @@ const productSchema = new mongoose.Schema(
     warranty: { type: String, default: "" },
     // Free shipping flag (admin toggle)
     freeShipping: { type: Boolean, default: false },
+    // Product code (admin-set, e.g. DRG-S24U-256)
+    productCode: { type: String, trim: true, default: "" },
   },
   {
     timestamps: true,
