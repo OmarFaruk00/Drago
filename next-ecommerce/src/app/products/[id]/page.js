@@ -434,7 +434,7 @@ export default function ProductDetailsPage() {
               </div>
 
               {/* Actions */}
-              <div className="mt-6 flex flex-wrap items-center gap-4">
+              <div className="mt-6 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-4">
                 <div className="flex items-center border border-gray-300 rounded-lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -452,18 +452,18 @@ export default function ProductDetailsPage() {
                     +
                   </button>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
                   <button
                     onClick={handleBuyNow}
                     disabled={!product.inStock}
-                    className="flex items-center justify-center gap-2 min-w-[200px] sm:min-w-[240px] px-10 py-4 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition text-base"
+                    className="flex items-center justify-center gap-2 w-full sm:w-auto min-w-0 sm:min-w-[240px] px-4 sm:px-10 py-3 sm:py-4 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black disabled:bg-gray-300 disabled:cursor-not-allowed transition text-sm sm:text-base"
                   >
                     Buy now
                   </button>
                   <button
                     onClick={handleAddToCart}
                     disabled={!product.inStock}
-                    className="flex items-center justify-center gap-2 min-w-[200px] sm:min-w-[240px] px-10 py-4 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition text-base"
+                    className="flex items-center justify-center gap-2 w-full sm:w-auto min-w-0 sm:min-w-[240px] px-4 sm:px-10 py-3 sm:py-4 bg-brand text-white font-semibold rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed transition text-sm sm:text-base"
                   >
                     <ShoppingCart className="w-5 h-5" />
                     Add to cart
