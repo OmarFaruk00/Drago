@@ -13,18 +13,10 @@ import { useEffect, useState, useRef } from "react";
 
 const SWIPE_THRESHOLD = 50;
 
-const DEFAULT_SLIDES = [
-  { id: "d1", image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
-  { id: "d2", image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
-  { id: "d3", image: "https://images.unsplash.com/photo-1505740106531-4243f3831c78?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
-  { id: "d4", image: "https://images.unsplash.com/photo-1514996937319-344454492b37?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
-  { id: "d5", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
-  { id: "d6", image: "https://images.unsplash.com/photo-1522204523234-8729aa6e3d4f?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
-];
-
 export default function HeroSection() {
   const { t } = useLanguage();
-  const [slides, setSlides] = useState(DEFAULT_SLIDES);
+  const [slides, setSlides] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -51,21 +43,20 @@ export default function HeroSection() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const withImage = data.filter((b) => b.image && b.image.trim());
-          if (withImage.length > 0) {
-            setSlides(
-              withImage.slice(0, 6).map((b) => ({
+          setSlides(
+            withImage.slice(0, 6).map((b) => ({
               id: b.id || b._id,
               image: b.image || "",
               title: b.title || "",
               subtitle: b.subtitle || "",
               link: b.link || "",
               linkText: b.linkText || "",
-              }))
-            );
-          }
+            }))
+          );
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -77,7 +68,7 @@ export default function HeroSection() {
   }, [slides.length]);
 
   const current = slides[index];
-  if (!current || !current.image) return null;
+  if (loading || slides.length === 0 || !current || !current.image) return null;
 
   return (
     <section className="relative bg-white overflow-hidden pt-0">
