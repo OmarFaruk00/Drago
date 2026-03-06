@@ -42,9 +42,9 @@ export default function ProfileAvatarCard({ currentImage, onImageChange, loading
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 pb-6 border-b border-gray-100">
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative w-[120px] h-[120px] rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 pb-6 border-b border-gray-100 min-w-0 w-full">
+      <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+        <div className="relative w-20 h-20 sm:w-[120px] sm:h-[120px] rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200">
           {preview ? (
             <img
               src={preview}
@@ -62,7 +62,7 @@ export default function ProfileAvatarCard({ currentImage, onImageChange, loading
           <p className="text-xs text-gray-500">PNG, JPEG under 10MB</p>
         </div>
       </div>
-      <div className="flex items-center gap-3 self-end sm:self-center sm:ml-auto">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 self-end sm:self-center sm:ml-auto flex-shrink-0">
         <input
           ref={inputRef}
           type="file"

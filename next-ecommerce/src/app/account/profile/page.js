@@ -139,9 +139,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full min-w-0 max-w-full overflow-x-hidden">
       {/* User avatar (editable) + name */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100 min-w-0">
         <ProfileAvatarCard
           currentImage={user?.avatar}
           onImageChange={handleAvatarChange}
@@ -159,13 +159,13 @@ export default function ProfilePage() {
         </div>
       )}
       {/* Stat cards - equal width, aligned with sidebar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8 w-full min-w-0">
         {statCards.map((card) => (
           <div
             key={card.label}
-            className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 min-w-0"
+            className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 sm:p-5 flex items-center gap-2 sm:gap-4 min-w-0 overflow-hidden"
           >
-            <div className={`w-12 h-12 rounded-lg ${card.bg} flex items-center justify-center ${card.iconColor}`}>
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex-shrink-0 ${card.bg} flex items-center justify-center ${card.iconColor}`}>
               {card.icon === "cart-check" && (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -187,52 +187,52 @@ export default function ProfilePage() {
                 </svg>
               )}
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">{card.value}</p>
-              <p className="text-sm text-gray-500">{card.label}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{card.value}</p>
+              <p className="text-xs sm:text-sm text-gray-500 truncate">{card.label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Recent Order History */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Order History</h2>
-          <Link href="/account/orders" className="text-black text-sm font-medium hover:underline">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-w-0">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4 border-b border-gray-100 min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">Recent Order History</h2>
+          <Link href="/account/orders" className="text-black text-sm font-medium hover:underline flex-shrink-0">
             View All
           </Link>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto -mx-0 min-w-0">
+          <table className="w-full min-w-[560px]">
             <thead>
               <tr className="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th className="px-6 py-4">Order ID</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Total</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4"></th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4">Order ID</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4">Date</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4">Total</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4">Status</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {recentOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={5} className="px-4 sm:px-6 py-12 text-center text-gray-500">
                     No orders yet. Start shopping!
                   </td>
                 </tr>
               ) : (
                 recentOrders.map((order) => (
                   <tr key={order.id || order.fullId} className="hover:bg-gray-50/50">
-                    <td className="px-6 py-4 font-medium text-gray-900">#{order.id}</td>
-                    <td className="px-6 py-4 text-gray-600">{order.date}</td>
-                    <td className="px-6 py-4 text-gray-900">{order.total}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors[order.status?.toLowerCase()] || "bg-gray-100 text-gray-800"}`}>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-gray-900">#{order.id}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-600 whitespace-nowrap">{order.date}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-900">{order.total}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                      <span className={`inline-flex px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusColors[order.status] || statusColors[order.status?.toLowerCase()] || "bg-gray-100 text-gray-800"}`}>
                         {getStatusLabel(order.status)}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <Link href={`/account/orders/${order.fullId || order.id}`} className="text-brand text-sm hover:underline">
                         View Details
                       </Link>
@@ -244,8 +244,8 @@ export default function ProfilePage() {
           </table>
         </div>
         {recentOrders.length > 0 && (
-          <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500">
-            <span>Showing 1-{recentOrders.length} of {stats.orders}</span>
+          <div className="px-4 sm:px-6 py-4 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500 min-w-0 overflow-hidden">
+            <span className="truncate">Showing 1-{recentOrders.length} of {stats.orders}</span>
           </div>
         )}
       </div>

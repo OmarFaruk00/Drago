@@ -305,7 +305,7 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Product Identity & Pricing */}
-            <div>
+            <div className="min-w-0">
               {isFlashSale && (
                 <div className="mb-4 p-3 rounded-lg bg-brand/10 border border-brand flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
@@ -323,6 +323,18 @@ export default function ProductDetailsPage() {
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">
                 {product.name}
               </h1>
+              <div className="mt-2 flex items-center gap-2 text-amber-500">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                <span className="font-medium text-gray-800">
+                  {(() => {
+                    const r = Math.min(5, Math.max(0, Number(product.rating) || 0));
+                    return r % 1 === 0 ? String(Math.round(r)) : r.toFixed(1);
+                  })()}/5
+                </span>
+                <span className="text-sm text-gray-500">({product.reviewCount ?? 0} reviews)</span>
+              </div>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-gray-500 text-sm">Cash Discount Price:</span>
                 <span className="text-gray-400 line-through">{formatCurrency(regularPrice)}</span>
@@ -496,7 +508,7 @@ export default function ProductDetailsPage() {
 
           {/* Tabs: Specification, Description, Warranty */}
           <div className="border-t border-gray-200">
-            <div className="flex border-b border-gray-200">
+            <div className="flex border-b border-gray-200 overflow-x-auto min-w-0">
               {[
                 { id: "specification", label: "Specification" },
                 { id: "description", label: "Description" },
@@ -507,7 +519,7 @@ export default function ProductDetailsPage() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-6 py-4 text-sm font-medium transition ${
+                  className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition ${
                     activeTab === tab.id
                       ? "bg-brand text-white border-b-2 border-brand"
                       : "text-gray-600 hover:bg-gray-50"
@@ -517,7 +529,7 @@ export default function ProductDetailsPage() {
                 </button>
               ))}
             </div>
-            <div className="p-6">
+            <div className="p-6 min-w-0">
               {activeTab === "specification" && (
                 <div className="overflow-x-auto">
                   {product.specs && Object.keys(product.specs).length > 0 ? (
@@ -547,13 +559,15 @@ export default function ProductDetailsPage() {
                 </div>
               )}
               {activeTab === "warranty" && (
-                <p className="text-gray-700">
-                  This product comes with a standard manufacturer warranty.{" "}
-                  <Link href="/policy/warranty" className="text-brand hover:underline">
-                    View Warranty Policy
-                  </Link>{" "}
-                  for full details.
-                </p>
+                <div className="text-gray-700">
+                  <p>
+                    This product comes with a standard manufacturer warranty.{" "}
+                    <Link href="/policy/warranty" className="text-brand hover:underline">
+                      View Warranty Policy
+                    </Link>{" "}
+                    for full details.
+                  </p>
+                </div>
               )}
               {activeTab === "review" && (
                 <p className="text-gray-600">No reviews yet. Be the first to review!</p>
