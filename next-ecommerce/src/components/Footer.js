@@ -74,6 +74,7 @@ export default function Footer() {
 
   const logoUrl = footer?.logoUrl || "";
   const logoSize = footer?.logoSize || "medium";
+  const logoScale = Math.min(150, Math.max(50, Number(footer?.logoScale) || 100));
   const copyrightText = footer?.copyrightText || `drago © ${new Date().getFullYear()}. All Rights Reserved`;
   const phone = footer?.phone || DEFAULT_PHONE;
   const email = footer?.email || DEFAULT_EMAIL;
@@ -105,11 +106,14 @@ export default function Footer() {
           {/* Brand & Contact */}
           <div className="lg:col-span-2 flex flex-col">
             {logoUrl && (
-              <Link href="/" className="mb-4 block w-fit">
+              <Link href="/" className="mb-4 block w-fit max-w-full">
                 <div
-                  className={`relative bg-white/5 rounded-lg overflow-hidden ${
-                    logoSize === "small" ? "h-10 w-24" : logoSize === "large" ? "h-14 w-36" : "h-12 w-28"
-                  }`}
+                  className="relative bg-white/5 rounded-lg overflow-hidden"
+                  style={{
+                    width: `${(logoSize === "small" ? 96 : logoSize === "large" ? 144 : 112) * (logoScale / 100)}px`,
+                    height: `${(logoSize === "small" ? 40 : logoSize === "large" ? 56 : 48) * (logoScale / 100)}px`,
+                    maxWidth: "100%",
+                  }}
                 >
                   <Image
                     src={logoUrl}
@@ -130,6 +134,14 @@ export default function Footer() {
               {phone && <a href={`tel:${phone.replace(/\s/g, "")}`} className="font-semibold block hover:text-red-400 transition">{phone}</a>}
               {email && <a href={`mailto:${email}`} className="font-semibold block hover:text-red-400 transition">{email}</a>}
             </div>
+            <a
+              href="https://www.google.com/maps/place/Drago/@24.6900031,90.6046415,17z/data=!3m1!4b1!4m6!3m5!1s0x3756f772706f6a6f:0xe0fedd5b2092abca!8m2!3d24.6900031!4d90.6072164!16s%2Fg%2F11vbxzpwf_?entry=ttu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center justify-center min-w-[120px] px-4 py-2.5 bg-brand text-white text-sm font-medium rounded-lg hover:opacity-90 transition text-center"
+            >
+              Find Us
+            </a>
           </div>
 
           {/* About Us */}

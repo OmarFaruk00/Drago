@@ -22,6 +22,7 @@ export async function GET() {
   const defaults = {
     logoUrl: "",
     logoSize: "medium",
+    logoScale: 100,
     copyrightText: "",
     aboutTitle: "",
     aboutText: "",
@@ -60,7 +61,7 @@ export async function PUT(request) {
   try {
     const body = await request.json();
     const allowed = [
-      "logoUrl", "logoSize", "copyrightText", "aboutTitle", "aboutText", "phone", "email", "address",
+      "logoUrl", "logoSize", "logoScale", "copyrightText", "aboutTitle", "aboutText", "phone", "email", "address",
       "aboutLinks", "accountLinks", "policyLinks", "socialLinks",
       "helpSupportItems", "instagramItems",
     ];
@@ -86,6 +87,9 @@ export async function PUT(request) {
       } else if (k === "logoSize") {
         const v = String(body[k] || "medium").toLowerCase();
         data[k] = ["small", "medium", "large"].includes(v) ? v : "medium";
+      } else if (k === "logoScale") {
+        const n = Number(body[k]);
+        data[k] = isNaN(n) ? 100 : Math.min(150, Math.max(50, n));
       } else {
         data[k] = body[k];
       }

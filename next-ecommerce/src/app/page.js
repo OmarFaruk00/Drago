@@ -151,21 +151,25 @@ export default function HomePage() {
   };
 
   const useSectionData = !useDummyProducts && sectionProducts.topProducts.length > 0;
-  const topProductsSegment = useSectionData
-    ? sectionProducts.topProducts.slice(0, 10)
-    : buildSegment(0, 10);
+  const topProductsSegment = useMemo(() => {
+    const raw = useSectionData
+      ? sectionProducts.topProducts.slice(0, 10)
+      : buildSegment(0, 10);
+    return shuffleArray([...raw]);
+  }, [useSectionData, sectionProducts.topProducts, productPool]);
   const topIdsForExplore = topProductsSegment.map((p) => p.id);
   const exploreRows = useMemo(() => {
     const exclude = new Set(topIdsForExplore);
     const pool = productPool.filter((p) => !exclude.has(p.id));
     const shuffled = shuffleArray([...pool]);
-    const segment = shuffled.slice(0, 30);
+    const segment = shuffled.slice(0, 36);
     return {
       row1: segment.slice(0, 6),
       row2: segment.slice(6, 12),
       row3: segment.slice(12, 18),
       row4: segment.slice(18, 24),
       row5: segment.slice(24, 30),
+      row6: segment.slice(30, 36),
     };
   }, [productPool, topIdsForExplore.join(",")]);
 
@@ -204,7 +208,7 @@ export default function HomePage() {
 
       <AfterTopProductsBanner />
 
-      {/* Explore Our Products - 5 rows × 6, shuffled from all products */}
+      {/* Explore Our Products - 6 rows × 6, shuffled from all products */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
         <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
@@ -219,6 +223,7 @@ export default function HomePage() {
             <ProductGrid products={exploreRows.row3} columns={6} priorityCount={0} />
             <ProductGrid products={exploreRows.row4} columns={6} priorityCount={0} />
             <ProductGrid products={exploreRows.row5} columns={6} priorityCount={0} />
+            <ProductGrid products={exploreRows.row6} columns={6} priorityCount={0} />
           </div>
         </div>
       </section>

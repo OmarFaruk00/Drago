@@ -28,6 +28,7 @@ const footerSettingsSchema = new mongoose.Schema(
   {
     logoUrl: { type: String, default: "" },
     logoSize: { type: String, default: "medium", enum: ["small", "medium", "large"] },
+    logoScale: { type: Number, default: 100, min: 50, max: 150 },
     copyrightText: { type: String, default: "" },
     aboutTitle: { type: String, default: "About Drago" },
     aboutText: { type: String, default: "" },

@@ -13,6 +13,7 @@ export default function AdminFooterPage() {
   const [form, setForm] = useState({
     logoUrl: "",
     logoSize: "medium",
+    logoScale: 100,
     copyrightText: "",
     aboutTitle: "",
     aboutText: "",
@@ -35,6 +36,7 @@ export default function AdminFooterPage() {
           setForm({
             logoUrl: data.logoUrl ?? "",
             logoSize: data.logoSize ?? "medium",
+            logoScale: data.logoScale ?? 100,
             copyrightText: data.copyrightText ?? "",
             aboutTitle: data.aboutTitle ?? "",
             aboutText: data.aboutText ?? "",
@@ -148,16 +150,22 @@ export default function AdminFooterPage() {
             placeholder="Or paste image URL (optional)"
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Logo Size</label>
-            <select
-              value={form.logoSize || "medium"}
-              onChange={(e) => setForm((f) => ({ ...f, logoSize: e.target.value }))}
-              className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
-            >
-              <option value="small">Small</option>
-              <option value="medium">Medium (standard)</option>
-              <option value="large">Large</option>
-            </select>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Logo Size (zoom) — {form.logoScale ?? 100}%
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={50}
+                max={150}
+                step={5}
+                value={form.logoScale ?? 100}
+                onChange={(e) => setForm((f) => ({ ...f, logoScale: Number(e.target.value) }))}
+                className="flex-1 max-w-xs h-2 rounded-lg appearance-none cursor-pointer accent-brand"
+              />
+              <span className="text-sm text-gray-500 w-12">{form.logoScale ?? 100}%</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-0.5">Adjust zoom. Save to apply on live site.</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Copyright Text</label>
