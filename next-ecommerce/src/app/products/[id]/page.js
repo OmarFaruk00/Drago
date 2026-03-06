@@ -7,6 +7,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useStore } from "@/lib/store/useStore";
@@ -21,6 +22,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Star,
+  ImagePlus,
 } from "lucide-react";
 
 function extractDirectImageUrl(url) {
@@ -107,6 +110,15 @@ export default function ProductDetailsPage() {
   const wishlist = useStore((s) => s.wishlist);
   const isInWishlist = product && wishlist?.some((w) => w.id === product.id);
   const [flashSaleEndTime, setFlashSaleEndTime] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewImages, setReviewImages] = useState([]);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewUploading, setReviewUploading] = useState(false);
+  const reviewImageInputRef = useRef(null);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
     if (!product?.id) return;
@@ -159,6 +171,59 @@ export default function ProductDetailsPage() {
     };
     fetchRelated();
   }, [product?.id, product?.category]);
+
+  // Fetch reviews when product is loaded or when user opens Review tab
+  useEffect(() => {
+    if (!product?.id) return;
+    if (activeTab !== "review") return;
+    setReviewsLoading(true);
+    fetch(`/api/products/${product.id}/reviews`, { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => setReviews(Array.isArray(data) ? data : []))
+      .catch(() => setReviews([]))
+      .finally(() => setReviewsLoading(false));
+  }, [product?.id, activeTab]);
+
+  const handleReviewImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !session?.user?.id || reviewImages.length >= 5) return;
+    setReviewUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    fetch("/api/reviews/upload", { method: "POST", credentials: "include", body: fd })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.url) setReviewImages((prev) => [...prev, data.url].slice(0, 5));
+      })
+      .finally(() => setReviewUploading(false));
+    e.target.value = "";
+  };
+
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    if (!product?.id || !reviewText.trim() || reviewRating < 1 || reviewSubmitting) return;
+    setReviewSubmitting(true);
+    fetch(`/api/products/${product.id}/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        text: reviewText.trim(),
+        rating: reviewRating,
+        images: reviewImages,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.error) throw new Error(data.error);
+        setReviews((prev) => [{ ...data, id: data.id }, ...prev]);
+        setReviewText("");
+        setReviewRating(0);
+        setReviewImages([]);
+      })
+      .catch((err) => alert(err?.message || "Failed to submit review"))
+      .finally(() => setReviewSubmitting(false));
+  };
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -570,7 +635,147 @@ export default function ProductDetailsPage() {
                 </div>
               )}
               {activeTab === "review" && (
-                <p className="text-gray-600">No reviews yet. Be the first to review!</p>
+                <div className="space-y-6">
+                  {sessionStatus === "loading" ? null : session?.user ? (
+                    <form onSubmit={handleSubmitReview} className="space-y-4 p-4 rounded-lg bg-gray-50 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900">Write a review</h4>
+                      <div>
+                        <span className="text-sm text-gray-600 block mb-1">Rating *</span>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setReviewRating(star)}
+                              className="p-1 rounded focus:outline-none focus:ring-2 focus:ring-brand/50"
+                            >
+                              <Star
+                                className={`w-8 h-8 ${reviewRating >= star ? "text-amber-500 fill-amber-500" : "text-gray-300"}`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-600 block mb-1">Your review *</label>
+                        <textarea
+                          value={reviewText}
+                          onChange={(e) => setReviewText(e.target.value)}
+                          required
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                          placeholder="Share your experience with this product..."
+                        />
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-600 block mb-1">Photos (optional, max 5)</span>
+                        <div className="flex flex-wrap gap-2 items-center">
+                          {reviewImages.map((url, i) => (
+                            <div key={i} className="relative group">
+                              <img src={url} alt="" className="w-16 h-16 object-cover rounded border border-gray-200" />
+                              <button
+                                type="button"
+                                onClick={() => setReviewImages((p) => p.filter((_, j) => j !== i))}
+                                className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                          {reviewImages.length < 5 && (
+                            <label className="w-16 h-16 rounded border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-brand hover:bg-brand/5 transition">
+                              <input
+                                ref={reviewImageInputRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleReviewImageUpload}
+                                disabled={reviewUploading}
+                              />
+                              {reviewUploading ? (
+                                <span className="text-xs text-gray-500">...</span>
+                              ) : (
+                                <ImagePlus className="w-6 h-6 text-gray-400" />
+                              )}
+                            </label>
+                          )}
+                        </div>
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={reviewSubmitting || !reviewText.trim() || reviewRating < 1}
+                        className="px-4 py-2 bg-brand text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {reviewSubmitting ? "Submitting..." : "Submit review"}
+                      </button>
+                    </form>
+                  ) : (
+                    <p className="text-gray-600">
+                      <Link href="/login" className="text-brand hover:underline">Log in</Link> to leave a review.
+                    </p>
+                  )}
+
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">Reviews ({reviews.length})</h4>
+                    {reviewsLoading ? (
+                      <p className="text-gray-500">Loading reviews...</p>
+                    ) : reviews.length === 0 ? (
+                      <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+                    ) : (
+                      <ul className="space-y-4">
+                        {reviews.map((r) => (
+                          <li key={r.id} className="border-b border-gray-100 pb-4 last:border-0">
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                                {r.userAvatar ? (
+                                  <img src={r.userAvatar} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                  <span className="w-full h-full flex items-center justify-center text-gray-500 text-sm font-medium">
+                                    {(r.userName || "U")[0].toUpperCase()}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-medium text-gray-900">{r.userName || "User"}</span>
+                                  <span className="flex items-center gap-0.5 text-amber-500">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                      <Star
+                                        key={star}
+                                        className={`w-4 h-4 ${(r.rating || 0) >= star ? "fill-amber-500 text-amber-500" : "text-gray-200"}`}
+                                      />
+                                    ))}
+                                  </span>
+                                </div>
+                                <p className="text-gray-700 mt-1 whitespace-pre-wrap">{r.text}</p>
+                                {r.images && r.images.length > 0 && (
+                                  <div className="flex flex-wrap gap-2 mt-2">
+                                    {r.images.map((imgUrl, i) => (
+                                      <a
+                                        key={i}
+                                        href={imgUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block"
+                                      >
+                                        <img src={imgUrl} alt="" className="w-20 h-20 object-cover rounded border border-gray-200 hover:opacity-90" />
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+                                {r.createdAt && (
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    {new Date(r.createdAt).toLocaleDateString()}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>
