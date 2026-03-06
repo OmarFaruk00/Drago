@@ -97,10 +97,15 @@ export async function getProductsByIds(idList) {
 
   const mongoose = await import("mongoose");
   const Product = (await import("@/lib/models/Product")).default;
-  const validIds = idList.filter((id) => mongoose.Types.ObjectId.isValid(id));
-  if (validIds.length === 0) return [];
+  const objectIds = [];
+  for (const id of idList) {
+    const str = typeof id === "string" ? id : id?.toString?.();
+    if (str && mongoose.Types.ObjectId.isValid(str)) objectIds.push(new mongoose.Types.ObjectId(str));
+  }
+  if (objectIds.length === 0) return [];
 
-  const docs = await Product.find({ _id: { $in: validIds } }).lean();
+  const docs = await Product.find({ _id: { $in: objectIds } }).lean();
   const byId = Object.fromEntries(docs.map((d) => [d._id.toString(), d]));
-  return validIds.map((id) => byId[id]).filter(Boolean).map(toApiProduct).map(normalizeProduct);
+  const idStrings = objectIds.map((o) => o.toString());
+  return idStrings.map((id) => byId[id]).filter(Boolean).map(toApiProduct).map(normalizeProduct);
 }

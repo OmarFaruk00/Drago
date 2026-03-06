@@ -32,10 +32,10 @@ export async function GET() {
       now <= endTime &&
       (startTime == null || now >= startTime);
     const productIds = (Array.isArray(doc.productIds) ? doc.productIds : [])
-      .map((id) => (typeof id === "string" ? id : id?.toString?.()))
+      .map((id) => (typeof id === "string" ? id : id?.toString?.()).trim())
       .filter(Boolean);
 
-    if (!active || productIds.length === 0) {
+    if (!active) {
       return NextResponse.json({
         active: false,
         startTime: startTime,
@@ -45,13 +45,13 @@ export async function GET() {
       });
     }
 
-    const products = await getProductsByIds(productIds);
+    const products = productIds.length > 0 ? await getProductsByIds(productIds) : [];
     return NextResponse.json({
       active: true,
       startTime: startTime,
       endTime: endTime,
       productIds,
-      products,
+      products: products || [],
     });
   } catch (err) {
     console.error("Flash sale GET:", err);

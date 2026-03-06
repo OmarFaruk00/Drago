@@ -21,8 +21,11 @@ export default function FlashSale() {
     fetch("/api/flash-sale")
       .then((r) => r.json())
       .then((data) => {
-        if (data.active && Array.isArray(data.products) && data.products.length > 0) {
-          setFlashData({ products: data.products, endTime: data.endTime });
+        if (data && data.active && data.endTime != null) {
+          setFlashData({
+            products: Array.isArray(data.products) ? data.products : [],
+            endTime: data.endTime,
+          });
         } else {
           setFlashData(null);
         }
@@ -89,7 +92,7 @@ export default function FlashSale() {
   ];
 
   const expired = timeLeft.days === 0 && timeLeft.hrs === 0 && timeLeft.min === 0 && timeLeft.sec === 0;
-  if (!flashData || !products.length || expired) return null;
+  if (!flashData || expired) return null;
 
   return (
     <section className="pt-2 pb-2 sm:pt-3 sm:pb-3 md:pt-4 md:pb-4 px-3 sm:px-4">
@@ -131,45 +134,57 @@ export default function FlashSale() {
         </div>
 
         <div className="mt-4 sm:mt-6 md:mt-8">
-          <div className="relative">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{
-                  transform: `translateX(-${currentSlide * 100}%)`,
-                }}
-              >
-                {slides.map((slideProducts, idx) => (
-                  <div key={`slide-${idx}`} className="w-full flex-shrink-0 px-0.5 sm:px-1">
-                    <div className="flex flex-nowrap gap-2 sm:gap-3 lg:gap-4">
-                      {slideProducts.map((product, productIndex) => (
-                        <div
-                          key={`${idx}-${product.id}`}
-                          className={`min-w-[130px] sm:min-w-[170px] flex-[0_0_50%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] ${
-                            productIndex >= 2 ? "hidden lg:block" : "block"
-                          }`}
-                        >
-                          <ProductCard product={product} variant="flash" />
-                        </div>
-                      ))}
+          {products.length > 0 ? (
+            <div className="relative">
+              <div className="overflow-hidden">
+                <div
+                  className="flex transition-transform duration-500 ease-out"
+                  style={{
+                    transform: `translateX(-${currentSlide * 100}%)`,
+                  }}
+                >
+                  {slides.map((slideProducts, idx) => (
+                    <div key={`slide-${idx}`} className="w-full flex-shrink-0 px-0.5 sm:px-1">
+                      <div className="flex flex-nowrap gap-2 sm:gap-3 lg:gap-4">
+                        {slideProducts.map((product, productIndex) => (
+                          <div
+                            key={`${idx}-${product.id}`}
+                            className={`min-w-[130px] sm:min-w-[170px] flex-[0_0_50%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] ${
+                              productIndex >= 2 ? "hidden lg:block" : "block"
+                            }`}
+                          >
+                            <ProductCard product={product} variant="flash" />
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center gap-2">
+                {slides.map((_, idx) => (
+                  <span
+                    key={`dot-${idx}`}
+                    className={`h-2.5 w-2.5 rounded-full transition ${
+                      idx === currentSlide ? "bg-brand" : "bg-white/30"
+                    }`}
+                    aria-label={`Slide ${idx + 1}`}
+                  />
                 ))}
               </div>
             </div>
-
-            <div className="mt-6 flex items-center justify-center gap-2">
-              {slides.map((_, idx) => (
-                <span
-                  key={`dot-${idx}`}
-                  className={`h-2.5 w-2.5 rounded-full transition ${
-                    idx === currentSlide ? "bg-brand" : "bg-white/30"
-                  }`}
-                  aria-label={`Slide ${idx + 1}`}
-                />
-              ))}
+          ) : (
+            <div className="py-8 text-center">
+              <p className="text-white/80 text-sm mb-4">No products in this flash sale yet.</p>
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-1 text-brand font-medium hover:underline"
+              >
+                Browse all products <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-          </div>
+          )}
         </div>
 
       </div>

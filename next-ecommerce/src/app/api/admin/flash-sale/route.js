@@ -44,7 +44,9 @@ export async function PUT(request) {
     const body = await request.json();
     let startTime = body.startTime;
     let endTime = body.endTime;
-    const productIds = Array.isArray(body.productIds) ? body.productIds.filter((id) => id && String(id).trim()) : [];
+    const productIds = (Array.isArray(body.productIds) ? body.productIds : [])
+      .map((id) => (id != null ? String(id).trim() : ""))
+      .filter(Boolean);
 
     if (startTime) startTime = new Date(startTime);
     else startTime = null;
