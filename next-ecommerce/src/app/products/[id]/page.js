@@ -341,6 +341,11 @@ export default function ProductDetailsPage() {
                 <span className={`inline-flex items-center px-3 py-1 rounded text-sm font-medium ${product.inStock ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}`}>
                   Status: {product.inStock ? "Stock in" : "Stock out"}
                 </span>
+                {product.freeShipping && (
+                  <span className="inline-flex items-center px-3 py-1 rounded text-sm font-semibold bg-emerald-100 text-emerald-800">
+                    Free Shipping
+                  </span>
+                )}
                 <span className="inline-flex items-center px-3 py-1 rounded bg-gray-100 text-sm text-gray-700">
                   Product Code: {product.productCode}
                 </span>

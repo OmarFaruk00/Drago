@@ -1,12 +1,13 @@
 "use client";
 
 /**
- * HeroSection - Slider from admin banners (up to 6), fallback to default slides
+ * HeroSection - Simple slider from admin banners (up to 6), fallback to default slides.
+ * No framer-motion animations, just auto-rotating slides.
  */
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
 
@@ -18,23 +19,6 @@ const DEFAULT_SLIDES = [
   { id: "d5", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
   { id: "d6", image: "https://images.unsplash.com/photo-1522204523234-8729aa6e3d4f?w=1200&h=600&fit=crop", title: "", subtitle: "", link: "", linkText: "" },
 ];
-
-const container = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
-  },
-};
-
-const itemUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-};
 
 export default function HeroSection() {
   const { t } = useLanguage();
@@ -68,7 +52,7 @@ export default function HeroSection() {
     if (slides.length === 0) return;
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % slides.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -78,107 +62,54 @@ export default function HeroSection() {
   return (
     <section className="relative bg-white overflow-hidden pt-0">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 pt-0 pb-3 sm:pb-4 md:pb-6">
-        <div className="relative min-h-[180px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-[360px] rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0"
-            >
-              {/* Background image */}
-              <motion.div
-                className="absolute inset-0"
-                initial={{ scale: 1.08 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Image
-                  src={current.image}
-                  alt={current.title || "Hero"}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                />
-              </motion.div>
-              {/* Gradient overlay */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              />
-              {/* Content */}
-              <motion.div
-                className="absolute inset-0 flex flex-col justify-center px-4 sm:px-6 md:px-12 lg:px-16"
-                variants={container}
-                initial="hidden"
-                animate="visible"
-              >
-                {(current.title || current.subtitle) && (
-                  <>
-                    {current.title && (
-                      <motion.h1
-                        variants={itemUp}
-                        className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight"
-                      >
-                        {current.title}
-                      </motion.h1>
-                    )}
-                    {current.subtitle && (
-                      <motion.p
-                        variants={itemUp}
-                        className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md"
-                      >
-                        {current.subtitle}
-                      </motion.p>
-                    )}
-                  </>
+        <div className="relative group min-h-[180px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-[360px] rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+          {/* Background image */}
+          <div className="absolute inset-0">
+            <Image
+              src={current.image}
+              alt={current.title || "Hero"}
+              fill
+              className="object-cover"
+              priority={index === 0}
+              sizes="(max-width: 768px) 100vw, 1200px"
+            />
+          </div>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col justify-center px-4 sm:px-6 md:px-12 lg:px-16">
+            {(current.title || current.subtitle) && (
+              <>
+                {current.title && (
+                  <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight">
+                    {current.title}
+                  </h1>
                 )}
-                {!current.title && !current.subtitle && (
-                  <>
-                    <motion.h1
-                      variants={itemUp}
-                      className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight"
-                    >
-                      {t("home.hero.bigSale")}
-                    </motion.h1>
-                    <motion.p
-                      variants={itemUp}
-                      className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md"
-                    >
-                      {t("home.hero.updateStyle")}
-                    </motion.p>
-                  </>
+                {current.subtitle && (
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md">
+                    {current.subtitle}
+                  </p>
                 )}
-                <motion.div variants={itemUp}>
-                  <Link href={current.link || "/products"}>
-                    <motion.span
-                      className="inline-flex w-fit px-5 py-2.5 sm:px-6 sm:py-2.5 md:px-8 md:py-3 text-sm sm:text-base bg-brand text-white font-semibold rounded-lg shadow-lg cursor-pointer"
-                      whileHover={{
-                        scale: 1.05,
-                        boxShadow: "0 20px 40px -12px rgba(220, 38, 38, 0.5)",
-                      }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    >
-                      {current.linkText || t("home.hero.cta")}
-                    </motion.span>
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Floating accent */}
-          <motion.div
-            className="absolute bottom-2 right-4 sm:bottom-4 sm:right-8 md:right-16 w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-white/10 backdrop-blur-sm"
-            animate={{ y: [0, -10, 0], opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
+              </>
+            )}
+            {!current.title && !current.subtitle && (
+              <>
+                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight">
+                  {t("home.hero.bigSale")}
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md">
+                  {t("home.hero.updateStyle")}
+                </p>
+              </>
+            )}
+            <div>
+              <Link href={current.link || "/products"}>
+                <span className="inline-flex w-fit px-5 py-2.5 sm:px-6 sm:py-2.5 md:px-8 md:py-3 text-sm sm:text-base bg-brand text-white font-semibold rounded-lg shadow-lg cursor-pointer">
+                  {current.linkText || t("home.hero.cta")}
+                </span>
+              </Link>
+            </div>
+          </div>
 
           {/* Dots */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
@@ -193,6 +124,43 @@ export default function HeroSection() {
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
+          </div>
+
+          {/* Arrows - desktop: show on hover, mobile: always */}
+          <button
+            type="button"
+            onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
+            className="hidden sm:flex items-center justify-center absolute top-1/2 -translate-y-1/2 left-3 w-9 h-9 rounded-full bg-black/35 text-white hover:bg-black/60 transition-opacity opacity-0 group-hover:opacity-100"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIndex((i) => (i + 1) % slides.length)}
+            className="hidden sm:flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-3 w-9 h-9 rounded-full bg-black/35 text-white hover:bg-black/60 transition-opacity opacity-0 group-hover:opacity-100"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+          {/* Mobile arrows - always visible, smaller */}
+          <div className="flex sm:hidden items-center justify-between absolute inset-y-1/2 -translate-y-1/2 left-2 right-2 pointer-events-none">
+            <button
+              type="button"
+              onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
+              className="pointer-events-auto w-7 h-7 rounded-full bg-black/35 text-white flex items-center justify-center"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIndex((i) => (i + 1) % slides.length)}
+              className="pointer-events-auto w-7 h-7 rounded-full bg-black/35 text-white flex items-center justify-center"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>

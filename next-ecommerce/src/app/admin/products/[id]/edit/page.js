@@ -24,6 +24,7 @@ export default function EditProductPage() {
     images: [],
     specifications: [],
     warranty: "",
+    freeShipping: false,
   });
   const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -86,6 +87,7 @@ export default function EditProductPage() {
           images: Array.isArray(data.images) && data.images.length > 0 ? data.images : [data.image].filter(Boolean),
           specifications: specsArr,
           warranty: data.warranty || "",
+          freeShipping: !!data.freeShipping,
         });
       })
       .catch(() => setForm(null))
@@ -153,6 +155,7 @@ export default function EditProductPage() {
           image: form.image || form.images?.[0] || "https://via.placeholder.com/400",
           specifications: (form.specifications || []).filter((s) => s.key && s.value).reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
           warranty: String(form.warranty || "").trim(),
+          freeShipping: !!form.freeShipping,
         }),
       });
       const data = await res.json();

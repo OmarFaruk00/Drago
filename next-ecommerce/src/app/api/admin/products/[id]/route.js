@@ -76,6 +76,7 @@ export async function PUT(request, { params }) {
       if (body.subCategory != null) update.subCategory = body.subCategory;
       if (body.specifications != null) update.specifications = typeof body.specifications === "object" ? body.specifications : {};
       if (body.warranty != null) update.warranty = typeof body.warranty === "string" ? body.warranty : "";
+      if (body.freeShipping != null) update.freeShipping = !!body.freeShipping;
       const product = await Product.findByIdAndUpdate(id, update, { new: true }).lean();
       if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json({
@@ -107,6 +108,7 @@ export async function PUT(request, { params }) {
     }
     if (body.originalPrice != null) p.originalPrice = body.originalPrice;
     if (body.subCategory != null) p.subCategory = body.subCategory;
+    if (body.freeShipping != null) p.freeShipping = !!body.freeShipping;
     return NextResponse.json({ ...p, stock: p.stockQuantity ?? (p.inStock ? 99 : 0) });
   } catch (err) {
     console.error("Admin product PUT:", err);

@@ -45,7 +45,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { name, price, originalPrice, image, images, category, subCategory, stock, description, sizeVariants, colors, specifications, warranty } = body;
+    const { name, price, originalPrice, image, images, category, subCategory, stock, description, sizeVariants, colors, specifications, warranty, freeShipping } = body;
     const catStr = typeof category === "string" ? category : (category?.name ?? "General");
     if (!name || price == null) {
       return NextResponse.json(
@@ -72,6 +72,7 @@ export async function POST(request) {
         colors: Array.isArray(colors) ? colors : [],
         specifications: specifications && typeof specifications === "object" ? specifications : {},
         warranty: typeof warranty === "string" ? warranty : "",
+        freeShipping: !!freeShipping,
       });
       const p = product.toObject();
       return NextResponse.json({
@@ -102,6 +103,7 @@ export async function POST(request) {
       colors: Array.isArray(colors) ? colors : [],
       specifications: specifications && typeof specifications === "object" ? specifications : {},
       warranty: typeof warranty === "string" ? warranty : "",
+      freeShipping: !!freeShipping,
     };
     products.push(newProduct);
     return NextResponse.json(newProduct);

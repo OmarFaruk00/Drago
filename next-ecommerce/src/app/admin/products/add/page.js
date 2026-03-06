@@ -219,6 +219,7 @@ export default function AddProductPage() {
             .filter((s) => s.key && s.value)
             .reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
           warranty: String(form.warranty || "").trim(),
+          freeShipping: !!form.freeShipping,
         }),
       });
       const data = await res.json();

@@ -96,6 +96,8 @@ const productSchema = new mongoose.Schema(
     specifications: { type: mongoose.Schema.Types.Mixed, default: {} },
     // Warranty text (e.g. "1 year manufacturer warranty")
     warranty: { type: String, default: "" },
+    // Free shipping flag (admin toggle)
+    freeShipping: { type: Boolean, default: false },
   },
   {
     timestamps: true,
