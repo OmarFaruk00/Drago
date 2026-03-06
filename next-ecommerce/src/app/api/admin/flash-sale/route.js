@@ -22,9 +22,20 @@ export async function GET() {
     if (!doc) {
       return NextResponse.json({ startTime: null, endTime: null, productIds: [] });
     }
+    const userTzHours = Number(process.env.FLASH_SALE_TZ_OFFSET) || 6;
+    const isServerUTC = new Date().getTimezoneOffset() === 0;
+    const toFormValue = (date) => {
+      if (!date) return null;
+      const d = new Date(date);
+      if (isNaN(d.getTime())) return null;
+      if (isServerUTC && userTzHours) {
+        d.setTime(d.getTime() + userTzHours * 60 * 60 * 1000);
+      }
+      return d.toISOString().slice(0, 16);
+    };
     return NextResponse.json({
-      startTime: doc.startTime ? new Date(doc.startTime).toISOString().slice(0, 16) : null,
-      endTime: doc.endTime ? new Date(doc.endTime).toISOString().slice(0, 16) : null,
+      startTime: toFormValue(doc.startTime),
+      endTime: toFormValue(doc.endTime),
       productIds: Array.isArray(doc.productIds) ? doc.productIds : [],
     });
   } catch (err) {
@@ -48,10 +59,19 @@ export async function PUT(request) {
       .map((id) => (id != null ? String(id).trim() : ""))
       .filter(Boolean);
 
-    if (startTime) startTime = new Date(startTime);
-    else startTime = null;
-    if (endTime) endTime = new Date(endTime);
-    else endTime = null;
+    const userTzHours = Number(process.env.FLASH_SALE_TZ_OFFSET) || 6;
+    const isServerUTC = new Date().getTimezoneOffset() === 0;
+    const adjustForTz = (val) => {
+      if (!val || !String(val).trim()) return null;
+      const d = new Date(val);
+      if (isNaN(d.getTime())) return null;
+      if (isServerUTC && userTzHours) {
+        return new Date(d.getTime() - userTzHours * 60 * 60 * 1000);
+      }
+      return d;
+    };
+    startTime = adjustForTz(startTime);
+    endTime = adjustForTz(endTime);
 
     await connectDB();
     const doc = await FlashSaleSettings.findOneAndUpdate(
