@@ -85,7 +85,7 @@ export default function ProductCard({ product, variant = "default", priority = f
           </span>
         )}
         {product.freeShipping && (
-          <span className="absolute top-1 right-1 bg-emerald-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+          <span className="absolute bottom-1 left-1 bg-emerald-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
             Free Shipping
           </span>
         )}

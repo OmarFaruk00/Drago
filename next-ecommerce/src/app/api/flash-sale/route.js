@@ -1,7 +1,7 @@
 /**
  * Public API: GET /api/flash-sale
  * Returns { active, startTime, endTime, productIds, products }.
- * active = true only when now >= startTime && now <= endTime; otherwise products = [] and section should hide.
+ * active = true when endTime is set, now <= endTime, and (no startTime or now >= startTime). Start time is optional.
  */
 
 import { NextResponse } from "next/server";
@@ -26,8 +26,14 @@ export async function GET() {
     const startTime = doc.startTime ? new Date(doc.startTime).getTime() : null;
     const endTime = doc.endTime ? new Date(doc.endTime).getTime() : null;
     const now = Date.now();
-    const active = startTime != null && endTime != null && now >= startTime && now <= endTime;
-    const productIds = Array.isArray(doc.productIds) ? doc.productIds.filter(Boolean) : [];
+    // End time required; start optional (if not set, sale is "already started")
+    const active =
+      endTime != null &&
+      now <= endTime &&
+      (startTime == null || now >= startTime);
+    const productIds = (Array.isArray(doc.productIds) ? doc.productIds : [])
+      .map((id) => (typeof id === "string" ? id : id?.toString?.()))
+      .filter(Boolean);
 
     if (!active || productIds.length === 0) {
       return NextResponse.json({
