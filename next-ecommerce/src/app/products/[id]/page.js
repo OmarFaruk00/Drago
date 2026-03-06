@@ -625,13 +625,17 @@ export default function ProductDetailsPage() {
               )}
               {activeTab === "warranty" && (
                 <div className="text-gray-700">
-                  <p>
-                    This product comes with a standard manufacturer warranty.{" "}
-                    <Link href="/policy/warranty" className="text-brand hover:underline">
-                      View Warranty Policy
-                    </Link>{" "}
-                    for full details.
-                  </p>
+                  {product.warranty && String(product.warranty).trim() ? (
+                    <div className="whitespace-pre-wrap">{product.warranty}</div>
+                  ) : (
+                    <p>
+                      No warranty information added for this product.{" "}
+                      <Link href="/policy/warranty" className="text-brand hover:underline">
+                        View Warranty Policy
+                      </Link>{" "}
+                      for general warranty information.
+                    </p>
+                  )}
                 </div>
               )}
               {activeTab === "review" && (

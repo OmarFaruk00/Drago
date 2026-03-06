@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Home Page - Hero, Flash Sale, Categories, Top Products, Promo, Explore, Testimonials
+ * Home Page - Hero, Flash Sale, Categories, Top Products, Explore, Testimonials
  * Below-fold sections lazy-loaded for faster initial load.
  */
 
@@ -19,7 +19,6 @@ const FlashSale = dynamic(() => import("@/components/FlashSale"), { loading: () 
 const CategorySection = dynamic(() => import("@/components/CategorySection"), { loading: () => <div className="min-h-[120px] rounded-lg bg-gray-100 animate-pulse" /> });
 const ProductGrid = dynamic(() => import("@/components/ProductGrid"), { loading: () => <div className="min-h-[280px] rounded-lg bg-gray-100 animate-pulse" /> });
 const AfterTopProductsBanner = dynamic(() => import("@/components/AfterTopProductsBanner"), { loading: () => <div className="min-h-[100px] rounded-xl bg-gray-100 animate-pulse" /> });
-const PromoBanner = dynamic(() => import("@/components/PromoBanner"), { loading: () => <div className="min-h-[140px] rounded-xl bg-gray-100 animate-pulse" /> });
 const Testimonials = dynamic(() => import("@/components/Testimonials"), { loading: () => <div className="min-h-[180px] rounded-xl bg-gray-100 animate-pulse" /> });
 
 const PRODUCT_CACHE_KEY = "drago.products.cache.v1";
@@ -204,10 +203,6 @@ export default function HomePage() {
       </section>
 
       <AfterTopProductsBanner />
-
-      <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6">
-        <PromoBanner />
-      </section>
 
       {/* Explore Our Products - 5 rows × 6, shuffled from all products */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
