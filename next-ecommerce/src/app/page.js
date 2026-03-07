@@ -15,6 +15,7 @@ import { products as staticProducts } from "@/lib/data/products";
 import { shuffleArray } from "@/lib/utils/shuffle";
 
 const FlashSale = dynamic(() => import("@/components/FlashSale"), { loading: () => <div className="min-h-[200px] rounded-xl bg-gray-100 animate-pulse" /> });
+const PromoBanner = dynamic(() => import("@/components/PromoBanner"), { loading: () => <div className="min-h-[140px] rounded-xl bg-gray-100 animate-pulse" /> });
 const CategorySection = dynamic(() => import("@/components/CategorySection"), { loading: () => <div className="min-h-[120px] rounded-lg bg-gray-100 animate-pulse" /> });
 const ProductGrid = dynamic(() => import("@/components/ProductGrid"), { loading: () => <div className="min-h-[280px] rounded-lg bg-gray-100 animate-pulse" /> });
 const AfterTopProductsBanner = dynamic(() => import("@/components/AfterTopProductsBanner"), { loading: () => <div className="min-h-[100px] rounded-xl bg-gray-100 animate-pulse" /> });
@@ -197,6 +198,8 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto mt-3 sm:mt-4 px-3 sm:px-4 md:px-6">
         <FlashSale />
       </section>
+
+      <PromoBanner />
 
       {/* Categories - only when admin has added categories */}
       {shuffledCategories.length > 0 && (

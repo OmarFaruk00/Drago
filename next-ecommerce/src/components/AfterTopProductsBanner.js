@@ -47,7 +47,9 @@ export default function AfterTopProductsBanner() {
                   {b.title && <p className="text-white font-semibold text-lg">{b.title}</p>}
                   {b.subtitle && <p className="text-white/90 text-sm">{b.subtitle}</p>}
                   {b.linkText && (
-                    <span className="mt-1 inline-flex text-brand-100 font-medium text-sm">{b.linkText}</span>
+                    <span className="mt-2 inline-flex w-fit px-4 py-2 text-sm bg-brand text-white font-semibold rounded-lg shadow-lg">
+                      {b.linkText}
+                    </span>
                   )}
                 </div>
               )}

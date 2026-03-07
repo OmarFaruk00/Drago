@@ -2,13 +2,27 @@
 
 /**
  * PromoBanner - Full-width promotional banner (e.g. 37% OFF with phones)
- * Design: 3 iPhones, discount text, red Shop Now button
+ * Shop Now link comes from admin (section=promo banner); fallback /products
  */
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function PromoBanner() {
+  const [shopNowLink, setShopNowLink] = useState("/products");
+
+  useEffect(() => {
+    fetch("/api/banners?section=promo", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0 && data[0].link?.trim()) {
+          setShopNowLink(data[0].link.trim());
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="py-3 sm:py-4 md:py-6 bg-white px-3 sm:px-4">
       <div className="w-full max-w-6xl mx-auto">
@@ -22,7 +36,7 @@ export default function PromoBanner() {
             <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2">37% OFF</p>
             <p className="text-white/90 text-sm sm:text-base md:text-lg mb-2 sm:mb-4">On Latest Smartphones</p>
             <Link
-              href="/products?category=Electronics"
+              href={shopNowLink}
               className="inline-flex px-5 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3 text-sm sm:text-base bg-brand text-white font-semibold rounded hover:bg-brand-dark transition"
             >
               Shop Now
