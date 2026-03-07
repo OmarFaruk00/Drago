@@ -62,6 +62,7 @@ export default function CheckoutPage() {
           price: parsed.price,
           image: parsed.image,
           quantity: parsed.quantity ?? 1,
+          freeShipping: !!parsed.freeShipping,
         };
         setBuyNowItems([item]);
       }
@@ -86,7 +87,8 @@ export default function CheckoutPage() {
   const displayItems = buyNowItems ?? cart;
   const subtotal = displayItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const deliveryChargeBase = deliveryArea === "inside" ? deliverySettings.deliveryInsideDhaka : deliverySettings.deliveryOutsideDhaka;
-  const deliveryCharge = appliedCoupon?.freeShipping ? 0 : deliveryChargeBase;
+  const allItemsFreeShipping = displayItems.length > 0 && displayItems.every((i) => i.freeShipping);
+  const deliveryCharge = appliedCoupon?.freeShipping || allItemsFreeShipping ? 0 : deliveryChargeBase;
   const codFee = paymentMethod === "cod" ? Math.round((subtotal * deliverySettings.codPercentage) / 100) : 0;
   const discountAmount = appliedCoupon?.discount ?? 0;
   const total = Math.max(0, subtotal - discountAmount + deliveryCharge + codFee);
@@ -458,7 +460,7 @@ export default function CheckoutPage() {
                 </div>
               )}
               <div className="flex justify-between text-sm text-gray-600">
-                <span>Delivery ({deliveryArea === "inside" ? "Inside Dhaka" : "Outside Dhaka"}){appliedCoupon?.freeShipping && " (Free)"}</span>
+                <span>Delivery ({deliveryArea === "inside" ? "Inside Dhaka" : "Outside Dhaka"}){(appliedCoupon?.freeShipping || allItemsFreeShipping) && " (Free)"}</span>
                 <span>{formatCurrency(deliveryCharge)}</span>
               </div>
               {paymentMethod === "cod" && (

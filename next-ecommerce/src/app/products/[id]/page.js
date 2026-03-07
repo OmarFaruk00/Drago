@@ -229,7 +229,7 @@ export default function ProductDetailsPage() {
     if (!product) return;
     const variantPrice = product.sizeVariants?.[selectedSize]?.price ?? product.storageVariants?.[selectedStorage]?.price ?? product.price;
     addToCart(
-      { id: product.id, name: product.name, price: variantPrice, image: product.image },
+      { id: product.id, name: product.name, price: variantPrice, image: product.image, freeShipping: !!product.freeShipping },
       quantity
     );
   };
@@ -237,7 +237,7 @@ export default function ProductDetailsPage() {
   const handleBuyNow = () => {
     if (!product) return;
     const variantPrice = product.sizeVariants?.[selectedSize]?.price ?? product.storageVariants?.[selectedStorage]?.price ?? product.price;
-    const item = { id: product.id, name: product.name, price: variantPrice, image: product.image, quantity };
+    const item = { id: product.id, name: product.name, price: variantPrice, image: product.image, quantity, freeShipping: !!product.freeShipping };
     try {
       sessionStorage.setItem("buyNowItem", JSON.stringify(item));
     } catch (_) {}
@@ -810,7 +810,7 @@ export default function ProductDetailsPage() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        addToCart({ id: p.id, name: p.name, price: p.price, image: p.image }, 1);
+                        addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, freeShipping: !!p.freeShipping }, 1);
                       }}
                       className="absolute bottom-2 right-2 w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shadow border border-gray-200 text-gray-600 hover:bg-brand hover:text-white transition"
                       aria-label="Quick add to cart"

@@ -37,7 +37,7 @@ export default function WishlistPage() {
               </Link>
               <p className="text-base font-bold text-brand mt-1">{formatCurrency(product.price)}</p>
               <button
-                onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image }, 1)}
+                onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image, freeShipping: !!product.freeShipping }, 1)}
                 className="mt-2 w-full py-1.5 bg-brand text-white text-xs font-medium rounded hover:bg-brand-dark"
               >
                 {t("product.addToCart")}

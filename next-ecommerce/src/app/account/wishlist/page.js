@@ -62,7 +62,7 @@ export default function WishlistPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, image: item.image }, 1)}
+                        onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, image: item.image, freeShipping: !!item.freeShipping }, 1)}
                         disabled={!item.inStock}
                         className="px-4 py-2 bg-brand text-white text-sm font-medium rounded-lg hover:bg-brand-dark disabled:bg-gray-300 disabled:cursor-not-allowed"
                       >

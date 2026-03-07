@@ -96,7 +96,7 @@ export default function ProductCard({ product, variant = "default", priority = f
             e.preventDefault();
             e.stopPropagation();
             if (isInWishlist) removeFromWishlist(product.id);
-            else addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, inStock: product.inStock });
+            else addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, inStock: product.inStock, freeShipping: !!product.freeShipping });
           }}
           className="absolute top-1 right-1 w-8 h-8 flex items-center justify-center rounded-full shadow border bg-white/90 text-gray-600 hover:text-brand hover:border-brand/30 transition z-10"
           title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
