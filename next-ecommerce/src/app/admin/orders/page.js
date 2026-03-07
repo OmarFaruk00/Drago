@@ -129,6 +129,52 @@ export default function AdminOrdersPage() {
 
   const getPaymentStatus = (o) => (o.status === "delivered" || o.status === "shipped" ? "Paid" : "Pending");
 
+  function escapeCsv(val) {
+    const s = String(val ?? "").replace(/"/g, '""');
+    return s.includes(",") || s.includes('"') || s.includes("\n") ? `"${s}"` : s;
+  }
+
+  function handleExport() {
+    const rows = filtered.map((o) => {
+      const itemsStr = (o.items || [])
+        .map((i) => `${i.name || "Item"} x${i.quantity || 1}`)
+        .join("; ");
+      return [
+        String(o.id || "").slice(-6),
+        new Date(o.createdAt || o.created_at).toISOString(),
+        o.customerName || "",
+        o.customerEmail || "",
+        o.customerPhone || "",
+        o.status || "",
+        getPaymentStatus(o),
+        o.total ?? "",
+        o.shippingAddress || "",
+        itemsStr,
+        o.couponCode || "",
+      ];
+    });
+    const headers = [
+      "Order ID",
+      "Date",
+      "Customer Name",
+      "Customer Email",
+      "Customer Phone",
+      "Order Status",
+      "Payment Status",
+      "Total",
+      "Shipping Address",
+      "Items",
+      "Coupon",
+    ];
+    const csv = [headers.map(escapeCsv).join(","), ...rows.map((r) => r.map(escapeCsv).join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `orders-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   async function handleDeleteSelected() {
     const ids = Array.from(selected);
     if (ids.length === 0) {
@@ -170,7 +216,12 @@ export default function AdminOrdersPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-        <button className="px-3 py-1.5 text-sm font-medium text-brand border border-gray-300 rounded-lg bg-white hover:bg-gray-50">
+        <button
+          type="button"
+          onClick={handleExport}
+          disabled={filtered.length === 0}
+          className="px-3 py-1.5 text-sm font-medium text-brand border border-gray-300 rounded-lg bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           Export
         </button>
       </div>
