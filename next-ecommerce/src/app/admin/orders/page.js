@@ -44,6 +44,7 @@ export default function AdminOrdersPage() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [showDateFilter, setShowDateFilter] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const dateFilterRef = useRef(null);
   const perPage = 10;
 
@@ -127,6 +128,34 @@ export default function AdminOrdersPage() {
   };
 
   const getPaymentStatus = (o) => (o.status === "delivered" || o.status === "shipped" ? "Paid" : "Pending");
+
+  async function handleDeleteSelected() {
+    const ids = Array.from(selected);
+    if (ids.length === 0) {
+      alert("Select one or more orders to delete.");
+      return;
+    }
+    if (!confirm(`Delete ${ids.length} order(s)? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      const results = await Promise.allSettled(
+        ids.map((id) =>
+          fetch(`/api/admin/orders/${id}`, { method: "DELETE", credentials: "include" })
+        )
+      );
+      const failed = results.filter((r) => r.status === "rejected" || (r.status === "fulfilled" && !r.value?.ok));
+      if (failed.length > 0) {
+        alert(`Failed to delete ${failed.length} order(s).`);
+      }
+      setOrders((prev) => prev.filter((o) => !selected.has(o.id)));
+      setSelected(new Set());
+    } catch (e) {
+      console.error(e);
+      alert("Failed to delete orders.");
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -233,10 +262,13 @@ export default function AdminOrdersPage() {
             )}
           </div>
           <div className="flex gap-1 shrink-0">
-            <button className="p-2 text-gray-500 hover:text-brand hover:bg-red-50 rounded-lg">
-              <Pencil className="w-4 h-4" />
-            </button>
-            <button className="p-2 text-gray-500 hover:text-brand hover:bg-red-50 rounded-lg">
+            <button
+              type="button"
+              onClick={handleDeleteSelected}
+              disabled={deleting || selected.size === 0}
+              className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              title={selected.size === 0 ? "Select orders to delete" : `Delete ${selected.size} selected`}
+            >
               <Trash2 className="w-4 h-4" />
             </button>
           </div>

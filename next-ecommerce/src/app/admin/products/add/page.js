@@ -692,7 +692,8 @@ export default function AddProductPage() {
                   onChange={(e) => setForm((f) => ({ ...f, category: e.target.value, subCategory: "" }))}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand/20 focus:border-brand"
                 >
-                  {(categories.length ? categories.filter((c) => !c.parentId && !c.parent) : [{ id: "1", name: "Electronics" }, { id: "2", name: "Fashion" }]).map((c) => {
+                  <option value="">{categories.filter((c) => !c.parentId && !c.parent).length ? "Select category" : "No categories — add from Admin → Categories first"}</option>
+                  {(categories.filter((c) => !c.parentId && !c.parent) || []).map((c) => {
                     const id = c.id || c;
                     const name = c.name || c;
                     return <option key={id} value={name}>{name}</option>;

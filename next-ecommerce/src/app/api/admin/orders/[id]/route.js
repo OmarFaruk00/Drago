@@ -67,3 +67,23 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
   }
 }
+
+export async function DELETE(request, { params }) {
+  const auth = await requireAdmin();
+  if (auth.error) return auth.error;
+
+  const id = params.id;
+  if (!USE_MONGODB) return NextResponse.json({ error: "Database required." }, { status: 503 });
+  try {
+    await connectDB();
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+    const order = await Order.findByIdAndDelete(id);
+    if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    return NextResponse.json({ deleted: true, id });
+  } catch (err) {
+    console.error("Admin order DELETE:", err);
+    return NextResponse.json({ error: "Failed to delete order" }, { status: 500 });
+  }
+}
