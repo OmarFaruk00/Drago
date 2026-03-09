@@ -80,7 +80,7 @@ export async function PUT(request) {
     await connectDB();
     const doc = await FlashSaleSettings.findOneAndUpdate(
       {},
-      { startTime, endTime, productIds },
+      { startTime, endTime, productIds, bannerImage, bannerImageScale },
       { upsert: true, new: true }
     ).lean();
 

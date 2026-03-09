@@ -6,7 +6,6 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
@@ -106,15 +105,11 @@ export default function FlashSale() {
               className="h-16 sm:h-20 md:h-24 lg:h-28 flex items-center w-full sm:w-auto justify-center sm:justify-start shrink-0"
               style={{ transform: `scale(${(flashData.bannerImageScale || 100) / 100})`, transformOrigin: "left center" }}
             >
-              <Image
+              <img
                 src={flashData.bannerImage}
                 alt="Flash Sale"
-                width={280}
-                height={112}
                 className="h-full w-auto max-w-full sm:max-w-[200px] md:max-w-[240px] lg:max-w-[280px] object-contain object-left"
-                priority
-                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 200px, 280px"
-                unoptimized={flashData.bannerImage?.startsWith("data:")}
+                loading="eager"
               />
             </div>
           )}

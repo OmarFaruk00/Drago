@@ -108,20 +108,17 @@ export default function Footer() {
             {logoUrl && (
               <Link href="/" className="mb-4 block w-fit max-w-full">
                 <div
-                  className="relative bg-white/5 rounded-lg overflow-hidden"
+                  className="relative bg-white/5 rounded-lg overflow-hidden flex items-center justify-center"
                   style={{
                     width: `${(logoSize === "small" ? 96 : logoSize === "large" ? 144 : 112) * (logoScale / 100)}px`,
                     height: `${(logoSize === "small" ? 40 : logoSize === "large" ? 56 : 48) * (logoScale / 100)}px`,
                     maxWidth: "100%",
                   }}
                 >
-                  <Image
+                  <img
                     src={logoUrl}
                     alt="Logo"
-                    fill
-                    className="object-contain p-1.5"
-                    sizes="(max-width: 768px) 112px, 144px"
-                    unoptimized={logoUrl?.startsWith("data:")}
+                    className="w-full h-full object-contain p-1.5"
                   />
                 </div>
               </Link>
