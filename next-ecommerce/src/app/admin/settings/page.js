@@ -52,10 +52,14 @@ export default function AdminSettingsPage() {
     timezone: "GMT+06:00",
     language: "en",
     notificationPreferences: {},
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const fileInputRef = useRef(null);
@@ -81,22 +85,54 @@ export default function AdminSettingsPage() {
   }, []);
 
   async function handleSave() {
+    setSaveError("");
+    if (form.newPassword || form.confirmPassword || form.currentPassword) {
+      if (!form.currentPassword) {
+        setSaveError("বর্তমান পাসওয়ার্ড দিন (current password required)");
+        return;
+      }
+      if (form.newPassword.length < 6) {
+        setSaveError("নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষর (min 6 characters)");
+        return;
+      }
+      if (form.newPassword !== form.confirmPassword) {
+        setSaveError("নতুন পাসওয়ার্ড মিলছে না (passwords do not match)");
+        return;
+      }
+    }
     setSaving(true);
     try {
+      const payload = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        avatar: form.avatar,
+        timezone: form.timezone,
+        language: form.language,
+        notificationPreferences: form.notificationPreferences,
+      };
+      if (form.newPassword && form.currentPassword) {
+        payload.currentPassword = form.currentPassword;
+        payload.newPassword = form.newPassword;
+      }
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setSettings(data);
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
+        setForm((f) => ({ ...f, currentPassword: "", newPassword: "", confirmPassword: "" }));
+      } else {
+        setSaveError(data.error || "Failed to save");
       }
     } catch (e) {
       console.error(e);
+      setSaveError("Something went wrong");
     } finally {
       setSaving(false);
     }
@@ -262,13 +298,45 @@ export default function AdminSettingsPage() {
                     </select>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  className="flex items-center gap-2 text-brand hover:text-brand-dark"
-                >
-                  <Key className="w-4 h-4" />
-                  Change Password
-                </button>
+                <div className="pt-6 border-t border-gray-200">
+                  <h3 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Key className="w-4 h-4" />
+                    Change Password
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-4">Admin নিজেই তার পাসওয়ার্ড পরিবর্তন করতে পারবেন।</p>
+                  <div className="space-y-4 max-w-md">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">বর্তমান পাসওয়ার্ড (Current)</label>
+                      <input
+                        type="password"
+                        value={form.currentPassword}
+                        onChange={(e) => setForm((f) => ({ ...f, currentPassword: e.target.value }))}
+                        placeholder="Enter current password"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">নতুন পাসওয়ার্ড (New, min 6 chars)</label>
+                      <input
+                        type="password"
+                        value={form.newPassword}
+                        onChange={(e) => setForm((f) => ({ ...f, newPassword: e.target.value }))}
+                        placeholder="Enter new password"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">পুনরায় নিশ্চিত করুন (Confirm)</label>
+                      <input
+                        type="password"
+                        value={form.confirmPassword}
+                        onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
+                        placeholder="Confirm new password"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -301,20 +369,28 @@ export default function AdminSettingsPage() {
               </div>
             )}
 
+          {saveError && (
+            <div className="mt-6 p-4 bg-red-50 text-red-700 rounded-lg text-sm">{saveError}</div>
+          )}
           <div className="mt-8 flex gap-3">
             <button
-              onClick={() =>
-                settings &&
-                setForm({
-                  name: settings.name || "",
-                  email: settings.email || "",
-                  phone: settings.phone || "",
-                  avatar: settings.avatar || "",
-                  timezone: settings.timezone || "GMT+06:00",
-                  language: settings.language || "en",
-                  notificationPreferences: settings.notificationPreferences || {},
-                })
-              }
+              onClick={() => {
+                setSaveError("");
+                if (settings) {
+                  setForm({
+                    name: settings.name || "",
+                    email: settings.email || "",
+                    phone: settings.phone || "",
+                    avatar: settings.avatar || "",
+                    timezone: settings.timezone || "GMT+06:00",
+                    language: settings.language || "en",
+                    notificationPreferences: settings.notificationPreferences || {},
+                    currentPassword: "",
+                    newPassword: "",
+                    confirmPassword: "",
+                  });
+                }
+              }}
               className="px-6 py-2.5 border border-brand text-brand rounded-lg hover:bg-red-50"
             >
               Discard
