@@ -10,6 +10,8 @@ const flashSaleSettingsSchema = new mongoose.Schema(
     startTime: { type: Date, default: null },
     endTime: { type: Date, default: null },
     productIds: [{ type: String, trim: true }],
+    bannerImage: { type: String, default: "" },
+    bannerImageScale: { type: Number, default: 100, min: 50, max: 150 },
   },
   { collection: "flashsalesettings", timestamps: true }
 );

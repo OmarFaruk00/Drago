@@ -37,6 +37,8 @@ export async function GET() {
       startTime: toFormValue(doc.startTime),
       endTime: toFormValue(doc.endTime),
       productIds: Array.isArray(doc.productIds) ? doc.productIds : [],
+      bannerImage: doc.bannerImage ?? "",
+      bannerImageScale: Math.min(150, Math.max(50, Number(doc.bannerImageScale) || 100)),
     });
   } catch (err) {
     console.error("Admin flash sale GET:", err);
@@ -55,6 +57,8 @@ export async function PUT(request) {
     const body = await request.json();
     let startTime = body.startTime;
     let endTime = body.endTime;
+    const bannerImage = typeof body.bannerImage === "string" ? body.bannerImage.trim() : "";
+    const bannerImageScale = Math.min(150, Math.max(50, Number(body.bannerImageScale) || 100));
     const productIds = (Array.isArray(body.productIds) ? body.productIds : [])
       .map((id) => (id != null ? String(id).trim() : ""))
       .filter(Boolean);
@@ -84,6 +88,8 @@ export async function PUT(request) {
       startTime: doc.startTime ? new Date(doc.startTime).toISOString().slice(0, 16) : null,
       endTime: doc.endTime ? new Date(doc.endTime).toISOString().slice(0, 16) : null,
       productIds: Array.isArray(doc.productIds) ? doc.productIds : [],
+      bannerImage: doc.bannerImage ?? "",
+      bannerImageScale: Math.min(150, Math.max(50, Number(doc.bannerImageScale) || 100)),
     });
   } catch (err) {
     console.error("Admin flash sale PUT:", err);

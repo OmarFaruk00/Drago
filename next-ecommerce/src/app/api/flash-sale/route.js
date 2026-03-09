@@ -42,16 +42,22 @@ export async function GET() {
         endTime: endTime,
         productIds: [],
         products: [],
+        bannerImage: "",
+        bannerImageScale: 100,
       });
     }
 
     const products = productIds.length > 0 ? await getProductsByIds(productIds) : [];
+    const bannerImage = doc.bannerImage ?? "";
+    const bannerImageScale = Math.min(150, Math.max(50, Number(doc.bannerImageScale) || 100));
     return NextResponse.json({
       active: true,
       startTime: startTime,
       endTime: endTime,
       productIds,
       products: products || [],
+      bannerImage,
+      bannerImageScale,
     });
   } catch (err) {
     console.error("Flash sale GET:", err);

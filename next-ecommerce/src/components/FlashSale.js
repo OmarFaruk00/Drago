@@ -25,6 +25,8 @@ export default function FlashSale() {
           setFlashData({
             products: Array.isArray(data.products) ? data.products : [],
             endTime: data.endTime,
+            bannerImage: data.bannerImage ?? "",
+            bannerImageScale: Math.min(150, Math.max(50, Number(data.bannerImageScale) || 100)),
           });
         } else {
           setFlashData(null);
@@ -98,18 +100,24 @@ export default function FlashSale() {
     <section className="pt-2 pb-2 sm:pt-3 sm:pb-3 md:pt-4 md:pb-4 px-3 sm:px-4">
       <div className="border border-gray-800 bg-[#02020a] p-3 sm:p-4 md:p-6 text-white rounded-lg sm:rounded-xl overflow-hidden">
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-between">
-          {/* FLASH SALE banner - original image */}
-          <div className="h-16 sm:h-20 md:h-24 lg:h-28 flex items-center w-full sm:w-auto justify-center sm:justify-start shrink-0">
-            <Image
-              src="/flash-sale-banner.png.jpg"
-              alt="Flash Sale"
-              width={280}
-              height={112}
-              className="h-full w-auto max-w-full sm:max-w-[200px] md:max-w-[240px] lg:max-w-[280px] object-contain object-left"
-              priority
-              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 200px, 280px"
-            />
-          </div>
+          {/* FLASH SALE banner - from admin (optional) */}
+          {flashData.bannerImage && (
+            <div
+              className="h-16 sm:h-20 md:h-24 lg:h-28 flex items-center w-full sm:w-auto justify-center sm:justify-start shrink-0"
+              style={{ transform: `scale(${(flashData.bannerImageScale || 100) / 100})`, transformOrigin: "left center" }}
+            >
+              <Image
+                src={flashData.bannerImage}
+                alt="Flash Sale"
+                width={280}
+                height={112}
+                className="h-full w-auto max-w-full sm:max-w-[200px] md:max-w-[240px] lg:max-w-[280px] object-contain object-left"
+                priority
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 200px, 280px"
+                unoptimized={flashData.bannerImage?.startsWith("data:")}
+              />
+            </div>
+          )}
           <div className="flex flex-col sm:items-end items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/flash-sale"

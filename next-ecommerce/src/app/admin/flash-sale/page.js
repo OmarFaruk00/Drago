@@ -7,7 +7,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Zap, Search } from "lucide-react";
+import { Zap, Search, ZoomIn, ZoomOut } from "lucide-react";
+import AdminImageUrlField from "@/components/admin/AdminImageUrlField";
 
 export default function AdminFlashSalePage() {
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,8 @@ export default function AdminFlashSalePage() {
     startTime: "",
     endTime: "",
     productIds: [],
+    bannerImage: "",
+    bannerImageScale: 100,
   });
 
   useEffect(() => {
@@ -33,6 +36,8 @@ export default function AdminFlashSalePage() {
           startTime: settings.startTime ?? "",
           endTime: settings.endTime ?? "",
           productIds: Array.isArray(settings.productIds) ? settings.productIds : [],
+          bannerImage: settings.bannerImage ?? "",
+          bannerImageScale: Math.min(150, Math.max(50, Number(settings.bannerImageScale) || 100)),
         });
       })
       .catch(console.error)
@@ -63,11 +68,18 @@ export default function AdminFlashSalePage() {
           startTime: form.startTime || null,
           endTime: form.endTime || null,
           productIds: form.productIds,
+          bannerImage: form.bannerImage || "",
+          bannerImageScale: Math.min(150, Math.max(50, Number(form.bannerImageScale) || 100)),
         }),
       });
       const data = await res.json();
       if (res.ok) {
-        setForm((f) => ({ ...f, productIds: data.productIds ?? f.productIds }));
+        setForm((f) => ({
+          ...f,
+          productIds: data.productIds ?? f.productIds,
+          bannerImage: data.bannerImage ?? f.bannerImage,
+          bannerImageScale: data.bannerImageScale ?? f.bannerImageScale,
+        }));
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
       } else {
@@ -122,6 +134,49 @@ export default function AdminFlashSalePage() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
             />
           </div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+          <h2 className="font-semibold text-gray-900 mb-2">Flash Sale Banner Logo (top right)</h2>
+          <p className="text-sm text-gray-500 mb-4">Upload or paste URL. Use zoom to adjust size. Leave empty to hide.</p>
+          <AdminImageUrlField
+            value={form.bannerImage}
+            onChange={(v) => setForm((f) => ({ ...f, bannerImage: v || "" }))}
+            label="Banner Image"
+            placeholder="Image URL or upload"
+          />
+          {form.bannerImage && (
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Zoom (50% - 150%)</label>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, bannerImageScale: Math.max(50, (f.bannerImageScale || 100) - 10) }))}
+                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+                  aria-label="Zoom out"
+                >
+                  <ZoomOut className="w-5 h-5 text-gray-600" />
+                </button>
+                <input
+                  type="range"
+                  min={50}
+                  max={150}
+                  value={form.bannerImageScale ?? 100}
+                  onChange={(e) => setForm((f) => ({ ...f, bannerImageScale: Number(e.target.value) }))}
+                  className="flex-1 h-2 rounded-full accent-brand"
+                />
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, bannerImageScale: Math.min(150, (f.bannerImageScale || 100) + 10) }))}
+                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+                  aria-label="Zoom in"
+                >
+                  <ZoomIn className="w-5 h-5 text-gray-600" />
+                </button>
+                <span className="text-sm font-medium text-gray-700 w-12">{form.bannerImageScale ?? 100}%</span>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">

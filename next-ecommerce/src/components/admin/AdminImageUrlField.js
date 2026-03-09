@@ -36,17 +36,18 @@ export default function AdminImageUrlField({ value, onChange, label = "Image", p
   return (
     <div>
       {label && <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
+      <p className="text-xs text-gray-500 mb-2">Image select করুন অথবা URL paste করুন (যেকোনো একটা করলেই হবে)</p>
       <div className="flex gap-2">
         <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="inline-flex items-center gap-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm shrink-0"
+          className="inline-flex items-center gap-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark text-sm shrink-0 font-medium"
         >
-          <Upload className="w-4 h-4" /> Upload
+          <Upload className="w-4 h-4" /> Upload Image
         </button>
         <input
-          type="url"
+          type="text"
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
