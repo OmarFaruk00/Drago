@@ -80,6 +80,8 @@ export async function PUT(request, { params }) {
       if (body.freeShipping != null) update.freeShipping = !!body.freeShipping;
       if (body.productCode != null) update.productCode = typeof body.productCode === "string" ? body.productCode.trim() : "";
       if (body.brand != null) update.brand = typeof body.brand === "string" ? body.brand.trim() : "";
+      if (body.sizeVariants != null && Array.isArray(body.sizeVariants)) update.sizeVariants = body.sizeVariants;
+      if (body.colors != null && Array.isArray(body.colors)) update.colors = body.colors;
       const product = await Product.findByIdAndUpdate(id, update, { new: true }).lean();
       if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json({

@@ -174,7 +174,7 @@ export default function DashboardDetailModal({ cardKey, onClose }) {
                         <td className="px-4 py-2">{formatCurrency(p.price)}</td>
                         <td className="px-4 py-2">{p.category}</td>
                         <td className="px-4 py-2">
-                          <Link href={`/admin/products/${p.id}/edit`} className="text-brand hover:underline text-xs">
+                          <Link href={`/admin/products/add/${p.id}`} className="text-brand hover:underline text-xs">
                             Edit
                           </Link>
                         </td>

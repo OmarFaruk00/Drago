@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, X } from "lucide-react";
 
-export default function AddProductPage() {
+export default function AddProductPage({ productId }) {
   const router = useRouter();
+  const isEdit = !!productId;
   const fileInputRef = useRef(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingProduct, setLoadingProduct] = useState(isEdit);
   const [error, setError] = useState("");
   const [subCategories, setSubCategories] = useState([]);
   const [form, setForm] = useState({
@@ -69,6 +71,63 @@ export default function AddProductPage() {
       setSubCategories([]);
     }
   }, [form.category, categories]);
+
+  useEffect(() => {
+    if (!productId) return;
+    setLoadingProduct(true);
+    fetch(`/api/admin/products/${productId}`, { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.error) throw new Error(data.error);
+        const imgs = Array.isArray(data.images) && data.images.length > 0
+          ? data.images
+          : (data.image ? [data.image] : []);
+        const specs = data.specifications && typeof data.specifications === "object"
+          ? Object.entries(data.specifications).map(([key, value]) => ({ key, value: String(value) }))
+          : [];
+        const hasDiscount = data.originalPrice != null && data.originalPrice > 0 && data.price < data.originalPrice;
+        setForm({
+          name: data.name || "",
+          brand: data.brand || "",
+          description: data.description || "",
+          price: hasDiscount ? String(data.originalPrice ?? "") : String(data.price ?? ""),
+          discountPrice: hasDiscount ? String(data.price ?? "") : "",
+          stock: String(data.stock ?? data.stockQuantity ?? ""),
+          category: data.category || "",
+          subCategory: data.subCategory || "",
+          image: data.image || imgs[0] || "",
+          images: imgs,
+          weight: data.weight || "",
+          country: data.country || "",
+          freeShipping: !!data.freeShipping,
+          digitalItem: !!data.digitalItem,
+          addTax: !!data.addTax,
+          visible: data.visible !== false,
+          metaTitle: data.metaTitle || "",
+          metaDescription: data.metaDescription || "",
+          tags: Array.isArray(data.tags) ? data.tags : [],
+          tagInput: "",
+          selectedCategories: [],
+          options: [{ name: "Size", values: ["S", "M", "L", "XL"] }],
+          hasMultipleOptions: !!(Array.isArray(data.sizeVariants)?.length || Array.isArray(data.colors)?.length),
+          sizeVariants: Array.isArray(data.sizeVariants) && data.sizeVariants.length > 0
+            ? data.sizeVariants.map((v) => ({
+                size: v.size || "",
+                price: v.price ?? "",
+                stock: v.stock ?? "",
+              }))
+            : [],
+          colors: Array.isArray(data.colors) && data.colors.length > 0
+            ? data.colors.map((c) => ({ name: c.name || "", hex: c.hex || "#000000" }))
+            : [],
+          specifications: specs,
+          warranty: data.warranty || "",
+          productCode: data.productCode || "",
+        });
+      })
+      .catch(() => setForm(null))
+      .finally(() => setLoadingProduct(false));
+  }, [productId]);
 
   async function handleFileUpload(e) {
     const files = e.target.files ? Array.from(e.target.files) : [];
@@ -192,39 +251,41 @@ export default function AddProductPage() {
     setError("");
     setLoading(true);
     const cat = form.category || (categories.find((c) => !c.parentId && !c.parent)?.name || categories[0]?.name || "General");
+    const payload = {
+      name: form.name,
+      brand: form.brand || "",
+      description: form.description || "",
+      price: form.discountPrice ? parseFloat(form.discountPrice) || 0 : parseFloat(form.price) || 0,
+      originalPrice: form.discountPrice ? parseFloat(form.price) || null : null,
+      images: form.images?.length ? form.images : [form.image || form.images?.[0] || "https://via.placeholder.com/400"],
+      image: form.image || form.images?.[0] || "https://via.placeholder.com/400",
+      subCategory: form.subCategory || "",
+      stock: parseInt(form.stock, 10) || 0,
+      category: cat || "General",
+      sizeVariants: form.sizeVariants
+        .filter((v) => v.size && v.price != null)
+        .map((v) => ({
+          size: String(v.size).trim(),
+          price: parseFloat(v.price) || 0,
+          stock: parseInt(v.stock, 10) || 0,
+        })),
+      colors: form.colors
+        .filter((c) => c.name && c.hex)
+        .map((c) => ({ name: String(c.name).trim(), hex: String(c.hex).trim() })),
+      specifications: (form.specifications || [])
+        .filter((s) => s.key && s.value)
+        .reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
+      warranty: String(form.warranty || "").trim(),
+      freeShipping: !!form.freeShipping,
+      productCode: String(form.productCode || "").trim(),
+    };
     try {
-      const res = await fetch("/api/admin/products", {
-        method: "POST",
+      const url = isEdit ? `/api/admin/products/${productId}` : "/api/admin/products";
+      const res = await fetch(url, {
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          name: form.name,
-          brand: form.brand || "",
-          description: form.description || "",
-          price: form.discountPrice ? parseFloat(form.discountPrice) || 0 : parseFloat(form.price) || 0,
-          originalPrice: form.discountPrice ? parseFloat(form.price) || null : null,
-          images: form.images?.length ? form.images : [form.image || form.images?.[0] || "https://via.placeholder.com/400"],
-          image: form.image || form.images?.[0] || "https://via.placeholder.com/400",
-          subCategory: form.subCategory || "",
-          stock: parseInt(form.stock, 10) || 0,
-          category: cat || "General",
-          sizeVariants: form.sizeVariants
-            .filter((v) => v.size && v.price != null)
-            .map((v) => ({
-              size: String(v.size).trim(),
-              price: parseFloat(v.price) || 0,
-              stock: parseInt(v.stock, 10) || 0,
-            })),
-          colors: form.colors
-            .filter((c) => c.name && c.hex)
-            .map((c) => ({ name: String(c.name).trim(), hex: String(c.hex).trim() })),
-          specifications: (form.specifications || [])
-            .filter((s) => s.key && s.value)
-            .reduce((o, s) => ({ ...o, [String(s.key).trim()]: String(s.value).trim() }), {}),
-          warranty: String(form.warranty || "").trim(),
-          freeShipping: !!form.freeShipping,
-          productCode: String(form.productCode || "").trim(),
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -250,14 +311,18 @@ export default function AddProductPage() {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Add Product</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{isEdit ? "Edit Product" : "Add Product"}</h1>
       </div>
+
+      {loadingProduct && (
+        <div className="p-8 text-center text-gray-500">Loading product...</div>
+      )}
 
       {error && (
         <div className="p-4 bg-red-50 text-brand rounded-lg text-sm">{error}</div>
       )}
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {!loadingProduct && <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column - Product form */}
         <div className="lg:col-span-2 space-y-6">
           {/* Single card: Information, Images, Price, Options, Shipping */}
@@ -822,7 +887,7 @@ export default function AddProductPage() {
             {loading ? "Saving..." : "Save"}
           </button>
         </div>
-      </form>
+      </form>}
     </div>
   );
 }

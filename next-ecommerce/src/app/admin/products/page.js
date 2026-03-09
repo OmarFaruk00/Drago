@@ -374,14 +374,14 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-4 py-3 text-right">
                         <Link
-                          href={`/admin/products/${p.id}/edit#specification-warranty`}
+                          href={`/admin/products/add/${p.id}#specification-warranty`}
                           className="inline-flex p-2 rounded-full bg-gray-100 hover:bg-brand/10 text-gray-600 hover:text-brand transition"
                           title="Specification & Warranty"
                         >
                           <FileText className="w-4 h-4" />
                         </Link>
                         <Link
-                          href={`/admin/products/${p.id}/edit`}
+                          href={`/admin/products/add/${p.id}`}
                           className="inline-flex p-2 rounded-full bg-gray-100 hover:bg-brand/10 text-gray-600 hover:text-brand transition ml-1"
                           title="Edit"
                         >
