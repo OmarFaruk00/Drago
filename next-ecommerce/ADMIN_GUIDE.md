@@ -163,6 +163,27 @@
 
 ---
 
+---
+
+## Image ও Logo Size – Best মানসমূহ
+
+| টাইপ | প্রস্তাবিত Size | অনুপাত (Ratio) | মন্তব্য |
+|------|-----------------|----------------|---------|
+| **Hero/Banner** (home top) | **1200 × 400** px বা **1920 × 640** | 3:1 | পারলে 1200px width রাখুন, mobile এ ভালো দেখাবে |
+| **Product Image** | **800 × 800** px বা তার বেশি | 1:1 (square) | Square সবদিকে ভালো |
+| **Flash Sale Logo** | **280 × 112** px (max) | 2.5:1 | Zoom 100% এ ঠিকমতো দেখায় |
+| **Footer Logo** | **144 × 56** px (large) | 2.5:1 | Small: 96×40, Medium: 112×48, Large: 144×56 |
+| **Category Image** | **200 × 200** px | 1:1 | Square |
+| **Testimonial Avatar** | **96 × 96** px | 1:1 | ছোট profile image |
+| **Blog Image** | **800 × 450** px | 16:9 | বা根据需要 width 800px |
+
+**সাধারণ নিয়ম:**
+- WebP বা JPG use করুন, file size কম রাখুন (প্রতি image 200KB–500KB)
+- PNG logo হলে transparent background দিতে পারেন
+- খুব বড় image (2MB+) upload করবেন না – site slow হবে
+
+---
+
 ## সংক্ষিপ্ত Route Map
 
 | মেনু | URL |

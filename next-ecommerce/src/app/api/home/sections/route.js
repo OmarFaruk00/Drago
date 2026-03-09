@@ -25,14 +25,16 @@ export async function GET() {
     const topIds = settings?.topProductIds?.length ? settings.topProductIds.map((id) => id.toString()) : [];
     const showTestimonials = !!settings?.showTestimonials;
 
+    let topProducts;
     if (topIds.length > 0) {
-      const topProducts = await getProductsByIds(topIds);
-      return NextResponse.json({ topProducts, showTestimonials });
+      topProducts = await getProductsByIds(topIds);
+    } else {
+      const all = await getProducts({});
+      topProducts = all.slice(0, 10);
     }
-
-    const all = await getProducts({});
-    const topProducts = all.slice(0, 10);
-    return NextResponse.json({ topProducts, showTestimonials });
+    const res = NextResponse.json({ topProducts, showTestimonials });
+    res.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+    return res;
   } catch (err) {
     console.error("Home sections GET:", err);
     return NextResponse.json(

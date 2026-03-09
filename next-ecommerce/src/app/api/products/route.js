@@ -23,7 +23,9 @@ export async function GET(request) {
     const size = searchParams.get("size") || undefined;
 
     const products = await getProducts({ category, search, inStock, min, max, brand, color, size });
-    return NextResponse.json(products);
+    const res = NextResponse.json(products);
+    res.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+    return res;
   } catch (error) {
     console.error("Products API error:", error);
     return NextResponse.json(

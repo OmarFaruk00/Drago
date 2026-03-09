@@ -1,10 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import LiveChatWidget from "./LiveChatWidget";
 import ScrollRestoration from "./ScrollRestoration";
+
+const LiveChatWidget = dynamic(() => import("./LiveChatWidget"), { ssr: false });
 
 export default function StoreShell({ children }) {
   const pathname = usePathname();

@@ -26,9 +26,11 @@ export async function GET(request) {
         }
       }
       const list = await Banner.find(query).sort({ order: 1 }).lean();
-      return NextResponse.json(
+      const res = NextResponse.json(
         list.map((b) => ({ id: b._id?.toString(), ...b, _id: undefined, __v: undefined }))
       );
+      res.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+      return res;
     }
     return NextResponse.json([]);
   } catch (err) {

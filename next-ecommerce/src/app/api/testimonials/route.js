@@ -35,7 +35,9 @@ export async function GET() {
           text: t.text,
           rating: Math.min(5, Math.max(1, t.rating || 5)),
         }));
-        return NextResponse.json(items);
+        const res = NextResponse.json(items);
+        res.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+        return res;
       }
     }
     return NextResponse.json(DUMMY_TESTIMONIALS);

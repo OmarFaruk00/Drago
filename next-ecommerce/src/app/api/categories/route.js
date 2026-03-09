@@ -16,7 +16,7 @@ export async function GET() {
     if (!USE_MONGODB) return NextResponse.json([]);
     await connectDB();
     const list = await Category.find({ status: "active" }).sort({ name: 1 }).lean();
-    return NextResponse.json(
+    const res = NextResponse.json(
       list.map((c) => ({
         id: c._id?.toString(),
         name: c.name,
@@ -27,6 +27,8 @@ export async function GET() {
         __v: undefined,
       }))
     );
+    res.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+    return res;
   } catch (err) {
     console.error("Categories GET:", err);
     return NextResponse.json([], { status: 200 });

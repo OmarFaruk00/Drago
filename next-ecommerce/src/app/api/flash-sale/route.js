@@ -50,7 +50,7 @@ export async function GET() {
     const products = productIds.length > 0 ? await getProductsByIds(productIds) : [];
     const bannerImage = doc.bannerImage ?? "";
     const bannerImageScale = Math.min(150, Math.max(50, Number(doc.bannerImageScale) || 100));
-    return NextResponse.json({
+    const res = NextResponse.json({
       active: true,
       startTime: startTime,
       endTime: endTime,
@@ -59,6 +59,8 @@ export async function GET() {
       bannerImage,
       bannerImageScale,
     });
+    res.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+    return res;
   } catch (err) {
     console.error("Flash sale GET:", err);
     return NextResponse.json({ active: false, startTime: null, endTime: null, productIds: [], products: [] });
