@@ -13,7 +13,6 @@ export default function AdminBannersPage() {
   const SECTION_OPTIONS = [
     { value: "hero", label: "Hero Slider" },
     { value: "after_top_products", label: "After Top Products" },
-    { value: "promo", label: "Promo / Other" },
   ];
   const [form, setForm] = useState({
     title: "",

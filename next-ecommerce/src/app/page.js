@@ -15,7 +15,6 @@ import { products as staticProducts } from "@/lib/data/products";
 import { shuffleArray } from "@/lib/utils/shuffle";
 
 const FlashSale = dynamic(() => import("@/components/FlashSale"), { loading: () => <div className="min-h-[200px] rounded-xl bg-gray-100 animate-pulse" /> });
-const PromoBanner = dynamic(() => import("@/components/PromoBanner"), { loading: () => <div className="min-h-[140px] rounded-xl bg-gray-100 animate-pulse" /> });
 const CategorySection = dynamic(() => import("@/components/CategorySection"), { loading: () => <div className="min-h-[120px] rounded-lg bg-gray-100 animate-pulse" /> });
 const ProductGrid = dynamic(() => import("@/components/ProductGrid"), { loading: () => <div className="min-h-[280px] rounded-lg bg-gray-100 animate-pulse" /> });
 const AfterTopProductsBanner = dynamic(() => import("@/components/AfterTopProductsBanner"), { loading: () => <div className="min-h-[100px] rounded-xl bg-gray-100 animate-pulse" /> });
@@ -178,14 +177,11 @@ export default function HomePage() {
     const exclude = new Set(topIdsForExplore);
     const pool = productPool.filter((p) => !exclude.has(p.id));
     const shuffled = shuffleArray([...pool]);
-    const segment = shuffled.slice(0, 36);
+    const segment = shuffled.slice(0, 18); // fewer cards => faster first paint
     return {
       row1: segment.slice(0, 6),
       row2: segment.slice(6, 12),
       row3: segment.slice(12, 18),
-      row4: segment.slice(18, 24),
-      row5: segment.slice(24, 30),
-      row6: segment.slice(30, 36),
     };
   }, [productPool, topIdsForExplore.join(",")]);
 
@@ -198,8 +194,6 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto mt-3 sm:mt-4 px-3 sm:px-4 md:px-6">
         <FlashSale />
       </section>
-
-      <PromoBanner />
 
       {/* Categories - only when admin has added categories */}
       {shuffledCategories.length > 0 && (
@@ -228,7 +222,7 @@ export default function HomePage() {
 
       <AfterTopProductsBanner />
 
-      {/* Explore Our Products - 6 rows × 6, shuffled from all products */}
+      {/* Explore Our Products - 3 rows × 6, shuffled from all products */}
       <section className="max-w-6xl mx-auto mt-4 px-4 sm:px-6 py-4">
         <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
@@ -241,9 +235,6 @@ export default function HomePage() {
             <ProductGrid products={exploreRows.row1} columns={6} priorityCount={0} />
             <ProductGrid products={exploreRows.row2} columns={6} priorityCount={0} />
             <ProductGrid products={exploreRows.row3} columns={6} priorityCount={0} />
-            <ProductGrid products={exploreRows.row4} columns={6} priorityCount={0} />
-            <ProductGrid products={exploreRows.row5} columns={6} priorityCount={0} />
-            <ProductGrid products={exploreRows.row6} columns={6} priorityCount={0} />
           </div>
         </div>
       </section>

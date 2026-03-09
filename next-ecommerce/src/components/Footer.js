@@ -134,14 +134,6 @@ export default function Footer() {
               {phone && <a href={`tel:${phone.replace(/\s/g, "")}`} className="font-semibold block hover:text-red-400 transition">{phone}</a>}
               {email && <a href={`mailto:${email}`} className="font-semibold block hover:text-red-400 transition">{email}</a>}
             </div>
-            <a
-              href="https://www.google.com/maps/place/Drago/@24.6900031,90.6046415,17z/data=!3m1!4b1!4m6!3m5!1s0x3756f772706f6a6f:0xe0fedd5b2092abca!8m2!3d24.6900031!4d90.6072164!16s%2Fg%2F11vbxzpwf_?entry=ttu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center justify-center min-w-[120px] px-4 py-2.5 bg-brand text-white text-sm font-medium rounded-lg hover:opacity-90 transition text-center"
-            >
-              Find Us
-            </a>
           </div>
 
           {/* About Us */}
