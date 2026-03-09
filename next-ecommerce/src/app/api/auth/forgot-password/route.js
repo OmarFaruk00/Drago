@@ -20,6 +20,7 @@ export async function POST(request) {
       success: true,
       message: "If this email exists, we've sent a reset link.",
       resetUrl: result.resetUrl,
+      code: result.code || undefined,
     });
   } catch (err) {
     console.error("Forgot password:", err);

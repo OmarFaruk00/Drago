@@ -132,13 +132,8 @@ export async function requestPasswordReset(email) {
     console.error("Failed to send password reset email:", err);
   }
 
-  // In development we can return the code to show in UI;
-  // in production, email has been sent.
-  const payload = { ok: true, resetUrl };
-  if (process.env.NODE_ENV !== "production") {
-    payload.code = code;
-  }
-  return payload;
+  // Return code so user can use it if email didn't arrive (e.g. SMTP not configured)
+  return { ok: true, resetUrl, code };
 }
 
 export async function getUserById(userId) {
