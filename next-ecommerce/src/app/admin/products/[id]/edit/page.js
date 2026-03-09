@@ -77,6 +77,9 @@ export default function EditProductPage() {
         const specsArr = specs
           ? Object.entries(data.specifications).map(([key, value]) => ({ key, value: String(value) }))
           : [];
+        const imgs = Array.isArray(data.images) && data.images.length > 0
+          ? data.images
+          : (data.image ? [data.image] : []);
         setForm({
           name: data.name || "",
           description: data.description || "",
@@ -85,8 +88,8 @@ export default function EditProductPage() {
           stock: data.stock ?? data.stockQuantity ?? "",
           category: data.category || "",
           subCategory: data.subCategory || "",
-          image: data.image || "",
-          images: Array.isArray(data.images) && data.images.length > 0 ? data.images : [data.image].filter(Boolean),
+          image: data.image || imgs[0] || "",
+          images: imgs,
           specifications: specsArr,
           warranty: data.warranty || "",
           freeShipping: !!data.freeShipping,
@@ -331,27 +334,38 @@ export default function EditProductPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Product Image
+              Product Images
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <p className="text-xs text-gray-500 mb-2">Previously uploaded images appear here. Add, remove or upload new ones.</p>
+            <div
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                handleFileUpload({ target: { files: e.dataTransfer.files } });
+              }}
+            >
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleFileUpload}
                 disabled={uploading}
                 className="hidden"
                 id="image-upload-edit"
               />
-              <label
-                htmlFor="image-upload-edit"
-                className="cursor-pointer flex flex-col items-center gap-2"
-              >
-                <Upload className="w-10 h-10 text-gray-400" />
-                <span className="text-sm text-gray-500">
-                  {uploading ? "Uploading..." : "Click to upload"}
-                </span>
+              <label htmlFor="image-upload-edit" className="cursor-pointer flex flex-col items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-4 py-2 text-red-600 text-sm font-medium hover:underline"
+                >
+                  {uploading ? "Uploading..." : "Add File"}
+                </button>
+                <span className="text-sm text-gray-500">Or drag and drop files</span>
               </label>
-              {(form.images && form.images.length > 0) ? (
+              {(form.images && form.images.length > 0) && (
                 <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {form.images.map((url, i) => (
                     <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
@@ -367,7 +381,8 @@ export default function EditProductPage() {
                     </div>
                   ))}
                 </div>
-              ) : form.image ? (
+              )}
+              {(!form.images || form.images.length === 0) && form.image && (
                 <div className="mt-4 relative inline-block">
                   <img
                     src={form.image}
@@ -382,15 +397,8 @@ export default function EditProductPage() {
                   >
                     <X className="w-4 h-4" />
                   </button>
-                  <input
-                    type="url"
-                    value={form.image}
-                    onChange={(e) => setForm((f) => ({ ...f, image: e.target.value, images: [e.target.value] }))}
-                    className="mt-2 w-full px-3 py-1.5 text-sm border rounded"
-                    placeholder="Image URL"
-                  />
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
         </div>
