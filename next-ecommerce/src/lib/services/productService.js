@@ -33,10 +33,17 @@ export async function getProducts(filters = {}) {
   if (!conn) return [];
 
   const Product = (await import("@/lib/models/Product")).default;
-  const { category, search, inStock } = filters;
+  const { category, search, inStock, min, max, brand, color, size } = filters;
   const query = {};
   if (category) query.category = category;
   if (inStock === true || inStock === "true") query.inStock = true;
+  const priceFilter = {};
+  if (min != null && min !== "") priceFilter.$gte = Number(min) || 0;
+  if (max != null && max !== "") priceFilter.$lte = Number(max) || 0;
+  if (Object.keys(priceFilter).length > 0) query.price = priceFilter;
+  if (brand) query.brand = brand;
+  if (color) query["colors.name"] = color;
+  if (size) query["sizeVariants.size"] = size;
   if (search) {
     const words = search.split(/\s+/).filter(Boolean);
     if (words.length === 0) {

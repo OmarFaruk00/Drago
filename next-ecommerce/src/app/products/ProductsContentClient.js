@@ -28,11 +28,17 @@ export default function ProductsContentClient({ initialProducts = [] }) {
     const inStock = searchParams.get("inStock");
     const min = searchParams.get("min");
     const max = searchParams.get("max");
+    const brand = searchParams.get("brand");
+    const color = searchParams.get("color");
+    const size = searchParams.get("size");
     if (category) params.set("category", category);
     if (search) params.set("search", search);
     if (inStock) params.set("inStock", inStock);
     if (min) params.set("min", min);
     if (max) params.set("max", max);
+    if (brand) params.set("brand", brand);
+    if (color) params.set("color", color);
+    if (size) params.set("size", size);
 
     const fetchProducts = async () => {
       setLoading(true);

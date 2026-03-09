@@ -45,7 +45,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { name, price, originalPrice, image, images, category, subCategory, stock, description, sizeVariants, colors, specifications, warranty, freeShipping, productCode } = body;
+    const { name, brand, price, originalPrice, image, images, category, subCategory, stock, description, sizeVariants, colors, specifications, warranty, freeShipping, productCode } = body;
     const catStr = typeof category === "string" ? category : (category?.name ?? "General");
     if (!name || price == null) {
       return NextResponse.json(
@@ -59,6 +59,7 @@ export async function POST(request) {
       const imgList = Array.isArray(images) && images.length > 0 ? images : [image || "https://via.placeholder.com/400"];
       const product = await Product.create({
         name: String(name).trim(),
+        brand: (brand != null && typeof brand === "string") ? brand.trim() : "",
         price: Number(price) || 0,
         originalPrice: originalPrice != null && originalPrice > 0 ? originalPrice : null,
         image: imgList[0],
@@ -89,6 +90,7 @@ export async function POST(request) {
     const newProduct = {
       id: String(products.length + 1),
       name,
+      brand: (brand != null && typeof brand === "string") ? brand.trim() : "",
       price: Number(price ?? 0),
       originalPrice: originalPrice != null && originalPrice > 0 ? Number(originalPrice) : null,
       image: imgList[0],

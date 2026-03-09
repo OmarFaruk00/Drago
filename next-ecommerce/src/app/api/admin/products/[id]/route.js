@@ -59,6 +59,7 @@ export async function PUT(request, { params }) {
       }
       const update = {};
       if (body.name != null) update.name = body.name;
+      if (body.brand != null) update.brand = body.brand;
       if (body.description != null) update.description = body.description;
       if (body.price != null) update.price = body.price;
       if (body.image != null) update.image = body.image;
@@ -78,6 +79,7 @@ export async function PUT(request, { params }) {
       if (body.warranty != null) update.warranty = typeof body.warranty === "string" ? body.warranty : "";
       if (body.freeShipping != null) update.freeShipping = !!body.freeShipping;
       if (body.productCode != null) update.productCode = typeof body.productCode === "string" ? body.productCode.trim() : "";
+      if (body.brand != null) update.brand = typeof body.brand === "string" ? body.brand.trim() : "";
       const product = await Product.findByIdAndUpdate(id, update, { new: true }).lean();
       if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
       return NextResponse.json({
@@ -93,6 +95,7 @@ export async function PUT(request, { params }) {
     if (idx < 0) return NextResponse.json({ error: "Product not found" }, { status: 404 });
     const p = products[idx];
     if (body.name != null) p.name = body.name;
+    if (body.brand != null) p.brand = body.brand;
     if (body.price != null) p.price = body.price;
     if (body.stock != null) {
       p.stockQuantity = body.stock;
@@ -110,6 +113,7 @@ export async function PUT(request, { params }) {
     if (body.originalPrice != null) p.originalPrice = body.originalPrice;
     if (body.subCategory != null) p.subCategory = body.subCategory;
     if (body.freeShipping != null) p.freeShipping = !!body.freeShipping;
+    if (body.brand != null) p.brand = typeof body.brand === "string" ? body.brand.trim() : "";
     return NextResponse.json({ ...p, stock: p.stockQuantity ?? (p.inStock ? 99 : 0) });
   } catch (err) {
     console.error("Admin product PUT:", err);

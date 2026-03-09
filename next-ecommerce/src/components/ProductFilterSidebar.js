@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
-import { colors, sizes, brands } from "@/lib/data/sidebarCategories";
+import { colors } from "@/lib/data/sidebarCategories";
 
 export default function ProductFilterSidebar({ products = [], isOpen, onClose }) {
   const router = useRouter();
@@ -52,9 +52,34 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
 
   const currentCategory = searchParams.get("category") || "";
   const currentBrand = searchParams.get("brand") || "";
-  const currentRating = searchParams.get("rating") || "";
   const currentColor = searchParams.get("color") || "";
   const currentSize = searchParams.get("size") || "";
+
+  const distinctBrands = useMemo(() => {
+    const set = new Set();
+    products.forEach((p) => {
+      if (p.brand && typeof p.brand === "string") {
+        const b = p.brand.trim();
+        if (b) set.add(b);
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [products]);
+
+  const distinctSizes = useMemo(() => {
+    const set = new Set();
+    products.forEach((p) => {
+      if (Array.isArray(p.sizeVariants)) {
+        p.sizeVariants.forEach((v) => {
+          if (v?.size) {
+            const s = String(v.size).trim();
+            if (s) set.add(s);
+          }
+        });
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  }, [products]);
 
   const toggleCategory = (id) => {
     setExpandedCats((prev) =>
@@ -210,43 +235,28 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
       </div>
 
       {/* Filter by Size */}
-      <div>
-        <h4 className="text-sm font-semibold text-gray-900 mb-2">Filter by Size</h4>
-        <div className="flex flex-wrap gap-1">
-          {sizes.map((s) => (
-            <button
-              key={s}
-              onClick={() => updateParams("size", currentSize === s ? "" : s)}
-              className={`px-2.5 py-1 text-xs border rounded ${currentSize === s ? "border-brand bg-brand/10 text-brand" : "border-gray-300 hover:border-gray-400"}`}
-            >
-              {s}
-            </button>
-          ))}
+      {distinctSizes.length > 0 && (
+        <div>
+          <h4 className="text-sm font-semibold text-gray-900 mb-2">Filter by Size</h4>
+          <div className="flex flex-wrap gap-1">
+            {distinctSizes.map((s) => (
+              <button
+                key={s}
+                onClick={() => updateParams("size", currentSize === s ? "" : s)}
+                className={`px-2.5 py-1 text-xs border rounded ${currentSize === s ? "border-brand bg-brand/10 text-brand" : "border-gray-300 hover:border-gray-400"}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Filter by Rating */}
-      <div>
-        <h4 className="text-sm font-semibold text-gray-900 mb-2">Filter by Rating</h4>
-        <div className="space-y-1">
-          {[5, 4, 3].map((r) => (
-            <button
-              key={r}
-              onClick={() => updateParams("rating", currentRating === String(r) ? "" : String(r))}
-              className={`flex items-center gap-1 w-full text-left px-2 py-1 text-xs rounded ${currentRating === String(r) ? "bg-brand/10 text-brand" : "text-gray-600 hover:bg-gray-50"}`}
-            >
-              <span className="text-amber-500">{Array(r).fill("★").join("")}</span>
-              {r === 5 ? "5 stars" : `${r} stars & up`}
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Filter by Brand */}
       <div>
         <h4 className="text-sm font-semibold text-gray-900 mb-2">Filter by Brand</h4>
         <div className="space-y-1 max-h-40 overflow-y-auto">
-          {brands.map((b) => (
+          {distinctBrands.map((b) => (
             <label key={b} className="flex items-center gap-2 cursor-pointer py-0.5">
               <input
                 type="checkbox"
@@ -257,6 +267,9 @@ export default function ProductFilterSidebar({ products = [], isOpen, onClose })
               <span className="text-xs text-gray-700">{b}</span>
             </label>
           ))}
+          {distinctBrands.length === 0 && (
+            <p className="text-xs text-gray-500">No brands yet. Add brands on products from admin.</p>
+          )}
         </div>
       </div>
 

@@ -41,6 +41,12 @@ const productSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    brand: {
+      type: String,
+      trim: true,
+      default: "",
+      index: true,
+    },
     subCategory: {
       type: String,
       trim: true,
@@ -100,6 +106,7 @@ const productSchema = new mongoose.Schema(
     freeShipping: { type: Boolean, default: false },
     // Product code (admin-set, e.g. DRG-S24U-256)
     productCode: { type: String, trim: true, default: "" },
+    brand: { type: String, trim: true, default: "", index: true },
   },
   {
     timestamps: true,

@@ -14,6 +14,7 @@ export default function AddProductPage() {
   const [subCategories, setSubCategories] = useState([]);
   const [form, setForm] = useState({
     name: "",
+    brand: "",
     description: "",
     price: "",
     discountPrice: "",
@@ -198,6 +199,7 @@ export default function AddProductPage() {
         credentials: "include",
         body: JSON.stringify({
           name: form.name,
+          brand: form.brand || "",
           description: form.description || "",
           price: form.discountPrice ? parseFloat(form.discountPrice) || 0 : parseFloat(form.price) || 0,
           originalPrice: form.discountPrice ? parseFloat(form.price) || null : null,
@@ -272,6 +274,16 @@ export default function AddProductPage() {
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
                   placeholder="Summer T-Shirt"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Brand (optional)</label>
+                <input
+                  type="text"
+                  value={form.brand}
+                  onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                  placeholder="e.g. Samsung"
                 />
               </div>
               <div>

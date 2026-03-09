@@ -13,7 +13,21 @@ export default async function ProductsPage({ searchParams }) {
   const category = params.category || undefined;
   const search = params.search || undefined;
   const inStock = params.inStock === "true" || params.inStock === true ? true : undefined;
-  const initialProducts = await getProducts({ category, search, inStock });
+  const min = params.min || undefined;
+  const max = params.max || undefined;
+  const brand = params.brand || undefined;
+  const color = params.color || undefined;
+  const size = params.size || undefined;
+  const initialProducts = await getProducts({
+    category,
+    search,
+    inStock,
+    min,
+    max,
+    brand,
+    color,
+    size,
+  });
 
   return (
     <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-8 text-center text-gray-500">Loading...</div>}>
