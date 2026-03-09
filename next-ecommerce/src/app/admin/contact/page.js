@@ -11,7 +11,6 @@ export default function AdminContactPage() {
     email: "",
     workingDays: "",
     workingDaysFri: "",
-    mapEmbedUrl: "",
   });
 
   useEffect(() => {
@@ -25,7 +24,6 @@ export default function AdminContactPage() {
             email: data.email ?? "",
             workingDays: data.workingDays ?? "",
             workingDaysFri: data.workingDaysFri ?? "",
-            mapEmbedUrl: data.mapEmbedUrl ?? "",
           });
         }
       })
@@ -91,15 +89,6 @@ export default function AdminContactPage() {
           <div>
             <label className={labelCls}>Friday / Closed Text</label>
             <input type="text" value={form.workingDaysFri} onChange={(e) => setForm((f) => ({ ...f, workingDaysFri: e.target.value }))} className={inputCls} placeholder="Friday: Closed" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-          <h2 className="font-semibold text-gray-900">Map Embed</h2>
-          <p className="text-sm text-gray-500">Paste the iframe src URL from Google Maps embed (Share → Embed a map).</p>
-          <div>
-            <label className={labelCls}>Map Embed URL</label>
-            <textarea value={form.mapEmbedUrl} onChange={(e) => setForm((f) => ({ ...f, mapEmbedUrl: e.target.value }))} rows={3} className={inputCls} placeholder="https://www.google.com/maps/embed?pb=..." />
           </div>
         </div>
 

@@ -1,20 +1,18 @@
 "use client";
 
 /**
- * HeroSection - Simple slider from admin banners (up to 6), fallback to default slides.
- * No arrow icons on mobile; user swipes with finger. Desktop: arrows on hover.
+ * HeroSection - Slider from admin banners (up to 6).
+ * Entire banner is clickable; no overlay text.
  */
 
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState, useRef } from "react";
 
 const SWIPE_THRESHOLD = 50;
 
 export default function HeroSection() {
-  const { t } = useLanguage();
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
@@ -91,41 +89,10 @@ export default function HeroSection() {
             />
           </div>
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col justify-center px-4 sm:px-6 md:px-12 lg:px-16">
-            {(current.title || current.subtitle) && (
-              <>
-                {current.title && (
-                  <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight">
-                    {current.title}
-                  </h1>
-                )}
-                {current.subtitle && (
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md">
-                    {current.subtitle}
-                  </p>
-                )}
-              </>
-            )}
-            {!current.title && !current.subtitle && (
-              <>
-                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2 tracking-tight leading-tight">
-                  {t("home.hero.bigSale")}
-                </h1>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 mb-4 sm:mb-6 drop-shadow max-w-md">
-                  {t("home.hero.updateStyle")}
-                </p>
-              </>
-            )}
-            <div>
-              <Link href={current.link || "/products"}>
-                <span className="inline-flex w-fit px-5 py-2.5 sm:px-6 sm:py-2.5 md:px-8 md:py-3 text-sm sm:text-base bg-brand text-white font-semibold rounded-lg shadow-lg cursor-pointer">
-                  {current.linkText || t("home.hero.cta")}
-                </span>
-              </Link>
-            </div>
-          </div>
+          {/* Clickable overlay - full banner */}
+          <Link href={current.link || "/products"} className="absolute inset-0 block" aria-label={current.title || "Banner"}>
+            <span className="sr-only">{current.title || "Banner"}</span>
+          </Link>
 
           {/* Dots */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
