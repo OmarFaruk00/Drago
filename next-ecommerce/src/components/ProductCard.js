@@ -8,7 +8,6 @@
 import SafeProductImage from "@/components/SafeProductImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const PLACEHOLDER = "https://via.placeholder.com/400x400?text=No+Image";
 import { useFormatCurrency } from "@/lib/utils/useFormatCurrency";
@@ -23,7 +22,6 @@ export default function ProductCard({ product, variant = "default", priority = f
   const removeFromWishlist = useStore((s) => s.removeFromWishlist);
   const wishlist = useStore((s) => s.wishlist);
   const isInWishlist = wishlist?.some((w) => w.id === product.id) ?? false;
-  const [showActions, setShowActions] = useState(false);
   const ratingVal = Math.min(5, Math.max(0, Number(product.rating) || 0));
   const ratingText = ratingVal % 1 === 0 ? String(Math.round(ratingVal)) : ratingVal.toFixed(1);
 
@@ -31,29 +29,9 @@ export default function ProductCard({ product, variant = "default", priority = f
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
-  const iconBtn = (onClick, title, d) => (
-    <button
-      key={title}
-      type="button"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onClick?.(e);
-      }}
-      className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow border border-gray-100 text-gray-600 hover:text-brand hover:border-brand/30 transition"
-      title={title}
-    >
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={d} />
-      </svg>
-    </button>
-  );
-
   return (
     <div
       className="group block bg-white rounded-xl shadow-sm overflow-hidden w-full hover:shadow-md transition-all duration-200"
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
     >
       {/* Image */}
       <Link href={`/products/${product.id}`} className="block">
@@ -105,14 +83,6 @@ export default function ProductCard({ product, variant = "default", priority = f
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </button>
-        {/* Action icons - Quick View, visible on hover (desktop) or always (mobile) */}
-        <div
-          className={`absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 transition-opacity ${
-            showActions ? "opacity-100" : "opacity-0 lg:group-hover:opacity-100"
-          }`}
-        >
-          {iconBtn(() => router.push(`/products/${product.id}`), t("product.quickView"), "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z")}
-        </div>
       </div>
 
       </Link>
