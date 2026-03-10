@@ -12,7 +12,6 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [resetUrl, setResetUrl] = useState(null);
-  const [code, setCode] = useState(null);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -32,7 +31,6 @@ export default function ForgotPasswordPage() {
       }
       setDone(true);
       if (data.resetUrl) setResetUrl(data.resetUrl);
-      if (data.code) setCode(data.code);
     } catch {
       setError("Something went wrong");
     } finally {
@@ -48,16 +46,9 @@ export default function ForgotPasswordPage() {
             <h1 className="text-xl font-bold text-gray-900 mb-2">Password reset</h1>
             <p className="text-gray-600 text-sm mb-4">
               {resetUrl
-                ? "If an account exists for " + email + ", use the link and code below to reset your password."
+                ? "If an account exists for " + email + ", use the link from your email to reset your password."
                 : "If an account exists for " + email + ", we've sent a password reset link to your email."}
             </p>
-            {code && (
-              <div className="mb-4 p-3 bg-gray-100 rounded-lg">
-                <p className="text-xs text-gray-600 mb-1">Your verification code:</p>
-                <p className="text-xl font-bold tracking-[0.3em] text-gray-900">{code}</p>
-                <p className="text-xs text-gray-500 mt-1">Use this code on the reset page (email না এলে এটা ব্যবহার করুন)</p>
-              </div>
-            )}
             {resetUrl && (
               <a
                 href={resetUrl}

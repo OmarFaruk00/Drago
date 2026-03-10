@@ -132,8 +132,8 @@ export async function requestPasswordReset(email) {
     console.error("Failed to send password reset email:", err);
   }
 
-  // Return code so user can use it if email didn't arrive (e.g. SMTP not configured)
-  return { ok: true, resetUrl, code };
+  // UI/API তে আর verification code ফেরত দিচ্ছি না — শুধু ইমেইলেই যাবে
+  return { ok: true, resetUrl };
 }
 
 export async function getUserById(userId) {
