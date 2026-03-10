@@ -44,14 +44,8 @@ function augmentProduct(p) {
   const images = raw.map((img) => extractDirectImageUrl(img));
   const brand = p.brand || (p.category === "Electronics" ? "Samsung" : p.category || "Drago");
   const productCode = (p.productCode != null && String(p.productCode).trim()) ? String(p.productCode).trim() : "";
-  const colors = (p.colors && p.colors.length > 0) ? p.colors : [
-    { name: "Pink", hex: "#ec4899" },
-    { name: "White", hex: "#f8fafc" },
-    { name: "Green", hex: "#86efac" },
-    { name: "Beige", hex: "#fef3c7" },
-    { name: "Black", hex: "#1f2937" },
-    { name: "Purple", hex: "#a78bfa" },
-  ];
+  // Admin যদি color সেট না করে, কোনো default color আর দেখানো হবে না
+  const colors = Array.isArray(p.colors) && p.colors.length > 0 ? p.colors : [];
   const sizeVariants = (p.sizeVariants && p.sizeVariants.length > 0) ? p.sizeVariants : null;
   const simTypes = (p.simTypes && Array.isArray(p.simTypes) && p.simTypes.length > 0) ? p.simTypes : null;
   const storageVariants = (p.storageVariants && p.storageVariants.length > 0)
