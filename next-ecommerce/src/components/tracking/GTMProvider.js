@@ -14,15 +14,21 @@ export default function GTMProvider() {
   const [gtmId, setGtmId] = useState(envGtmId);
 
   useEffect(() => {
-    fetch("/api/settings/tracking", { credentials: "include" })
-      .then((r) => r.json())
-      .then((data) => {
-        const id = (data?.gtmId || "").trim() || envGtmId;
-        if (id) setGtmId(id);
-      })
-      .catch(() => {
-        if (envGtmId) setGtmId(envGtmId);
-      });
+    const run = () => {
+      fetch("/api/settings/tracking", { credentials: "include" })
+        .then((r) => r.json())
+        .then((data) => {
+          const id = (data?.gtmId || "").trim() || envGtmId;
+          if (id) setGtmId(id);
+        })
+        .catch(() => {
+          if (envGtmId) setGtmId(envGtmId);
+        });
+    };
+    const id = typeof requestIdleCallback !== "undefined"
+      ? requestIdleCallback(run, { timeout: 2000 })
+      : setTimeout(run, 100);
+    return () => (typeof requestIdleCallback !== "undefined" ? cancelIdleCallback(id) : clearTimeout(id));
   }, []);
 
   if (!gtmId) return null;

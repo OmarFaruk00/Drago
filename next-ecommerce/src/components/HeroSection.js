@@ -66,7 +66,15 @@ export default function HeroSection() {
   }, [slides.length]);
 
   const current = slides[index];
-  if (loading || slides.length === 0 || !current || !current.image) return null;
+  if (loading || slides.length === 0 || !current || !current.image) {
+    return (
+      <section className="relative bg-white overflow-hidden pt-0">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 pt-0 pb-3 sm:pb-4 md:pb-6">
+          <div className="relative min-h-[180px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-[360px] rounded-xl sm:rounded-2xl overflow-hidden bg-gray-200 animate-pulse" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative bg-white overflow-hidden pt-0">

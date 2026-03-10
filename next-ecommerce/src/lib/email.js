@@ -15,11 +15,13 @@ function getTransport() {
     throw new Error("SMTP configuration is missing");
   }
 
+  const secure = port === 465;
   return nodemailer.createTransport({
     host,
     port,
-    secure: port === 465,
+    secure,
     auth: { user, pass },
+    ...(port === 587 && { requireTLS: true }),
   });
 }
 
@@ -46,16 +48,22 @@ If you did not request this, you can safely ignore this email.`;
 
   const transport = getTransport();
   if (!transport) {
-    console.log("[email] sendPasswordResetEmail", { to, code, resetUrl });
+    console.log("[email] sendPasswordResetEmail (no SMTP)", { to, code, resetUrl });
     return;
   }
 
-  await transport.sendMail({
-    from,
-    to,
-    subject,
-    text,
-    html,
-  });
+  try {
+    await transport.sendMail({
+      from,
+      to,
+      subject,
+      text,
+      html,
+    });
+    console.log("[email] Password reset sent to", to);
+  } catch (err) {
+    console.error("[email] Send failed:", err.message);
+    throw err;
+  }
 }
 

@@ -9,6 +9,7 @@ import GTMProvider from "@/components/tracking/GTMProvider";
 const geistSans = Inter({
   subsets: ["latin"],
   variable: "--font-geist-sans",
+  display: "swap",
 });
 
 const fbPixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
@@ -39,7 +40,7 @@ export default function RootLayout({ children }) {
           <>
             <Script
               id="facebook-pixel"
-              strategy="afterInteractive"
+              strategy="lazyOnload"
               dangerouslySetInnerHTML={{
                 __html: `
                   !function(f,b,e,v,n,t,s)

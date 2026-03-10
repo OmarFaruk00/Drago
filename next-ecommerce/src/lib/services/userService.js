@@ -102,7 +102,8 @@ export async function requestPasswordReset(email) {
   const conn = await connectDB();
   if (!conn) return { ok: false, error: "Database unavailable." };
   const User = (await import("@/lib/models/User")).default;
-  const user = await User.findOne({ email }).select("+password").lean();
+  const normalizedEmail = (email || "").trim().toLowerCase();
+  const user = await User.findOne({ email: normalizedEmail }).select("+password").lean();
   if (!user || !user.password) return { ok: true };
 
   const crypto = await import("crypto");
@@ -127,12 +128,12 @@ export async function requestPasswordReset(email) {
 
   try {
     const { sendPasswordResetEmail } = await import("@/lib/email");
-    await sendPasswordResetEmail({ to: email, code, resetUrl });
+    await sendPasswordResetEmail({ to: normalizedEmail, code, resetUrl });
   } catch (err) {
-    console.error("Failed to send password reset email:", err);
+    console.error("Failed to send password reset email:", err?.message || err);
+    return { ok: false, error: "Failed to send email. Please try again later." };
   }
 
-  // UI/API তে আর verification code ফেরত দিচ্ছি না — শুধু ইমেইলেই যাবে
   return { ok: true, resetUrl };
 }
 
